@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Coverage / temporary files
+coverage/
+.coverage
+*.tmp
+*.bak
+*.backup
+*~
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

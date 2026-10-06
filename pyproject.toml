@@ -1,0 +1,15 @@
+[project]
+name = "ha-pool-cockpit"
+version = "3.0.0"
+description = "Advanced swimming pool monitoring, analytics and control for Home Assistant."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Vincent Fournet" }
+]
+license = "PolyForm-Noncommercial-1.0.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-p no:cacheprovider"

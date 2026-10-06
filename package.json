@@ -1,0 +1,18 @@
+{
+  "name": "ha-pool-cockpit",
+  "private": true,
+  "version": "3.0.0",
+  "scripts": {
+    "test": "npm run build:check && npm run test:dashboard && npm run test:intelligence && npm run test:interface && npm run test:build",
+    "test:interface": "node --test tests/jsdom/*.test.mjs",
+    "test:smoke": "node tests/runtime_rc28_3_smoke.js",
+    "test:dashboard": "node --test tests/js/*.test.cjs",
+    "test:intelligence": "node --test tests/unitaires/*.test.mjs",
+    "build": "node outils/construire-bundle.mjs",
+    "build:check": "node outils/construire-bundle.mjs --verifier",
+    "test:build": "node --test tests/build/*.test.mjs"
+  },
+  "description": "Advanced swimming pool monitoring, analytics and control for Home Assistant.",
+  "author": "Vincent Fournet",
+  "license": "PolyForm-Noncommercial-1.0.0"
+}

@@ -1,0 +1,13 @@
+{
+  "domain": "ha_pool_dashboard",
+  "name": "Pool Cockpit",
+  "codeowners": [
+    "@vinzgithub"
+  ],
+  "documentation": "https://github.com/vinzgithub/ha-pool-cockpit",
+  "integration_type": "service",
+  "iot_class": "local_push",
+  "requirements": [],
+  "version": "3.0.0",
+  "issue_tracker": "https://github.com/vinzgithub/ha-pool-cockpit/issues"
+}

@@ -1,0 +1,23 @@
+save_config:
+  name: Enregistrer la configuration piscine
+  description: Enregistre les entités, modes et horaires du programmateur RC28.3.
+  fields:
+    config:
+      name: Configuration
+      required: true
+      selector:
+        object:
+
+boost:
+  name: Boost filtration
+  description: Force temporairement la pompe de filtration, ou annule le boost avec 0 heure.
+  fields:
+    hours:
+      name: Durée
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 4
+          step: 1
+          unit_of_measurement: h
