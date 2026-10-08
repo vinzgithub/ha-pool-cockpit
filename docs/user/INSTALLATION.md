@@ -83,6 +83,8 @@ Backups are created automatically under:
 
 Restart Home Assistant.
 
+Pool Cockpit automatically configures the Lovelace resource and adds a **Piscine** dashboard to the Home Assistant sidebar.
+
 The frontend resource is available at:
 
     /local/ha-pool-dashboard/pool-dashboard.js
@@ -90,6 +92,8 @@ The frontend resource is available at:
 The generated dashboard configuration is stored in:
 
     /config/pool-dashboard.yaml
+
+No manual Lovelace resource registration is required for a standard installation.
 
 ## Device detection
 

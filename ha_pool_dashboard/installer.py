@@ -22,6 +22,173 @@ def ensure_scheduler_yaml(content: str) -> str:
     suffix = "" if content.endswith("\n") else "\n"
     return f"{content}{suffix}\n{SCHEDULER_YAML_MARKER}\nha_pool_dashboard:\n"
 
+
+def _top_level_block_span(lines: list[str], key: str) -> tuple[int, int] | None:
+    pattern = re.compile(rf"^{re.escape(key)}\s*:")
+    for start, line in enumerate(lines):
+        if not pattern.match(line):
+            continue
+        end = len(lines)
+        for index in range(start + 1, len(lines)):
+            candidate = lines[index]
+            if re.match(r"^[^\s#][^:]*:", candidate):
+                end = index
+                break
+        return start, end
+    return None
+
+
+def _child_block_end(lines: list[str], start: int, end: int, indent: int) -> int:
+    pattern = re.compile(rf"^ {{{indent}}}[^\s#][^:]*:")
+    for index in range(start + 1, end):
+        if pattern.match(lines[index]):
+            return index
+    return end
+
+
+def ensure_lovelace_yaml(content: str, version: str) -> str:
+    resource_url = f"/local/ha-pool-dashboard/pool-dashboard.js?v={version}"
+    lines = content.splitlines()
+
+    span = _top_level_block_span(lines, "lovelace")
+    if span is None:
+        prefix = content.rstrip("\n")
+        if prefix:
+            prefix += "\n\n"
+        return (
+            f"{prefix}"
+            "# Pool Cockpit dashboard\n"
+            "lovelace:\n"
+            "  mode: storage\n"
+            "  resource_mode: yaml\n"
+            "  resources:\n"
+            f"    - url: {resource_url}\n"
+            "      type: module\n"
+            "  dashboards:\n"
+            "    pool-cockpit:\n"
+            "      mode: yaml\n"
+            "      title: Piscine\n"
+            "      icon: mdi:pool\n"
+            "      show_in_sidebar: true\n"
+            "      filename: pool-dashboard.yaml\n"
+        )
+
+    start, end = span
+
+    mode_index = next(
+        (i for i in range(start + 1, end) if re.match(r"^  mode\s*:", lines[i])),
+        None,
+    )
+    if mode_index is None:
+        lines.insert(start + 1, "  mode: storage")
+
+    start, end = _top_level_block_span(lines, "lovelace")
+    resource_mode_index = next(
+        (i for i in range(start + 1, end) if re.match(r"^  resource_mode\s*:", lines[i])),
+        None,
+    )
+    if resource_mode_index is None:
+        mode_index = next(
+            (i for i in range(start + 1, end) if re.match(r"^  mode\s*:", lines[i])),
+            start,
+        )
+        lines.insert(mode_index + 1, "  resource_mode: yaml")
+    else:
+        value = lines[resource_mode_index].split(":", 1)[1].split("#", 1)[0].strip()
+        if value != "yaml":
+            raise RuntimeError(
+                "La configuration Lovelace existante utilise un resource_mode incompatible. "
+                "Pool Cockpit n'a pas modifié configuration.yaml."
+            )
+
+    start, end = _top_level_block_span(lines, "lovelace")
+    resources_index = next(
+        (i for i in range(start + 1, end) if re.match(r"^  resources\s*:", lines[i])),
+        None,
+    )
+
+    if resources_index is None:
+        dashboards_index = next(
+            (i for i in range(start + 1, end) if re.match(r"^  dashboards\s*:", lines[i])),
+            end,
+        )
+        lines[dashboards_index:dashboards_index] = [
+            "  resources:",
+            f"    - url: {resource_url}",
+            "      type: module",
+        ]
+    else:
+        if not re.match(r"^  resources\s*:\s*(?:#.*)?$", lines[resources_index]):
+            raise RuntimeError(
+                "Le bloc Lovelace resources utilise une forme externe/non standard. "
+                "Pool Cockpit n'a pas modifié configuration.yaml."
+            )
+
+        start, end = _top_level_block_span(lines, "lovelace")
+        resources_index = next(
+            i for i in range(start + 1, end)
+            if re.match(r"^  resources\s*:", lines[i])
+        )
+        resources_end = _child_block_end(lines, resources_index, end, 2)
+
+        existing_resource = next(
+            (
+                i for i in range(resources_index + 1, resources_end)
+                if "/local/ha-pool-dashboard/pool-dashboard.js" in lines[i]
+            ),
+            None,
+        )
+
+        if existing_resource is None:
+            lines[resources_end:resources_end] = [
+                f"    - url: {resource_url}",
+                "      type: module",
+            ]
+        else:
+            indent = lines[existing_resource][:len(lines[existing_resource]) - len(lines[existing_resource].lstrip())]
+            lines[existing_resource] = f"{indent}- url: {resource_url}"
+
+    start, end = _top_level_block_span(lines, "lovelace")
+    dashboards_index = next(
+        (i for i in range(start + 1, end) if re.match(r"^  dashboards\s*:", lines[i])),
+        None,
+    )
+
+    dashboard_lines = [
+        "    pool-cockpit:",
+        "      mode: yaml",
+        "      title: Piscine",
+        "      icon: mdi:pool",
+        "      show_in_sidebar: true",
+        "      filename: pool-dashboard.yaml",
+    ]
+
+    if dashboards_index is None:
+        lines[end:end] = ["  dashboards:", *dashboard_lines]
+    else:
+        if not re.match(r"^  dashboards\s*:\s*(?:#.*)?$", lines[dashboards_index]):
+            raise RuntimeError(
+                "Le bloc Lovelace dashboards utilise une forme externe/non standard. "
+                "Pool Cockpit n'a pas modifié configuration.yaml."
+            )
+
+        start, end = _top_level_block_span(lines, "lovelace")
+        dashboards_index = next(
+            i for i in range(start + 1, end)
+            if re.match(r"^  dashboards\s*:", lines[i])
+        )
+        dashboards_end = _child_block_end(lines, dashboards_index, end, 2)
+
+        pool_dashboard_exists = any(
+            re.match(r"^    pool-cockpit\s*:", lines[i])
+            for i in range(dashboards_index + 1, dashboards_end)
+        )
+
+        if not pool_dashboard_exists:
+            lines[dashboards_end:dashboards_end] = dashboard_lines
+
+    return "\n".join(lines).rstrip("\n") + "\n"
+
 class Installer:
     def __init__(self, source_dir: Path, config_dir: Path, version: str) -> None:
         self.source_dir = source_dir
@@ -111,6 +278,7 @@ class Installer:
         atomic_write_text(dashboard_target, generate_dashboard(devices, theme, weather))
         configuration = configuration_target.read_text(encoding="utf-8") if configuration_target.exists() else ""
         updated_configuration = ensure_scheduler_yaml(configuration)
+        updated_configuration = ensure_lovelace_yaml(updated_configuration, self.version)
         if updated_configuration != configuration:
             atomic_write_text(configuration_target, updated_configuration)
 

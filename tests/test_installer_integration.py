@@ -26,6 +26,11 @@ def test_installer_copies_backend_and_is_idempotent(tmp_path: Path) -> None:
 
     configuration = (tmp_path / "configuration.yaml").read_text()
     assert configuration.count("ha_pool_dashboard:") == 1
+    assert configuration.count("lovelace:") == 1
+    assert configuration.count("resource_mode: yaml") == 1
+    assert configuration.count("/local/ha-pool-dashboard/pool-dashboard.js?v=2.0.0-rc28.3") == 1
+    assert configuration.count("pool-cockpit:") == 1
+    assert configuration.count("filename: pool-dashboard.yaml") == 1
     assert (tmp_path / "custom_components" / "ha_pool_dashboard" / "manifest.json").exists()
     assert (tmp_path / "custom_components" / "ha_pool_dashboard" / "services.yaml").exists()
     assert (tmp_path / "www" / "ha-pool-dashboard" / "pool-dashboard.js").exists()
