@@ -259,6 +259,15 @@ class Installer:
         scheduler_source = self.source_dir / "home_assistant" / "custom_components" / "ha_pool_dashboard"
         scheduler_target = self.config_dir / "custom_components" / "ha_pool_dashboard"
 
+        # Preflight: validate everything that can fail before touching the HA config.
+        if not scheduler_source.exists():
+            raise RuntimeError("Composant Pool Cockpit introuvable dans l’archive.")
+
+        configuration = configuration_target.read_text(encoding="utf-8") if configuration_target.exists() else ""
+        updated_configuration = ensure_scheduler_yaml(configuration)
+        updated_configuration = ensure_lovelace_yaml(updated_configuration, self.version)
+        dashboard_content = generate_dashboard(devices, theme, weather)
+
         backup_dir = create_backup(
             self.config_dir,
             [frontend_target, dashboard_target, configuration_target, scheduler_target],
@@ -272,13 +281,9 @@ class Installer:
             elif source_path.is_file():
                 target_path.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(source_path, target_path)
-        if not scheduler_source.exists():
-            raise RuntimeError("Composant Pool Cockpit introuvable dans l’archive.")
+
         shutil.copytree(scheduler_source, scheduler_target, dirs_exist_ok=True)
-        atomic_write_text(dashboard_target, generate_dashboard(devices, theme, weather))
-        configuration = configuration_target.read_text(encoding="utf-8") if configuration_target.exists() else ""
-        updated_configuration = ensure_scheduler_yaml(configuration)
-        updated_configuration = ensure_lovelace_yaml(updated_configuration, self.version)
+        atomic_write_text(dashboard_target, dashboard_content)
         if updated_configuration != configuration:
             atomic_write_text(configuration_target, updated_configuration)
 
