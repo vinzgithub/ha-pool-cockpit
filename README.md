@@ -1,58 +1,111 @@
 # Pool Cockpit for Home Assistant
 
-**Pool Cockpit** is an advanced swimming-pool monitoring, analytics and control dashboard for Home Assistant.
+**Pool Cockpit** is an advanced swimming-pool monitoring and management dashboard for Home Assistant.
 
-It brings water measurements, filtration, heat-pump control, energy monitoring and contextual recommendations into a single responsive interface.
+It brings water measurements, filtration performance, scheduling, heat-pump monitoring, treatment guidance, weather context and equipment status into a single responsive interface.
 
-> Copyright © 2026 Vincent Fournet<br>
-> Licensed for non-commercial use under the PolyForm Noncommercial License 1.0.0.
+![Pool Cockpit dashboard overview](docs/images/dashboard-overview.png)
 
-## Features
+> Copyright © 2026 Vincent Fournet
+> Source-available for non-commercial use under the PolyForm Noncommercial License 1.0.0.
 
-- Pool temperature monitoring
-- pH and ORP monitoring
-- Conductivity monitoring
-- Historical sensor trends
-- Filtration monitoring and scheduling
-- Seasonal filtration profiles
-- Heat-pump monitoring and control
+## Highlights
+
+- Water temperature, pH and ORP monitoring
+- Conductivity, salinity and free-chlorine support
+- Blue Connect / Blueriiot / Zodiac and Flipr discovery
+- Multi-analyzer comparison and confidence indicators
+- Filtration performance and daily target tracking
+- Seasonal and adaptive filtration scheduling
+- Heat-pump monitoring with protected control interface
 - Energy monitoring
-- Blue Connect support
 - Weather-aware recommendations
-- Sensor confidence and comparison
-- Treatment journal
-- Responsive Home Assistant interface
-- Optional master / satellite coordination between two Home Assistant sites
+- Pool treatment and dosage workspace
+- Maintenance and treatment journal
+- Expert contextual summary
+- Responsive desktop and mobile interface
+- Optional coordination between two Home Assistant instances
 
-## Architecture
+## Dashboard
 
-Main directories:
+Pool Cockpit is designed as a single visual cockpit for the pool.
 
-- `src/` — dashboard source modules and business logic
-- `frontend/` — dashboard template and generated distribution bundle
-- `home_assistant/custom_components/ha_pool_dashboard/` — Home Assistant backend integration
-- `ha_pool_dashboard/` — Python package and installation helpers
-- `tests/` — JavaScript and Python automated tests
-- `outils/` — bundle generation tools
-- `docs/` — architecture, testing and design documentation
+The interface includes dedicated sections for:
 
-The generated dashboard bundle is:
+- measurement devices;
+- filtration performance;
+- scheduling and equipment actions;
+- heat pump;
+- treatment and dosage;
+- contextual recommendations.
 
-`frontend/dist/pool-dashboard.js`
+See the full interface guide:
 
-## Development
+[Dashboard documentation](docs/user/DASHBOARD.md)
 
-JavaScript tests:
+## Quick start
 
-    npm ci
-    npm test
-    npm run test:smoke
+Pool Cockpit automatically discovers compatible pool analyzers already registered in Home Assistant.
 
-Python tests:
+Before installation, run a diagnostic dry run:
 
-    python -m pytest
+    python3 install_pool_dashboard.py --config /config --theme ocean --dry-run --diagnostic
 
-The build system verifies that the committed distribution bundle matches the source code.
+Then install:
+
+    python3 install_pool_dashboard.py --config /config --theme ocean --yes
+
+On systems where the Home Assistant configuration directory is `/config`, the helper script can also be used:
+
+    ./install.sh
+
+Restart Home Assistant after installation.
+
+## Documentation
+
+### User documentation
+
+- [Installation](docs/user/INSTALLATION.md)
+- [Configuration](docs/user/CONFIGURATION.md)
+- [Dashboard guide](docs/user/DASHBOARD.md)
+
+### Developer documentation
+
+- [Architecture](docs/developer/ARCHITECTURE.md)
+- [Design system](docs/developer/DESIGN_SYSTEM.md)
+- [Business rules](docs/developer/REGLES_METIER.md)
+- [Testing](docs/developer/TESTING.md)
+- [Roadmap](docs/developer/ROADMAP.md)
+
+## Compatible analyzers
+
+Automatic discovery currently supports analyzer families identified as:
+
+- Blue Connect
+- Blueriiot
+- Zodiac-compatible Blue Connect devices
+- Flipr
+
+Pool Cockpit reads the Home Assistant entity and device registries and maps the measurements exposed by compatible devices.
+
+## Themes
+
+Four visual themes are available:
+
+- `ocean`
+- `sky`
+- `night`
+- `auto`
+
+The default theme used by `install.sh` is `ocean`.
+
+## Safety
+
+Pool Cockpit provides monitoring, calculations and contextual recommendations based on Home Assistant data and local configuration.
+
+Treatment recommendations must always be checked against the actual pool conditions and the instructions printed on the products being used.
+
+Equipment controls may be protected or unavailable depending on the configuration and safety rules of the installation.
 
 ## License
 
@@ -64,17 +117,15 @@ The source code is licensed under the **PolyForm Noncommercial License 1.0.0**.
 
 See:
 
-- `LICENSE` — full public license
-- `NOTICE` — copyright notice
-- `COMMERCIAL-LICENSE.md` — commercial licensing information
+- [LICENSE](LICENSE)
+- [NOTICE](NOTICE)
+- [Commercial licensing](COMMERCIAL-LICENSE.md)
 
 ### Commercial use
 
 The public license does **not** grant commercial-use rights.
 
-Commercial use, resale, paid redistribution, inclusion in a commercial
-product or service, or other commercial exploitation requires a separate
-written license from Vincent Fournet.
+Commercial use, resale, paid redistribution, inclusion in a commercial product or service, or other commercial exploitation requires a separate written license from Vincent Fournet.
 
 Access to the public source code does not grant a commercial license.
 
@@ -82,5 +133,4 @@ Access to the public source code does not grant a commercial license.
 
 Pool Cockpit is an independent project for Home Assistant.
 
-Home Assistant and other product or company names mentioned by this
-project remain the property of their respective owners.
+Home Assistant and other product or company names mentioned by this project remain the property of their respective owners.

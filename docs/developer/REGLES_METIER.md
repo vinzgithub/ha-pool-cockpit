@@ -1,8 +1,8 @@
 # Règles métier — HA Pool Dashboard
 
-Ce document rend explicites les règles déjà validées qui concernent les modules
-extraits. Il est complété à chaque étape du refactor sans changer le comportement
-fonctionnel de la référence FIX14.5.3 / v3.0.0.
+Ce document rend explicites les règles métier déjà validées du projet.
+Il est maintenu à jour au fil des évolutions sans modifier les comportements
+fonctionnels garantis par la version publique v3.0.0.
 
 ## RÈGLE FILT-004 — Recommandation indicative
 
@@ -33,7 +33,8 @@ Implémentation actuelle :
 - `src/programmation/prolongation.js`, `lireProlongationPonctuelle()` pour la lecture front sans effet de bord ;
 - `frontend/pool-dashboard.template.js` conserve l’action utilisateur et l’appel backend.
 
-L’étape 3 déplace uniquement la lecture front ; la persistance et l’exécution restent inchangées.
+La lecture frontend est séparée de la persistance et de l’exécution,
+qui restent gérées par le backend.
 
 ## RÈGLE FILT-006 — Anti-double-comptage
 
@@ -174,7 +175,7 @@ Implémentation actuelle :
 - `src/programmation/priorites.js`, `obtenirDerogationPompeActive()` et
   `evaluerPrioriteProgrammation()` ;
 - `home_assistant/custom_components/ha_pool_dashboard/scheduler.py`, stockage et
-  application du forçage — fichier non modifié pendant ce refactor ;
+  application du forçage ;
 - `frontend/pool-dashboard.template.js`, rendu de l'état et bouton de reprise.
 
 Test comportemental : `tests/js/manual_override_priority.test.cjs` — désormais
@@ -190,12 +191,11 @@ métier déterminants dans le moteur adaptatif historique. Le profil Maintenance
 reste hors suivi astronomique automatique.
 
 Le repli historique en cas de date invalide ou de saison inconnue reste le
-profil `summer`, afin de préserver strictement le comportement de FIX14.5.3.
+profil `summer`, afin de préserver le comportement historique attendu.
 
 Implémentation actuelle :
 
-- `src/intelligence/saisons/detecter-saison.js` : détection astronomique déjà
-  existante, non modifiée pendant cette étape ;
+- `src/intelligence/saisons/detecter-saison.js` : détection astronomique ;
 - `src/moteur/saisons.js` : catalogue des cinq profils de référence et mapping
   saison astronomique → profil ;
 - `src/programmation/programme-adaptatif.js` : calcul pur du placement horaire
@@ -214,7 +214,7 @@ le rendu réel et les actions réelles « Reprendre le programme adaptatif » et
 
 Toute normalisation de la configuration PAC force `write_enabled` à `false`,
 quelle que soit la valeur reçue depuis le navigateur, le stockage local ou le
-backend. Aucun mécanisme de cette étape ne peut activer les écritures PAC.
+backend. Aucun mécanisme de cette couche ne peut activer les écritures PAC.
 
 Implémentation actuelle :
 
@@ -222,7 +222,7 @@ Implémentation actuelle :
 - `frontend/pool-dashboard.template.js`, `rc27SanitizeControl()` consomme le
   résultat du module ;
 - `home_assistant/custom_components/ha_pool_dashboard/scheduler.py` conserve son
-  verrou backend historique, non modifié pendant cette étape.
+  verrou backend existant.
 
 Tests directs : `tests/unitaires/securite-pac.test.mjs` et
 `tests/js/pac_write_lock_runtime.test.cjs`.
@@ -292,7 +292,7 @@ Implémentation actuelle :
   `persistTreatmentHistory()` : seuls endroits frontend qui effectuent les
   appels WebSocket du journal ;
 - `home_assistant/custom_components/ha_pool_dashboard/treatment_journal.py` :
-  stockage persistant backend, inchangé pendant l'étape 8 ;
+  stockage persistant backend ;
 - `tests/unitaires/journal-traitement.test.mjs` et
   `tests/js/journal_traitement_runtime.test.cjs` : comportement direct et réel
   du bundle.

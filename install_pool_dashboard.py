@@ -36,7 +36,7 @@ def choose_theme(preselected: str | None) -> str:
         raise SystemExit("Choix invalide.")
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=f"HA Pool Dashboard {__version__}")
+    parser = argparse.ArgumentParser(description=f"Pool Cockpit {__version__}")
     parser.add_argument("--config")
     parser.add_argument("--theme", choices=THEMES)
     parser.add_argument("--dry-run", action="store_true")
@@ -49,7 +49,7 @@ def main() -> int:
     installer = Installer(Path(__file__).resolve().parent, config_dir, __version__)
     plan = installer.plan(theme)
 
-    print(f"\nHA Pool Dashboard {__version__}")
+    print(f"\nPool Cockpit {__version__}")
     print(f"Configuration : {config_dir}")
     print(f"Thème : {theme}")
     print(f"Appareils utiles détectés : {len(plan['devices'])}")
@@ -88,10 +88,10 @@ def main() -> int:
     print("\nInstallation terminée.")
     print(f"Sauvegarde : {result['backup_dir']}")
     print(f"Ressource attendue : /local/ha-pool-dashboard/pool-dashboard.js?v={__version__}")
-    print("RC28.3 installée : activation indépendante de chaque appareil et comportement RC28.2 conservé. Redémarrage Home Assistant requis.")
+    print("Pool Cockpit installé avec succès. Redémarrage Home Assistant requis.")
     return 0
 
 if __name__ == "__main__":
     raise SystemExit(main())
 
-# Beta17.7 assets are stored under frontend/dist/assets and must be copied with the frontend dist directory.
+# Frontend assets are stored under frontend/dist/assets and must be copied with the frontend distribution directory.

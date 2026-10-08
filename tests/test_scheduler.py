@@ -43,7 +43,7 @@ def test_cross_midnight_period_stays_active() -> None:
 def test_installer_adds_scheduler_yaml_once() -> None:
     initial = "default_config:\n"
     installed = ensure_scheduler_yaml(initial)
-    assert "# HA Pool Dashboard RC27 scheduler" in installed
+    assert "# Pool Cockpit scheduler" in installed
     assert installed.count("ha_pool_dashboard:") == 1
     assert ensure_scheduler_yaml(installed) == installed
 

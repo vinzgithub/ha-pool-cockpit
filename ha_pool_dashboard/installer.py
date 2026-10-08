@@ -13,7 +13,7 @@ from .models import PoolDevice
 
 THEMES = ("ocean", "sky", "night", "auto")
 
-SCHEDULER_YAML_MARKER = "# HA Pool Dashboard RC27 scheduler"
+SCHEDULER_YAML_MARKER = "# Pool Cockpit scheduler"
 
 
 def ensure_scheduler_yaml(content: str) -> str:
@@ -106,7 +106,7 @@ class Installer:
                 target_path.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(source_path, target_path)
         if not scheduler_source.exists():
-            raise RuntimeError("Composant de programmation RC28.3 introuvable dans l’archive.")
+            raise RuntimeError("Composant Pool Cockpit introuvable dans l’archive.")
         shutil.copytree(scheduler_source, scheduler_target, dirs_exist_ok=True)
         atomic_write_text(dashboard_target, generate_dashboard(devices, theme, weather))
         configuration = configuration_target.read_text(encoding="utf-8") if configuration_target.exists() else ""
