@@ -4,7 +4,7 @@
 
 ### A modern Home Assistant dashboard for smarter pool monitoring
 
-**Water quality · Filtration · Heating · Lighting · Cameras · Scheduling**
+**Water quality · Filtration pump · Heat pump · Pool lighting · Scheduling**
 
 <br>
 
@@ -86,7 +86,7 @@ Keep heat-pump status and controls visible alongside the rest of your pool equip
 </tr>
 </table>
 
-Pool Cockpit can also surface other compatible Home Assistant equipment — such as **pool lighting** and **camera views** — when those entities are available.
+Pool Cockpit can also integrate compatible Home Assistant equipment such as the **filtration pump**, **heat pump** and **pool lighting** when those entities are available.
 
 ---
 
@@ -110,7 +110,7 @@ Pool Cockpit is designed to feel at home inside Home Assistant rather than looki
 - **Water measurements** including temperature, pH, ORP and conductivity when available
 - **Measurement-device visibility** and confidence information
 - **Filtration monitoring**
-- **Pool equipment integration** — filtration pump, heat pump, lighting and camera views when available
+- **Pool equipment integration** — filtration pump, heat pump and pool lighting when available
 - **Scheduling views**
 - **Treatment-oriented information**
 - **Responsive interface** for different screen sizes
