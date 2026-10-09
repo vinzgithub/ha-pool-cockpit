@@ -20,5 +20,8 @@ assert.equal(aggregate.completeCount, 1);
 assert.equal(runtime.smartConfidence([], aggregate.usableCount, aggregate.activeCount, aggregate.completeCount), 100);
 card.render();
 assert.match(card.shadowRoot.innerHTML, /Mes appareils de mesure/);
-assert.match(card.shadowRoot.innerHTML, /Confiance Élevée/);
+assert.match(
+  card.shadowRoot.innerHTML,
+  /<small>Confiance<\/small><strong>100%<\/strong><em>1 source valide<\/em>/,
+);
 console.log('rc28.3-runtime-ok');

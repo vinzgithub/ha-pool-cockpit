@@ -51,6 +51,24 @@ export function rendreCoquillePrincipaleDashboard({
   typeTraitement,
   assistantExpertHtml,
 }) {
+  const confianceIndisponible =
+    String(libelleConfiance ?? "").trim().toLowerCase() === "indisponible";
+
+  const confianceValeurHero =
+    confianceIndisponible ? "—" : `${confidence}%`;
+
+  const confianceDetailHero =
+    confianceIndisponible
+      ? "Indisponible"
+      : aggregated.activeCount === 1 && confidence === 100
+        ? "1 source valide"
+        : "";
+
+  const sousTitreTemperatureHero =
+    temp.count > 0
+      ? `Température moyenne de l'eau · ${temp.count} appareil${temp.count > 1 ? "s" : ""}`
+      : "Température de l'eau · Aucune mesure disponible";
+
   return `<main class="app ${preferences.compact_mobile?"pref-compact-mobile":""} ${preferences.animations?"":"pref-no-animations"} ${preferences.advanced_measurements?"pref-advanced":""}">
       ${weatherAlertBanner}
       <section class=hero-v2 data-health="${smart.level}">
@@ -71,15 +89,15 @@ export function rendreCoquillePrincipaleDashboard({
               <strong>${titre}</strong>
             </div>
             <div class=hero-v2__temperature>${displayTemp.value}<small>${displayTemp.unit}</small></div>
-            <div class=hero-v2__subtitle>Température moyenne de l'eau · ${temp.count} appareil${temp.count>1?"s":""}</div>
+            <div class=hero-v2__subtitle>${sousTitreTemperatureHero}</div>
             <div class=hero-v2__metrics>
               <article class=hero-v2__metric>
                 <span class=hero-v2__metric-icon>${ICONS.drop}</span>
                 <span><small>pH moyen</small><strong>${aggregated.ph.value}</strong></span>
               </article>
-              <article class=hero-v2__metric>
+              <article class="hero-v2__metric hero-v2__confidence">
                 <span class=hero-v2__metric-icon>${ICONS.shield}</span>
-                <span><small>Confiance ${libelleConfiance}</small><strong>${confidence}%</strong><em>${aggregated.activeCount===1&&confidence===100?"1 source valide":""}</em></span>
+                <span><small>Confiance</small><strong>${confianceValeurHero}</strong><em>${confianceDetailHero}</em></span>
               </article>
               <article class=hero-v2__metric>
                 <span class=hero-v2__metric-icon>${ICONS.device}</span>

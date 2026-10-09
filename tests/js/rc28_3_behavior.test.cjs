@@ -78,8 +78,10 @@ test('la confiance vaut 100 % avec une seule source volontairement active et com
   assert.equal(aggregated.completeCount, 1);
   assert.equal(confidence, 100);
   card.render();
-  assert.match(card.shadowRoot.innerHTML, /Confiance Élevée/);
-  assert.match(card.shadowRoot.innerHTML, /1 source valide/);
+  assert.match(
+    card.shadowRoot.innerHTML,
+    /<small>Confiance<\/small><strong>100%<\/strong><em>1 source valide<\/em>/,
+  );
 });
 
 test('la confiance baisse seulement lorsqu’une source activée est incomplète', () => {

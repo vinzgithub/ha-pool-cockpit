@@ -9,7 +9,7 @@ const VERSION="3.0.1";
 
 /* DÉBUT BLOC GÉNÉRÉ — NE PAS MODIFIER DANS dist/
  * Sources : src/configuration/fonctionnalites.js, src/moteur/filtration.js, src/moteur/saisons.js, src/pac/securite-pac.js, src/pac/commandes-pac.js, src/traitement/produits-dosage.js, src/traitement/journal.js, src/programmation/priorites.js, src/programmation/prolongation.js, src/programmation/programme-adaptatif.js, src/intelligence/eau-meteo/configuration-eau-meteo.js, src/intelligence/eau-meteo/normaliser-entrees-eau-meteo.js, src/intelligence/eau-meteo/regles-eau-meteo.js, src/intelligence/eau-meteo/calculer-score-eau-meteo.js, src/intelligence/confiance-capteurs/calculer-confiance-capteurs.js, src/intelligence/optimisation-energetique/evaluer-heures-creuses.js, src/intelligence/saisons/detecter-saison.js, src/intelligence/pac/evaluer-pac.js, src/intelligence/mode-location/evaluer-mode-location.js, src/adaptateurs/home-assistant/construire-entrees-eau-meteo.js, src/controleurs/evaluer-recommandation-eau-meteo-temps-reel.js, src/interface/themes.js, src/interface/composants/sections-repliables.js, src/interface/composants/selecteurs-entites.js, src/interface/coquille-rendu.js, src/interface/historique-capteurs.js, src/interface/recommandation-eau-meteo/rendre-recommandation-eau-meteo.js, src/interface/carte-filtration.js, src/interface/carte-pac.js, src/interface/carte-traitement.js, src/interface/carte-capteurs.js, src/interface/carte-coordination.js, src/interface/carte-programmation.js, src/interface/assistant-expert/assistant-expert.js, src/interface/assistant-expert/adaptateur-dashboard.js, src/interface/assistant-expert/etat-popup.js, src/interface/gemini/gemini-reformulation.js, src/interface/gemini/controleur-gemini.js
- * Empreinte sources : 0702693d2f254f271d20764a668793d24be4e3a2d791cd7d1752b1f71ec898c3
+ * Empreinte sources : 3914df344caeb2253e96dba03c5e11350e1c5577abd94bd7b8b82ddcde15b4de
  */
 /* Source générée : src/configuration/fonctionnalites.js */
 /*
@@ -2886,6 +2886,24 @@ function rendreCoquillePrincipaleDashboard({
   typeTraitement,
   assistantExpertHtml,
 }) {
+  const confianceIndisponible =
+    String(libelleConfiance ?? "").trim().toLowerCase() === "indisponible";
+
+  const confianceValeurHero =
+    confianceIndisponible ? "—" : `${confidence}%`;
+
+  const confianceDetailHero =
+    confianceIndisponible
+      ? "Indisponible"
+      : aggregated.activeCount === 1 && confidence === 100
+        ? "1 source valide"
+        : "";
+
+  const sousTitreTemperatureHero =
+    temp.count > 0
+      ? `Température moyenne de l'eau · ${temp.count} appareil${temp.count > 1 ? "s" : ""}`
+      : "Température de l'eau · Aucune mesure disponible";
+
   return `<main class="app ${preferences.compact_mobile?"pref-compact-mobile":""} ${preferences.animations?"":"pref-no-animations"} ${preferences.advanced_measurements?"pref-advanced":""}">
       ${weatherAlertBanner}
       <section class=hero-v2 data-health="${smart.level}">
@@ -2906,15 +2924,15 @@ function rendreCoquillePrincipaleDashboard({
               <strong>${titre}</strong>
             </div>
             <div class=hero-v2__temperature>${displayTemp.value}<small>${displayTemp.unit}</small></div>
-            <div class=hero-v2__subtitle>Température moyenne de l'eau · ${temp.count} appareil${temp.count>1?"s":""}</div>
+            <div class=hero-v2__subtitle>${sousTitreTemperatureHero}</div>
             <div class=hero-v2__metrics>
               <article class=hero-v2__metric>
                 <span class=hero-v2__metric-icon>${ICONS.drop}</span>
                 <span><small>pH moyen</small><strong>${aggregated.ph.value}</strong></span>
               </article>
-              <article class=hero-v2__metric>
+              <article class="hero-v2__metric hero-v2__confidence">
                 <span class=hero-v2__metric-icon>${ICONS.shield}</span>
-                <span><small>Confiance ${libelleConfiance}</small><strong>${confidence}%</strong><em>${aggregated.activeCount===1&&confidence===100?"1 source valide":""}</em></span>
+                <span><small>Confiance</small><strong>${confianceValeurHero}</strong><em>${confianceDetailHero}</em></span>
               </article>
               <article class=hero-v2__metric>
                 <span class=hero-v2__metric-icon>${ICONS.device}</span>
@@ -8380,7 +8398,7 @@ class PoolDashboardCard extends HTMLElement{
         }
         .hero-label{
           margin-top:4px!important;
-          font-size:.74rem!important;
+          font-size:.71rem!important;
           line-height:1.2!important;
         }
         .smart-grid{
@@ -12912,6 +12930,16 @@ class PoolDashboardCard extends HTMLElement{
       .hero-v2__metric>span:last-child{
         display:block!important;
         min-width:0!important;
+        max-width:100%!important;
+      }
+
+      .hero-v2__metric small,
+      .hero-v2__metric strong,
+      .hero-v2__metric em{
+        max-width:100%!important;
+        overflow-wrap:normal!important;
+        word-break:normal!important;
+        hyphens:none!important;
       }
 
       .hero-v2__metric-icon{
@@ -13182,41 +13210,58 @@ class PoolDashboardCard extends HTMLElement{
 
         .hero-v2__metrics{
           grid-template-columns:repeat(4,minmax(0,1fr))!important;
-          gap:16px!important;
+          gap:12px!important;
           margin-top:auto!important;
         }
 
         .hero-v2__metric{
-          min-height:112px!important;
-          padding:17px 18px!important;
-          gap:15px!important;
+          min-height:108px!important;
+          padding:14px 13px 14px 11px!important;
+          gap:7px!important;
           border-radius:23px!important;
         }
 
         .hero-v2__metric-icon{
-          width:58px!important;
-          height:58px!important;
+          width:42px!important;
+          height:42px!important;
         }
 
         .hero-v2__metric-icon svg{
-          width:32px!important;
-          height:32px!important;
+          width:23px!important;
+          height:23px!important;
         }
 
         .hero-v2__metric small{
-          font-size:.79rem!important;
+          font-size:.69rem!important;
+          line-height:1.18!important;
         }
 
         .hero-v2__metric strong{
-          margin-top:7px!important;
-          font-size:1.17rem!important;
-          line-height:1.08!important;
+          margin-top:5px!important;
+          font-size:.94rem!important;
+          line-height:1.10!important;
+          white-space:nowrap!important;
         }
 
         .hero-v2__metric em{
-          margin-top:6px!important;
-          font-size:.98rem!important;
-          font-weight:750!important;
+          margin-top:4px!important;
+          font-size:.74rem!important;
+          line-height:1.12!important;
+          font-weight:700!important;
+          white-space:nowrap!important;
+        }
+
+        /* Valeurs longues : conserver une vraie marge visuelle à droite */
+        .hero-v2__confidence em{
+          font-size:.66rem!important;
+        }
+
+        .hero-v2__weather strong{
+          font-size:.87rem!important;
+        }
+
+        .hero-v2__weather em{
+          font-size:.68rem!important;
         }
 
         .hero-v2__score{

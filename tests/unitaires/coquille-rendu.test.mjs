@@ -106,3 +106,26 @@ test("SEC-000 : la coquille ne lit ni Home Assistant, ni DOM, ni stockage, ni AP
   const entree=Object.assign(Object.create(prototypeHostile),modele());
   assert.doesNotThrow(()=>rendreCoquillePrincipaleDashboard(entree));
 });
+
+test("le hero présente proprement un Home Assistant sans données de piscine",()=>{
+  const html=rendreCoquillePrincipaleDashboard(modele({
+    displayTemp:{value:"—",unit:""},
+    temp:{count:0,unit:"°C"},
+    aggregated:{
+      ph:{value:"—",number:null},
+      orp:{value:"—",number:null},
+      activeCount:0,
+    },
+    libelleConfiance:"Indisponible",
+    confidence:0,
+    enabledCount:0,
+    nombreAppareils:1,
+  }));
+
+  assert.match(html,/Température de l'eau · Aucune mesure disponible/);
+  assert.match(html,/<small>Confiance<\/small><strong>—<\/strong><em>Indisponible<\/em>/);
+
+  assert.doesNotMatch(html,/Température moyenne de l'eau · 0 appareil/);
+  assert.doesNotMatch(html,/Confiance Indisponible/);
+  assert.doesNotMatch(html,/<small>Confiance<\/small><strong>0%<\/strong>/);
+});

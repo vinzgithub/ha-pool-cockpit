@@ -23,8 +23,8 @@ e1b8badff148e91f736bbdf4bb36e56d5e23c20bbaaabec4c590bbdcc637b23e  ./docs/user/DA
 82461868834ae60e5b08b168697f04a0cc024a3ca1cbf984c469207dfc83902e  ./frontend/dist/assets/pool-dashboard-background-beta25-2.png
 4797242154265f46afea892ba74e887d7c70888d295648769edf976b01bce199  ./frontend/dist/assets/pool-dashboard-background-beta25-2.webp
 cfc12f801afea2260c703268a53cd86d573ec598707e61620958c212075e92f6  ./frontend/dist/hero-ocean.svg
-ae61816e16ed23fda84be1123030bb91a8662f1ffed403089838647f141f9545  ./frontend/dist/pool-dashboard.js
-4058e6e7ea9ed20da83e766146ce5dc136d646af816e94f7e3fd8ab4cfe1bfc2  ./frontend/pool-dashboard.template.js
+70ec1a473c0de8e47abc90d655d196bbedb055d390dc00061371fd77b51ed2ff  ./frontend/dist/pool-dashboard.js
+9df57decb743b1b22fb91a719df29c5b4059a387b569f5e15b6edf6ccb91a908  ./frontend/pool-dashboard.template.js
 138fc0273942a9f3ab78f79e450ff0c3ad7fde183f810e0da6c7e16dfaf7962e  ./ha_pool_dashboard/__init__.py
 b604dc3ce0786498c2b0d6b93c8d991c9ff3f5d022da23cab1080efb47cb902a  ./ha_pool_dashboard/backup.py
 0e7c5b16337197a536df55a90f6990fdd60065e9d878ced351f1270060e08675  ./ha_pool_dashboard/dashboard_generator.py
@@ -76,7 +76,7 @@ a88986058d7e9b82a8ada630e70283e2a5bd3073fc450b72bb72a46212e5dd6e  ./src/interfac
 4d48a895c6f891ef287a785cc60675e8cfb4b8c1a634050dd5da293235e3239a  ./src/interface/carte-traitement.js
 f4d35c40c8abdf13e774ae91a2691e411de6bb38672197d9a937634134d70c4c  ./src/interface/composants/sections-repliables.js
 137f6a167aa032c2c205309a2ddb6e65153fa316e9fcf97655b64c4204362e7f  ./src/interface/composants/selecteurs-entites.js
-77467f913f4b26f549d48436a4030ed388f5de5db1171bc9742064bd39e92232  ./src/interface/coquille-rendu.js
+c79b1e19b4063a86fae14c3debdb2bbd160375f7451d9d89320a8501ddd2d0d5  ./src/interface/coquille-rendu.js
 06d1ca7920088ab97de6285684d4dfbddd1ee9eb9dc95f8eb25b311b65ab13ef  ./src/interface/gemini/controleur-gemini.js
 902dcba09d87ddaa532d78045d22fc2dcb767a7096b1add71da80f19f0b1a0a4  ./src/interface/gemini/gemini-reformulation.js
 ce8b27d4b938ceebcc2d449ff56720ebe0dad371f0a0d50d7848c3764b655906  ./src/interface/historique-capteurs.js
@@ -130,14 +130,14 @@ d65f6d1edc08f2c040194d4da56021dc75d6248e6b11f192733bf5d8ce318317  ./tests/js/pac
 3a0d7bb65a728dfe8ccad0e26aa3d7ec1b0808585a8ca670354556a4dab6823f  ./tests/js/products_fix14_5.test.cjs
 20e98cfbf32d2f5aa569a93fa8d08d2d144bef28df0c2c57a64225ca1fad8028  ./tests/js/produits_dosage_runtime.test.cjs
 2b4aa07236d0e512b50e047334130539ac4c8e878cfdd6a4ea87f33592a6b5d1  ./tests/js/programme_adaptatif_runtime.test.cjs
-8f6ca874587d55d6ba2ff169d4266bbca3a489ad58359febe2e7c4bebdb1e10c  ./tests/js/rc28_3_behavior.test.cjs
+1181c0216459ef4b2821b8d23678f4920f720fa7a0ce869ec0ad5944dd342835  ./tests/js/rc28_3_behavior.test.cjs
 b3056bf120f75fa62a92064234a03ad3d0ece29d19202a9e791c9615b973257e  ./tests/js/rc28_4_etape2.test.cjs
 c418b5779d873dd5aa3d73a699e5f084ee7c3e3ddf0d8a199e326a009d547eff  ./tests/js/rc30_light_profiles.test.cjs
 5d554ae86a29ce68aa10805cdfa9edefbf19166866eb75b5f87f1b08cb27e0cb  ./tests/js/sections_repliables_runtime.test.cjs
 25f2848ca7dc4b6969d2a65513f6a77d0fba272efb978a4e636ebf360a768735  ./tests/js/selecteurs_entites_runtime.test.cjs
 0189dbb0227c3d95c63c40418cdeab150bcdc6f96ba22d71a2afca22d2d2fbc2  ./tests/js/themes_runtime.test.cjs
 8da368172b8c70e85c18afce25857e687617432f427cd0bd97235c35c77d41aa  ./tests/jsdom/rendu-recommandation-eau-meteo.test.mjs
-78654745fc08d7e0f2de71056028f4235571aada8bf3c3e0d7d9d3a31bbd4334  ./tests/runtime_rc28_3_smoke.js
+a5aa33b81a94fcb257f0485954566e820da0641bff4c1de3af855627df30de53  ./tests/runtime_rc28_3_smoke.js
 98e3a448f291f75317c08ac4ed046b21e0aa4bf2292e4ac13e392fc731305e9a  ./tests/test_dashboard.py
 dad23d74e74564d8b3c369a9b51c5728dd2e422d96b268d14a11ef261182c1cb  ./tests/test_discovery.py
 7e6f8e791fd1cbb077331ec4e160085ea313f46a9a1357b19bdb66979720f1b9  ./tests/test_dual_ha_static.py
@@ -163,7 +163,7 @@ d740840f490027e0df6f1eded9bd09e38be384d4bf98799778083f38dc6a0b78  ./tests/unitai
 d2ffadac549d23c1939b5c0d697e839a713332dd6f888c14b375227d98b1e8af  ./tests/unitaires/commandes-pac.test.mjs
 ddc8364cef2cfcf5ecc0f39d0b1813a1721145a0978091342b539e008bea21ed  ./tests/unitaires/confiance-capteurs.test.mjs
 571576a645fecf5ffabf96a2efe2c12b752bba5f011e77ec53faf66df3c66663  ./tests/unitaires/controleur-eau-meteo-temps-reel.test.mjs
-8f91ff407ac9386e04687ae59f3048859e8660a8f66878291999132547624ad9  ./tests/unitaires/coquille-rendu.test.mjs
+1aa69249b16c44730f58f59f48a5f562fd7cd1d96bacf1591f1bb8213a135703  ./tests/unitaires/coquille-rendu.test.mjs
 0c7759bf858410f93527e284d2194fb48b7141794a28a859aeb116267c6f1629  ./tests/unitaires/filtration.test.mjs
 d386e16daad379fb7242a1ebd93551242e9d2dd94a928f34a1275a49063a66fb  ./tests/unitaires/gemini-controleur.test.mjs
 72f15b7146e36a57bf9201090d48fb82d48083266abbf89077a464929893cc9c  ./tests/unitaires/gemini-reformulation.test.mjs

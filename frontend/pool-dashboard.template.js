@@ -3219,7 +3219,7 @@ class PoolDashboardCard extends HTMLElement{
         }
         .hero-label{
           margin-top:4px!important;
-          font-size:.74rem!important;
+          font-size:.71rem!important;
           line-height:1.2!important;
         }
         .smart-grid{
@@ -7751,6 +7751,16 @@ class PoolDashboardCard extends HTMLElement{
       .hero-v2__metric>span:last-child{
         display:block!important;
         min-width:0!important;
+        max-width:100%!important;
+      }
+
+      .hero-v2__metric small,
+      .hero-v2__metric strong,
+      .hero-v2__metric em{
+        max-width:100%!important;
+        overflow-wrap:normal!important;
+        word-break:normal!important;
+        hyphens:none!important;
       }
 
       .hero-v2__metric-icon{
@@ -8021,41 +8031,58 @@ class PoolDashboardCard extends HTMLElement{
 
         .hero-v2__metrics{
           grid-template-columns:repeat(4,minmax(0,1fr))!important;
-          gap:16px!important;
+          gap:12px!important;
           margin-top:auto!important;
         }
 
         .hero-v2__metric{
-          min-height:112px!important;
-          padding:17px 18px!important;
-          gap:15px!important;
+          min-height:108px!important;
+          padding:14px 13px 14px 11px!important;
+          gap:7px!important;
           border-radius:23px!important;
         }
 
         .hero-v2__metric-icon{
-          width:58px!important;
-          height:58px!important;
+          width:42px!important;
+          height:42px!important;
         }
 
         .hero-v2__metric-icon svg{
-          width:32px!important;
-          height:32px!important;
+          width:23px!important;
+          height:23px!important;
         }
 
         .hero-v2__metric small{
-          font-size:.79rem!important;
+          font-size:.69rem!important;
+          line-height:1.18!important;
         }
 
         .hero-v2__metric strong{
-          margin-top:7px!important;
-          font-size:1.17rem!important;
-          line-height:1.08!important;
+          margin-top:5px!important;
+          font-size:.94rem!important;
+          line-height:1.10!important;
+          white-space:nowrap!important;
         }
 
         .hero-v2__metric em{
-          margin-top:6px!important;
-          font-size:.98rem!important;
-          font-weight:750!important;
+          margin-top:4px!important;
+          font-size:.74rem!important;
+          line-height:1.12!important;
+          font-weight:700!important;
+          white-space:nowrap!important;
+        }
+
+        /* Valeurs longues : conserver une vraie marge visuelle à droite */
+        .hero-v2__confidence em{
+          font-size:.66rem!important;
+        }
+
+        .hero-v2__weather strong{
+          font-size:.87rem!important;
+        }
+
+        .hero-v2__weather em{
+          font-size:.68rem!important;
         }
 
         .hero-v2__score{
