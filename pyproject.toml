@@ -1,6 +1,6 @@
 [project]
 name = "ha-pool-cockpit"
-version = "3.0.1"
+version = "3.0.2"
 description = "Advanced swimming pool monitoring, analytics and control for Home Assistant."
 readme = "README.md"
 requires-python = ">=3.10"

@@ -1,7 +1,7 @@
 {
   "name": "ha-pool-cockpit",
   "private": true,
-  "version": "3.0.1",
+  "version": "3.0.2",
   "scripts": {
     "test": "npm run build:check && npm run test:dashboard && npm run test:intelligence && npm run test:interface && npm run test:build",
     "test:interface": "node --test tests/jsdom/*.test.mjs",

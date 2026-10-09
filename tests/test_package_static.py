@@ -8,8 +8,8 @@ import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION_DEPOT = "3.0.1"
-VERSION_BUNDLE_GELE = "3.0.1"
+VERSION_DEPOT = "3.0.2"
+VERSION_BUNDLE_GELE = "3.0.2"
 RESOURCE = f"/local/ha-pool-dashboard/pool-dashboard.js?v={VERSION_BUNDLE_GELE}"
 
 

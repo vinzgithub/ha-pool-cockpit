@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
  */
 
-const VERSION="3.0.1";
+const VERSION="3.0.2";
 
 
 
