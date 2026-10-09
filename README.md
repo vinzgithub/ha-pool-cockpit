@@ -4,7 +4,7 @@
 
 ### A modern Home Assistant dashboard for smarter pool monitoring
 
-**Water quality · Filtration · Heating · Scheduling · Equipment**
+**Water quality · Filtration · Heating · Lighting · Cameras · Scheduling**
 
 <br>
 
@@ -24,7 +24,7 @@
 
 Pool Cockpit turns Home Assistant into a clear and modern control center for your pool.
 
-Instead of jumping between sensors, entities and dashboards, Pool Cockpit brings the essential information together in one interface: water measurements, equipment status, filtration, heating, scheduling and treatment guidance.
+Instead of jumping between sensors, entities and dashboards, Pool Cockpit brings the essential information together in one interface: water measurements, pool equipment, scheduling and treatment guidance.
 
 The goal is simple: **understand the state of your pool at a glance.**
 
@@ -59,7 +59,7 @@ Keep an eye on connected measurement devices and their current availability.
 
 ---
 
-## ⚙️ Control the equipment
+## ⚙️ Pool equipment at a glance
 
 <table>
 <tr>
@@ -70,7 +70,7 @@ Keep an eye on connected measurement devices and their current availability.
 <img src="docs/images/filtration.png"
      alt="Pool Cockpit filtration">
 
-A dedicated view for filtration status and operation.
+Monitor filtration status and operation, including the filtration pump when exposed in Home Assistant.
 
 </td>
 <td width="50%" valign="top">
@@ -80,11 +80,13 @@ A dedicated view for filtration status and operation.
 <img src="docs/images/heat-pump.png"
      alt="Pool Cockpit heat pump">
 
-Pool heating information integrated directly into the dashboard.
+Keep heat-pump status and controls visible alongside the rest of your pool equipment.
 
 </td>
 </tr>
 </table>
+
+Pool Cockpit can also surface other compatible Home Assistant equipment — such as **pool lighting** and **camera views** — when those entities are available.
 
 ---
 
@@ -108,7 +110,7 @@ Pool Cockpit is designed to feel at home inside Home Assistant rather than looki
 - **Water measurements** including temperature, pH, ORP and conductivity when available
 - **Measurement-device visibility** and confidence information
 - **Filtration monitoring**
-- **Heat-pump monitoring**
+- **Pool equipment integration** — filtration pump, heat pump, lighting and camera views when available
 - **Scheduling views**
 - **Treatment-oriented information**
 - **Responsive interface** for different screen sizes
