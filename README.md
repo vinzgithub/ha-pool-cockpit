@@ -1,254 +1,107 @@
 <div align="center">
 
-# 🏊 Pool Cockpit
+<img src="release/assets/pool-cockpit-v4-logo.png" alt="Pool Cockpit" width="128" />
 
-### A modern Home Assistant dashboard for smarter pool monitoring
+# Pool Cockpit V4
 
-**Water quality · Filtration pump · Heat pump · Pool lighting · Scheduling**
+### Your pool. One elegant cockpit.
 
-<br>
+**A premium Home Assistant experience for monitoring, understanding and controlling your pool.**
 
-<img src="docs/images/dashboard-overview.png"
-     alt="Pool Cockpit dashboard overview"
-     width="100%">
+![Status](https://img.shields.io/badge/status-release%20candidate-0d7ddc?style=flat-square) ![Version](https://img.shields.io/badge/version-v4.0.0--rc.1-083657?style=flat-square) ![Home Assistant](https://img.shields.io/badge/platform-Home%20Assistant-41BDF5?style=flat-square) ![Languages](https://img.shields.io/badge/languages-9-0f766e?style=flat-square)
 
-<br><br>
-
-**Designed for Home Assistant · Local-first · Responsive · Open source for non-commercial use**
+*Designed for clarity. Built around real pool telemetry.*
 
 </div>
 
 ---
 
-## ✨ Your pool. One cockpit.
+## A new perspective on your pool
 
-Pool Cockpit turns Home Assistant into a clear and modern control center for your pool.
+Pool Cockpit V4 brings a redesigned, responsive interface to Home Assistant. Instead of navigating a collection of raw entities, you get an integrated cockpit built around water condition, relevant advice, measurement sources, equipment and scheduling.
 
-Instead of jumping between sensors, entities and dashboards, Pool Cockpit brings the essential information together in one interface: water measurements, pool equipment, scheduling and treatment guidance.
+> **Release Candidate 1 — not a stable release.** The V4 interface is ready for release-candidate testing; full end-to-end validation, translations of some dynamic V3 messages and hardware-specific behavior still require verification.
 
-The goal is simple: **understand the state of your pool at a glance.**
+## Explore V4
 
----
+| Space | Purpose |
+| :--- | :--- |
+| **Overview** | Water status, essential indicators, global score, analysis progress, quick actions and weather |
+| **Water** | Core water-quality metrics and expert insight |
+| **Advice** | Contextual recommendations and next actions |
+| **Measurements** | Sources, health, freshness and monitoring details |
+| **Equipment** | Detailed pump, heat pump and lighting controls |
+| **Planning** | Equipment schedules and operational configuration |
+| **History** | Trends, charts and historical readings |
 
-## 🌊 See what matters instantly
+### Designed for the everyday
 
-<table>
-<tr>
-<td width="50%" valign="top">
+- **Ocean-inspired visual system** — refined translucent cards, consistent branding, coherent typography and responsive layouts.
+- **Glanceable quick controls** — compact circular actions for pump, heat pump and lighting with state feedback; existing safety rules and command handlers remain authoritative.
+- **Analysis feedback** — contextual status and a discreet progress indicator; no invented percentage of completion.
+- **Nine interface languages** — French, English, German, Spanish, Brazilian Portuguese, Italian, Dutch, Japanese and Simplified Chinese. *Translation coverage is still being refined during RC testing.*
+- **Native Home Assistant integration** — uses your configured entities and installed backend; this front-end package does not replace your existing automation logic.
 
-### 🧪 Water treatment
+## RC1 installation
 
-<img src="docs/images/treatment.png"
-     alt="Pool Cockpit water treatment">
+> **Release Candidate — frontend preview.**
+> Requires an existing compatible Pool Cockpit installation.
+> The stable V3 dashboard must remain unchanged.
 
-Monitor the information that matters for water balance and treatment from a single view.
+The tested V4 frontend is available in `release/v4-rc1/`.
 
-</td>
-<td width="50%" valign="top">
+### Included files
 
-### 📡 Measurement devices
+- `pool-dashboard-v4-test.js` — V4 RC1 frontend bundle.
+- `pool-cockpit-v4-logo.png` — official dashboard logo.
 
-<img src="docs/images/measurement-devices.png"
-     alt="Pool Cockpit measurement devices">
+### Verify integrity
 
-Keep an eye on connected measurement devices and their current availability.
+Run `sha256sum release/v4-rc1/*`.
 
-</td>
-</tr>
-</table>
+Expected JavaScript SHA-256:
+`49a5faf55bc3850232b97c996832c7cf85a94cdea253c802c8011edfeb13578c`
 
----
+### Install
 
-## ⚙️ Pool equipment at a glance
+Back up the existing V4 test resource before replacing it.
 
-<table>
-<tr>
-<td width="50%" valign="top">
+Destination: `/home/homeassistant/config/www/ha-pool-dashboard/`
 
-### 💧 Filtration
+Copy the JavaScript bundle and logo from `release/v4-rc1/`
+to this destination.
 
-<img src="docs/images/filtration.png"
-     alt="Pool Cockpit filtration">
+Configure Lovelace resource type as **JavaScript module**.
 
-Monitor filtration status and operation, including the filtration pump when exposed in Home Assistant.
+Resource URL:
+`/local/ha-pool-dashboard/pool-dashboard-v4-test.js?v=v4.0.0-rc.1`
 
-</td>
-<td width="50%" valign="top">
+Refresh the browser and validate the V4 dashboard.
 
-### 🔥 Heat pump
+**Rollback:** restore the previous V4 test JavaScript.
+Never replace the stable V3 resource.
 
-<img src="docs/images/heat-pump.png"
-     alt="Pool Cockpit heat pump">
+> The RC1 frontend and the repository's source-built bundle
+> are currently distinct artifacts. Source reconciliation is
+> required before the final V4 release.
 
-Keep heat-pump status and controls visible alongside the rest of your pool equipment.
+## Reliability and safety
 
-</td>
-</tr>
-</table>
+V4 is an interface layer, not a replacement for Home Assistant's authority over device state. Pump, heat-pump and lighting operations must continue to follow the pre-existing command handlers, device states and safety guards. Before enabling hardware controls, validate every entity mapping and test stop/start behavior locally.
 
-Pool Cockpit can also integrate compatible Home Assistant equipment such as the **filtration pump**, **heat pump** and **pool lighting** when those entities are available.
+**Never commit** tokens, HA secrets, `secrets.yaml`, device credentials, personal telemetry exports or environment-specific private configuration.
 
----
+## RC1 known limitations
 
-## 🗓️ Plan instead of guessing
+- Some dynamic domain-specific text inherited from the V3 engine may remain untranslated.
+- Nine-locale catalog checks confirm key presence, **not** complete translation quality.
+- Automated syntax/integrity checks do not replace functional tests across all pages, themes, browsers and devices.
+- The bundle is a release artifact; the original modular source tree is **not** included in this distribution.
 
-<img src="docs/images/scheduling.png"
-     alt="Pool Cockpit scheduling"
-     width="100%">
+## Project principles
 
-Pool Cockpit brings scheduling information into the same interface so that monitoring and operation stay easy to understand.
-
----
-
-## 🚀 Built for Home Assistant
-
-Pool Cockpit is designed to feel at home inside Home Assistant rather than looking like an external application pasted on top of it.
-
-### Highlights
-
-- **Modern dashboard UI** designed specifically for pool monitoring
-- **Water measurements** including temperature, pH, ORP and conductivity when available
-- **Measurement-device visibility** and confidence information
-- **Filtration monitoring**
-- **Pool equipment integration** — filtration pump, heat pump and pool lighting when available
-- **Scheduling views**
-- **Treatment-oriented information**
-- **Responsive interface** for different screen sizes
-- **Graceful unavailable states** when measurements are temporarily missing
-- **Automatic Lovelace setup** during installation
-- **Local-first architecture**
+**Clarity over clutter.** Real data over simulated status. Safety over convenience. Progressive improvement without destabilizing a working installation.
 
 ---
 
-## 🎨 Designed to stay readable
-
-Pool conditions are not always perfect — and sensors are not always available.
-
-Pool Cockpit is designed to remain useful even when measurements disappear temporarily. Missing values are presented clearly instead of being confused with real measurements such as `0%`.
-
-The interface adapts its presentation so the dashboard remains clean, balanced and easy to read.
-
----
-
-## 📦 Installation
-
-Pool Cockpit includes an installer that prepares the required Home Assistant dashboard resources and Lovelace configuration.
-
-After installation, Pool Cockpit appears as its own dashboard inside Home Assistant.
-
-> Before installing or upgrading, always keep a backup of your Home Assistant configuration.
-
----
-
-## 🔌 Measurement sources
-
-Pool Cockpit works with Home Assistant entities and can aggregate compatible pool measurement data exposed by integrations.
-
-Typical measurements include:
-
-| Measurement | Example |
-|---|---|
-| 🌡️ Water temperature | °C |
-| 🧪 pH | pH |
-| ⚡ ORP | mV |
-| 💧 Conductivity | µS/cm |
-| 🧂 Salinity | when available |
-| 🔋 Battery | when available |
-| 📶 Connectivity | when available |
-
-The dashboard is designed so that unavailable measurements do not break the overall presentation.
-
----
-
-## 🏠 Built around Home Assistant
-
-Pool Cockpit does not try to replace Home Assistant.
-
-It provides a dedicated pool-oriented interface on top of your existing Home Assistant environment, while keeping the underlying entities, automations and integrations under your control.
-
----
-
-## 📸 Gallery
-
-<table>
-<tr>
-<td width="50%">
-<img src="docs/images/dashboard-overview.png" alt="Dashboard overview">
-</td>
-<td width="50%">
-<img src="docs/images/treatment.png" alt="Water treatment">
-</td>
-</tr>
-<tr>
-<td align="center"><b>Dashboard overview</b></td>
-<td align="center"><b>Water treatment</b></td>
-</tr>
-
-<tr>
-<td width="50%">
-<img src="docs/images/filtration.png" alt="Filtration">
-</td>
-<td width="50%">
-<img src="docs/images/heat-pump.png" alt="Heat pump">
-</td>
-</tr>
-<tr>
-<td align="center"><b>Filtration</b></td>
-<td align="center"><b>Heat pump</b></td>
-</tr>
-
-<tr>
-<td width="50%">
-<img src="docs/images/measurement-devices.png" alt="Measurement devices">
-</td>
-<td width="50%">
-<img src="docs/images/scheduling.png" alt="Scheduling">
-</td>
-</tr>
-<tr>
-<td align="center"><b>Measurement devices</b></td>
-<td align="center"><b>Scheduling</b></td>
-</tr>
-</table>
-
----
-
-## 🛡️ License & copyright
-
-**Copyright © 2026 Vincent Fournet.**
-
-The source code is licensed under the **PolyForm Noncommercial License 1.0.0**.
-
-See:
-
-- [LICENSE](LICENSE)
-- [NOTICE](NOTICE)
-- [Commercial licensing](COMMERCIAL-LICENSE.md)
-
-### Commercial use
-
-The public license does **not** grant commercial-use rights.
-
-Commercial use, resale, paid redistribution, inclusion in a commercial product or service, or other commercial exploitation requires a separate written license from Vincent Fournet.
-
-**Access to the public source code does not grant a commercial license.**
-
----
-
-## ℹ️ Disclaimer
-
-Pool Cockpit is an independent project for Home Assistant.
-
-Home Assistant and other product or company names mentioned by this project remain the property of their respective owners.
-
----
-
-<div align="center">
-
-### 🏊 Pool Cockpit
-
-**A clearer view of your pool.**
-
-Copyright © 2026 Vincent Fournet
-
-</div>
+<div align="center"><sub>Pool Cockpit V4 • Release Candidate 1 • Built for Home Assistant</sub></div>
