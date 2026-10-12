@@ -1,107 +1,78 @@
 <div align="center">
 
-<img src="release/assets/pool-cockpit-v4-logo.png" alt="Pool Cockpit" width="128" />
+# 🌊 Pool Cockpit V4 — Release Candidate 1
 
-# Pool Cockpit V4
+**Your pool. One elegant cockpit.**  
+*A modern Home Assistant dashboard for smarter pool monitoring, analysis and control.*
 
-### Your pool. One elegant cockpit.
+[**English**](README.md) · [**Français**](README.fr.md)
 
-**A premium Home Assistant experience for monitoring, understanding and controlling your pool.**
+![Release Candidate](https://img.shields.io/badge/release-v4.0.0--rc.1-177ed7) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-dashboard-41BDF5) ![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-0d355d)
 
-![Status](https://img.shields.io/badge/status-release%20candidate-0d7ddc?style=flat-square) ![Version](https://img.shields.io/badge/version-v4.0.0--rc.1-083657?style=flat-square) ![Home Assistant](https://img.shields.io/badge/platform-Home%20Assistant-41BDF5?style=flat-square) ![Languages](https://img.shields.io/badge/languages-9-0f766e?style=flat-square)
+![Pool Cockpit V4 promotional hero](docs/images/v4-rc1/hero-en.webp)
 
-*Designed for clarity. Built around real pool telemetry.*
+<sub>Promotional illustration inspired by the V4 interface; see actual screenshots below.</sub>
 
 </div>
 
----
+## See the real interface
 
-## A new perspective on your pool
+The Ocean interface brings water quality, recommendations, monitoring and equipment control into seven connected views. The following images are **real application screenshots**, not generated marketing renders.
 
-Pool Cockpit V4 brings a redesigned, responsive interface to Home Assistant. Instead of navigating a collection of raw entities, you get an integrated cockpit built around water condition, relevant advice, measurement sources, equipment and scheduling.
+### Overview
 
-> **Release Candidate 1 — not a stable release.** The V4 interface is ready for release-candidate testing; full end-to-end validation, translations of some dynamic V3 messages and hardware-specific behavior still require verification.
+![Actual V4 Overview dashboard](docs/images/v4-rc1/overview.webp)
 
-## Explore V4
+### Water · Advice · Measurements
 
-| Space | Purpose |
-| :--- | :--- |
-| **Overview** | Water status, essential indicators, global score, analysis progress, quick actions and weather |
-| **Water** | Core water-quality metrics and expert insight |
-| **Advice** | Contextual recommendations and next actions |
-| **Measurements** | Sources, health, freshness and monitoring details |
-| **Equipment** | Detailed pump, heat pump and lighting controls |
-| **Planning** | Equipment schedules and operational configuration |
-| **History** | Trends, charts and historical readings |
+| Water quality | Contextual advice |
+|:---:|:---:|
+| ![V4 Water screen](docs/images/v4-rc1/water.webp) | ![V4 Advice screen](docs/images/v4-rc1/advice.webp) |
 
-### Designed for the everyday
+![V4 measurement sources and status](docs/images/v4-rc1/measurements.webp)
 
-- **Ocean-inspired visual system** — refined translucent cards, consistent branding, coherent typography and responsive layouts.
-- **Glanceable quick controls** — compact circular actions for pump, heat pump and lighting with state feedback; existing safety rules and command handlers remain authoritative.
-- **Analysis feedback** — contextual status and a discreet progress indicator; no invented percentage of completion.
-- **Nine interface languages** — French, English, German, Spanish, Brazilian Portuguese, Italian, Dutch, Japanese and Simplified Chinese. *Translation coverage is still being refined during RC testing.*
-- **Native Home Assistant integration** — uses your configured entities and installed backend; this front-end package does not replace your existing automation logic.
+### Equipment · Planning
 
-## RC1 installation
+| Equipment controls | Scheduling |
+|:---:|:---:|
+| ![V4 Equipment screen](docs/images/v4-rc1/equipment.webp) | ![V4 Planning screen](docs/images/v4-rc1/planning.webp) |
 
-> **Release Candidate — frontend preview.**
-> Requires an existing compatible Pool Cockpit installation.
-> The stable V3 dashboard must remain unchanged.
+**History** is also one of the seven V4 views; an up-to-date screenshot will be added after final validation.
 
-The tested V4 frontend is available in `release/v4-rc1/`.
+## What V4 offers
 
-### Included files
+- **Ocean-inspired UI:** immersive background, translucent surfaces and consistent typography.
+- **Water awareness:** temperature, pH, ORP, confidence and contextual status.
+- **Compact quick controls:** pump, heat pump and pool lighting, subject to existing safety rules.
+- **Actionable advice:** measurements, recommendations and maintenance prompts.
+- **Analysis feedback:** contextual progress states without fabricated completion percentages.
+- **Nine language options:** French, English, German, Spanish, Brazilian Portuguese, Italian, Dutch, Japanese and Simplified Chinese. Translation coverage is still being refined.
+- **Responsive layout:** desktop and mobile views.
 
-- `pool-dashboard-v4-test.js` — V4 RC1 frontend bundle.
-- `pool-cockpit-v4-logo.png` — official dashboard logo.
+## Installation — V4 RC1
 
-### Verify integrity
+> **Pre-release.** V3 remains the stable edition on `main`. The V4 RC1 artifact is available only on `release/v4-rc1` and requires an existing compatible Pool Cockpit / Home Assistant setup.
 
-Run `sha256sum release/v4-rc1/*`.
+1. Open `release/v4-rc1/` on the RC1 branch. Verify the frontend `pool-dashboard-v4-test.js` SHA-256:
 
-Expected JavaScript SHA-256:
-`49a5faf55bc3850232b97c996832c7cf85a94cdea253c802c8011edfeb13578c`
+   ```text
+   49a5faf55bc3850232b97c996832c7cf85a94cdea253c802c8011edfeb13578c
+   ```
 
-### Install
+2. Back up the existing **V4 test** JS resource, then install the RC1 JS and `pool-cockpit-v4-logo.png` into `/config/www/ha-pool-dashboard/` (or the equivalent host-side directory). Do **not** replace the V3 resource.
+3. In Home Assistant Lovelace resources, select **JavaScript module**:
 
-Back up the existing V4 test resource before replacing it.
+   ```text
+   /local/ha-pool-dashboard/pool-dashboard-v4-test.js?v=v4.0.0-rc.1
+   ```
 
-Destination: `/home/homeassistant/config/www/ha-pool-dashboard/`
+4. Refresh your browser and validate the configured entities and equipment commands. Restore your previous V4 JS backup to roll back.
 
-Copy the JavaScript bundle and logo from `release/v4-rc1/`
-to this destination.
+## Release status and safety
 
-Configure Lovelace resource type as **JavaScript module**.
+The RC1 JavaScript artifact differs from the source-generated `frontend/dist/pool-dashboard.js`. Full source reconciliation, translations of some dynamic V3 texts and end-to-end hardware testing remain open before the stable V4 release. This preview does not replace Home Assistant automations or safety interlocks.
 
-Resource URL:
-`/local/ha-pool-dashboard/pool-dashboard-v4-test.js?v=v4.0.0-rc.1`
+Avoid publishing Home Assistant tokens, secrets, credentials or identifiable live telemetry. Promotional images are illustrative, not functional guarantees.
 
-Refresh the browser and validate the V4 dashboard.
-
-**Rollback:** restore the previous V4 test JavaScript.
-Never replace the stable V3 resource.
-
-> The RC1 frontend and the repository's source-built bundle
-> are currently distinct artifacts. Source reconciliation is
-> required before the final V4 release.
-
-## Reliability and safety
-
-V4 is an interface layer, not a replacement for Home Assistant's authority over device state. Pump, heat-pump and lighting operations must continue to follow the pre-existing command handlers, device states and safety guards. Before enabling hardware controls, validate every entity mapping and test stop/start behavior locally.
-
-**Never commit** tokens, HA secrets, `secrets.yaml`, device credentials, personal telemetry exports or environment-specific private configuration.
-
-## RC1 known limitations
-
-- Some dynamic domain-specific text inherited from the V3 engine may remain untranslated.
-- Nine-locale catalog checks confirm key presence, **not** complete translation quality.
-- Automated syntax/integrity checks do not replace functional tests across all pages, themes, browsers and devices.
-- The bundle is a release artifact; the original modular source tree is **not** included in this distribution.
-
-## Project principles
-
-**Clarity over clutter.** Real data over simulated status. Safety over convenience. Progressive improvement without destabilizing a working installation.
-
----
-
-<div align="center"><sub>Pool Cockpit V4 • Release Candidate 1 • Built for Home Assistant</sub></div>
+**License:** PolyForm Noncommercial 1.0.0.  
+**[V3 stable branch](https://github.com/vinzgithub/ha-pool-cockpit/tree/main)** · **[V4 RC1 release](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.0.0-rc.1)**
