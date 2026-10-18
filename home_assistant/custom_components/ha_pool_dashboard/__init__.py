@@ -13,6 +13,7 @@ from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers import config_validation as cv
 
 from .const import DOMAIN
+from .device_catalog import DeviceCatalogStore
 from .gemini_backend import (
     DEFAULT_GEMINI_MODEL,
     DEFAULT_TIMEOUT_SECONDS,
@@ -27,6 +28,12 @@ CONFIG_SCHEMA = vol.Schema({DOMAIN: vol.Schema({})}, extra=vol.ALLOW_EXTRA)
 
 
 async def async_setup(hass: HomeAssistant, _config: dict[str, Any]) -> bool:
+    catalog = DeviceCatalogStore(hass)
+    await catalog.async_load()
+    hass.data[f"{DOMAIN}_device_catalog"] = catalog
+    websocket_api.async_register_command(hass, ws_get_device_catalog)
+    websocket_api.async_register_command(hass, ws_save_device_catalog)
+
     manager = PoolScheduler(hass)
     await manager.async_load()
     hass.data[DOMAIN] = manager
@@ -155,4 +162,27 @@ async def ws_gemini_rewrite(
         dict(hass.data.get(GEMINI_DATA_KEY) or {}),
         dict(msg.get("payload") or {}),
     )
+    connection.send_result(msg["id"], result)
+
+
+@websocket_api.websocket_command({vol.Required("type"): "ha_pool_dashboard/get_device_catalog", vol.Required("scope"): str})
+@websocket_api.async_response
+async def ws_get_device_catalog(hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]) -> None:
+    try:
+        result = hass.data[f"{DOMAIN}_device_catalog"].read(msg["scope"])
+    except (ValueError, TypeError, KeyError):
+        connection.send_error(msg["id"], "invalid_catalog_storage", "Catalogue unavailable; existing data retained")
+        return
+    connection.send_result(msg["id"], result)
+
+
+@websocket_api.websocket_command({vol.Required("type"): "ha_pool_dashboard/save_device_catalog", vol.Required("scope"): str, vol.Required("catalog"): dict, vol.Required("expected_revision"): vol.All(int, vol.Range(min=0))})
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_save_device_catalog(hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]) -> None:
+    try:
+        result = await hass.data[f"{DOMAIN}_device_catalog"].save(msg["scope"], msg["catalog"], msg["expected_revision"])
+    except (ValueError, TypeError, KeyError, OSError) as error:
+        connection.send_error(msg["id"], "catalog_conflict" if str(error) == "catalog_conflict" else "invalid_catalog", "Catalogue not saved; reload and review")
+        return
     connection.send_result(msg["id"], result)
