@@ -1,3 +1,5 @@
+> **Version V4.1.0 (branche de livraison)** — Le complément Réel/Démonstration est décrit dans [les notes V4.1.0](docs/releases/V4.1.0.md). Il nécessite une V4 compatible déjà installée. Le code V4.0.0 ci-dessous reste la base du système ; `main` n'est pas modifiée.
+
 <div align="center">
 
 # 🌊 Pool Cockpit V4.0.0
