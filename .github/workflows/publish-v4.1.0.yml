@@ -1,23 +1,21 @@
-name: Publish Pool Cockpit V4.1.0
+name: Pool Cockpit V4.1.0 complete release
 on:
   push:
     branches: [release/v4.1.0]
-
 permissions:
   contents: write
-
 jobs:
-  package-and-release:
+  package:
     if: github.repository == 'vinzgithub/ha-pool-cockpit'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Build and verify one final V4.1.0 ZIP
+      - name: Test safe clean install, upgrade and rollback
+        run: python -m unittest discover -s tests -p test_v41_full_install.py -v
+      - name: Build and verify complete ZIP
         shell: bash
         run: |
           set -euo pipefail
@@ -25,27 +23,25 @@ jobs:
           zip=release/pool-cockpit-v4.1.0.zip
           sha256sum "$zip" > "$zip.sha256"
           unzip -t "$zip"
-          mkdir -p "$RUNNER_TEMP/v41-release"
-          unzip -q "$zip" -d "$RUNNER_TEMP/v41-release"
-          (cd "$RUNNER_TEMP/v41-release" && sha256sum -c SHA256SUMS)
+          mkdir -p "$RUNNER_TEMP/validate-v41"
+          unzip -q "$zip" -d "$RUNNER_TEMP/validate-v41"
+          (cd "$RUNNER_TEMP/validate-v41" && sha256sum -c SHA256SUMS)
+          (cd "$RUNNER_TEMP/validate-v41" && python -m unittest discover -s tests -p test_v41_full_install.py -v) 
           sha256sum -c "$zip.sha256"
-      - name: Publish only v4.1.0 in public repo (no main merge)
+      - name: Replace assets on existing v4.1.0 release only after successful checks
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-        shell: bash
         run: |
           set -euo pipefail
-          test "$GITHUB_REF_NAME" = "release/v4.1.0"
-          if gh release view v4.1.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            echo "::error::v4.1.0 release already exists; refusing to overwrite."
-            exit 1
-          fi
-          gh release create v4.1.0 \
-            "release/pool-cockpit-v4.1.0.zip" \
-            "release/pool-cockpit-v4.1.0.zip.sha256" \
-            --repo "$GITHUB_REPOSITORY" \
-            --target "$GITHUB_SHA" \
-            --title "Pool Cockpit V4.1.0 — Réel / Démonstration" \
-            --notes-file "docs/releases/V4.1.0.md" \
-            --latest
-          gh release view v4.1.0 --repo "$GITHUB_REPOSITORY" --json tagName,isDraft,isPrerelease,assets
+          test "$GITHUB_REF_NAME" = release/v4.1.0
+          release="repos/$GITHUB_REPOSITORY/releases/tags/v4.1.0"
+          id="$(gh api "$release" --jq '.id')"
+          [[ -n "$id" ]] || exit 1
+          [[ "$(gh api "repos/$GITHUB_REPOSITORY/releases/$id" --jq '.draft')" == false ]] || exit 1
+          [[ "$(gh api "repos/$GITHUB_REPOSITORY/releases/$id" --jq '.prerelease')" == false ]] || exit 1
+          gh release upload v4.1.0 release/pool-cockpit-v4.1.0.zip release/pool-cockpit-v4.1.0.zip.sha256 --repo "$GITHUB_REPOSITORY" --clobber
+          gh api --method PATCH "repos/$GITHUB_REPOSITORY/releases/$id" \
+            -f name="Pool Cockpit V4.1.0 — Installation complète" \
+            -F body=@docs/releases/V4.1.0.md --silent
+          gh release view v4.1.0 --repo "$GITHUB_REPOSITORY" --json tagName,assets
