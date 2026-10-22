@@ -44,4 +44,13 @@ jobs:
           gh api --method PATCH "repos/$GITHUB_REPOSITORY/releases/$id" \
             -f name="Pool Cockpit V4.1.0 — Installation complète" \
             -F body=@docs/releases/V4.1.0.md --silent
+          # Align the v4.1.0 Git tag with the tested complete distribution.
+          current_ref="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v4.1.0" --jq '.object.sha')"
+          if [[ "$current_ref" != "$GITHUB_SHA" ]]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/git/refs/tags/v4.1.0" \
+              -f sha="$GITHUB_SHA" -F force=true --silent
+          fi
+          gh api --method PATCH "repos/$GITHUB_REPOSITORY/releases/$id" \
+            -f target_commitish="$GITHUB_SHA" --silent
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v4.1.0" --jq '.object.sha')" = "$GITHUB_SHA"
           gh release view v4.1.0 --repo "$GITHUB_REPOSITORY" --json tagName,assets
