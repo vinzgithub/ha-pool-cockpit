@@ -1,0 +1,35 @@
+name: Prepare V4.1.0 promotion checksums
+on:
+  push:
+    branches: [promote/v4.1.0]
+permissions:
+  contents: write
+
+jobs:
+  refresh-sha256:
+    if: github.repository == 'vinzgithub/ha-pool-cockpit'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: promote/v4.1.0
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate tracked repository SHA-256 manifest once
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/generate_sha256s.py
+          if ! git diff --quiet -- SHA256SUMS; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add SHA256SUMS
+            git commit -m "build(v4.1.0): refresh full source integrity manifest"
+            git push origin HEAD:promote/v4.1.0
+          fi
+      - name: Verify manifest is unchanged after regeneration
+        run: |
+          python tools/generate_sha256s.py
+          git diff --exit-code -- SHA256SUMS

@@ -1,11 +1,13 @@
-d12b4dfbb2976cde37870c53a96a2bb41de78c30781f196f691f4a2da73e8d30  ./.github/workflows/tests.yml
+a53d4c593450b3e08f8db61bec562cfdd9268e40d964f85bb747f9e4626c7908  ./.github/workflows/prepare-v41-manifest.yml
+b088630f680cd825924ea54f1cf4bb316223334266dc6777f971f3907e1012a2  ./.github/workflows/publish-v4.1.0.yml
+17c3c7b3aa68ca0a680d583a16f73ee78701e361e0feabc9ce41445f5e84ab6a  ./.github/workflows/tests.yml
 4cc84ee957eb3ba771b11fb920f21aecae26fc6425da9b5420105ccfe46df572  ./.gitignore
 24d87832aeeae55d58ac0012ba304dc8a2a704c9cc9f424d6eb3a8c75f8eada5  ./CHANGELOG.md
 709c700f20a5ddbc280e2cab0a36decd05e2b2d459c2c6ed6be7a72a0e8cbe0e  ./COMMERCIAL-LICENSE.md
 ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8  ./LICENSE
 a70b91b7d441289996b48ddd23af3bd8c9abddb050d956062af4054409c62fd1  ./NOTICE
-d906fc32db3ffc9833fbdff8f694620d1341e105c4e677f59e03418bd4406e36  ./README.fr.md
-24359e4453a539a57505382310fe124254bef22b72d485fe76f4a9a57a1c7966  ./README.md
+afdafffe4db80cad25d63ffd630f916179b2676afcbbd6271abcb2d8ab3d4b23  ./README.fr.md
+cee890a4fed65d97d1739d50accf4236a45224eda936f816672543605bd1772b  ./README.md
 018c8c8a25a448a228389a8e4d3e3f610e0d44696a516b66801daad4b052e1a4  ./conftest.py
 9266c19d6a57ae48139566125a19f5cf1cf3ea42e04661836d658622c6dab9b6  ./docs/developer/ARCHITECTURE.md
 be12b03c4cc6e7275fe7ab9793fade69db6ef49061c6c6539f609bac6e71e83d  ./docs/developer/DESIGN_SYSTEM.md
@@ -26,9 +28,10 @@ bbdcde726274ab576b16647b8fc2d86e4c019eaf80476f31deb970a7af4652d0  ./docs/images/
 495533854d2e7e3348083b5ac6b4fc79ec43b91117c523ca1fa0af67824eccfa  ./docs/images/v4-rc1/overview.webp
 5beba485aceeb485406cb93eccd690036966f0519a88ba268b483486d6c704bd  ./docs/images/v4-rc1/planning.webp
 011f2163d1a2068e4d6d3657f5a9cd17cc7b725a945ddfb5c6d29647cd583d66  ./docs/images/v4-rc1/water.webp
+7861d6c579812f47716326d606d1343246e20c2b9304919d5a95fded0273287e  ./docs/releases/V4.1.0.md
 a52df9410a28ce41689f6eac78cca54870bb521e015962fb3ed76be2b0634452  ./docs/user/CONFIGURATION.md
 e1b8badff148e91f736bbdf4bb36e56d5e23c20bbaaabec4c590bbdcc637b23e  ./docs/user/DASHBOARD.md
-4c3689ee54d9519e992e2f981ea371b069a845ef8b011b5c710402b9c471f7fe  ./docs/user/INSTALLATION.md
+00ffec8c90cf6b1afe8cf8e2156a46ad5c335c295e4cca441497b8af19f046ce  ./docs/user/INSTALLATION.md
 82461868834ae60e5b08b168697f04a0cc024a3ca1cbf984c469207dfc83902e  ./frontend/dist/assets/pool-dashboard-background-beta25-2.png
 4797242154265f46afea892ba74e887d7c70888d295648769edf976b01bce199  ./frontend/dist/assets/pool-dashboard-background-beta25-2.webp
 cfc12f801afea2260c703268a53cd86d573ec598707e61620958c212075e92f6  ./frontend/dist/hero-ocean.svg
@@ -54,9 +57,10 @@ c0e518ce62274c7f3e7c0345108f88f3df73d254dcfce13968865e1c048b7b33  ./home_assista
 cd3e85f5db7c2e876e3c17f930205666ad1de057a9cbb6c8d5ad3b74a395b921  ./home_assistant/custom_components/ha_pool_dashboard/scheduler.py
 a92c53fd12da96d6ca2275eede912351f94d40fba79c2b56321845c680007419  ./home_assistant/custom_components/ha_pool_dashboard/services.yaml
 0e33bdb915943d62a51f6163aec6dc4f4345070755bc6beee93f9abb51340898  ./home_assistant/custom_components/ha_pool_dashboard/treatment_journal.py
-42fef74de508432e23e644fb3844010d1d01278c9c2ae1e04a7c90b027af635a  ./install.sh
+5e7a12c4b75d2f0a4306433ac5a2613e29491b65828e4e1e4e01adfcf90325b7  ./install.sh
 532f6309fe82dee3985c580ed3a2999081f7a4d2d81f7f8f0eaab665679572c0  ./install_pool_dashboard.py
 aedb3c231c130cad9496974034189205761881a24ec4a07a6e31eb8b2d08cf10  ./install_v4.py
+5c773286d0017de2e5076dd34d2b3492ebc1fea7365af83352fcb45e6199449b  ./install_v41.py
 0b619f1121d9788994ca0d60c75e9d57d2220209c24cec956260c307cd58da35  ./outils/construire-bundle.mjs
 3d3267f74f94212e4b5b8afcebcdc09fc5c379e71da55c1b4f83612f6b218751  ./outils/lib/construction-bundle.mjs
 11ed8dfa7689bb9e713019e151be776cef6b9eda03ef83d226701feef3f764b8  ./outils/verifier-dom-flag-desactive.mjs
@@ -71,6 +75,9 @@ bb88e6cde58d5c0f16e0ca7c7bf9656963e10f4b5b787e1141a43e3837876d5b  ./release/v4-r
 4797242154265f46afea892ba74e887d7c70888d295648769edf976b01bce199  ./release/v4-rc8-2/assets/pool-dashboard-background-beta25-2.webp
 cfc12f801afea2260c703268a53cd86d573ec598707e61620958c212075e92f6  ./release/v4-rc8-2/hero-ocean.svg
 665d856c4d454b39ded404ed8ec15731b3431038602393020935592cf122405e  ./release/v4-rc8-2/pool-dashboard-v4-rc8-2.js
+a28fb01384f21adbc3231d2b586c4dd39458a2eb050eea55a2e09aa8a8fd9f9d  ./release/v4.1.0/INSTALLATION.md
+276711099e15934439d7283d25483dc1ec09fbd5aeeadc8db59afc25b264c869  ./release/v4.1.0/assets/demo-pool-camera.jpg
+e5bfed20e69f976071f60189da649bbe07cb06ec1962239c4679124a7e1d7940  ./release/v4.1.0/pool-cockpit-dual-mode-card.js
 ee264428db6363d7d2e06b9d5c12afeb8e5594f22ba405c8c4a613f12382031b  ./src/adaptateurs/home-assistant/construire-entrees-eau-meteo.js
 b5b7097a8feef29e8a15beae2a09dc54680c2b9177d95c3d4d28c80fa06837d2  ./src/configuration/fonctionnalites.js
 b384a2b7535e779bd8fc217473872c8201549b428c46ac64c4ff6e58eaf1498d  ./src/controleurs/evaluer-recommandation-eau-meteo-temps-reel.js
@@ -169,6 +176,8 @@ cfb27dbbd611eaa0e157354cda4d3b9ef0be5e3b36624b497e08a835946edff3  ./tests/test_m
 f27dd598d271f940231c46685535f108c429be2fc0976ac73b8803d05377792d  ./tests/test_package_static.py
 e188951ca0d8597dbedb36cd9c0a78c276a6888db3d9b6631b999c8e517d6221  ./tests/test_scheduler.py
 7562727932a6a6e44b6e6071e831cba5238145dab76e7b8155bd18faf62d8ee7  ./tests/test_treatment_journal.py
+9d3a6b31267d1727835fddb398851171c53160d92a0285f2c1973c0f3b6360b8  ./tests/test_v41_default_mode.js
+425d61b518426727e40ff49f9de8dfff0b50081c3c8e461889ef70c4fbe2bc7d  ./tests/test_v41_full_install.py
 398a9c3892fab016fbf00f79268e3c9b6617bdb9ae22a0a7005e9ef6cd678052  ./tests/test_weather.py
 c93530a55a731d352f41b2b59adb0870c7945e78a5befc0c99a53c42de19c058  ./tests/unitaires/assistant-expert-adaptateur.test.mjs
 312fd2d195ead92358d514c7afe58dcb07dbb8116bf7b5e441f709055edebeb1  ./tests/unitaires/assistant-expert-etat-popup.test.mjs
@@ -202,5 +211,6 @@ af93dcefe5930f7b881377d24bb443aea41c93cb3b81b88f3f01be6d38b98fab  ./tests/unitai
 21e402141320d58d1de7dd5b986fbb0f36d6777ae096c80d1c5a04abeaf70550  ./tests/unitaires/securite-pac.test.mjs
 1b1dee07d2f97a3b1f06a7d63a356a7d564d9a484e68f1c21c4beb96cbaff6ef  ./tests/unitaires/selecteurs-entites.test.mjs
 ccf09d5814f13005ea0129d51f38bf5bace58dcfa96422c6eeae18d7beed73b1  ./tests/unitaires/themes-interface.test.mjs
+328d1c11d19e9bcb02a7ece823e968e0dce9a58f7ddfdd503f523c1e051f288c  ./tools/build_v41_public_release.py
 bb629024b08504862fc4de70cf472447fcdeab10b9cf32439641d1b236b4eaef  ./tools/generate_sha256s.py
 bc4b8b2ae82f1471c43050bdcd585ccaddbb8a7a134f22afb40cfd4c88d781d9  ./uninstall_pool_dashboard.py

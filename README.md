@@ -1,3 +1,18 @@
+# Pool Cockpit V4.1.0 — Installation complète
+
+**Installer depuis Git (Home Assistant Core/Docker)** :
+```bash
+git clone https://github.com/vinzgithub/ha-pool-cockpit.git
+cd ha-pool-cockpit
+python3 install_v41.py --config /config --dry-run
+python3 install_v41.py --config /config --yes
+```
+**Mise à jour d'une V4.0.0 reconnue** : utilisez `--upgrade --dry-run`, puis `--upgrade --yes` avec le même script. Adapter `/config` au dossier Home Assistant sur l'hôte. La V4.1.0 contient moteur, backend, ressources et Réel/Démo. [Instructions complètes](release/v4.1.0/INSTALLATION.md). The V4.0.0 installation instructions further below are historical. For V4.1.0 use `install_v41.py`.
+
+---
+
+> **Version V4.1.0 (branche de livraison)** — Le complément Réel/Démonstration est décrit dans [les notes V4.1.0](docs/releases/V4.1.0.md). Il nécessite une V4 compatible déjà installée. Le code V4.0.0 ci-dessous reste la base du système ; `main` n'est pas modifiée.
+
 <div align="center">
 
 # 🌊 Pool Cockpit V4.0.0
