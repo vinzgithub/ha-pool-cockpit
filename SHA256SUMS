@@ -1,6 +1,7 @@
 f0ef6cfdb90d779e03f45a5ab621dd14083893811c5460150f07628860b423c3  ./.github/workflows/build-v42-single-js.yml
 a53d4c593450b3e08f8db61bec562cfdd9268e40d964f85bb747f9e4626c7908  ./.github/workflows/prepare-v41-manifest.yml
 b088630f680cd825924ea54f1cf4bb316223334266dc6777f971f3907e1012a2  ./.github/workflows/publish-v4.1.0.yml
+673abe44ba1085bf98d4f58826b728fedb8a6bd53e72477624c02709c64bbeb0  ./.github/workflows/publish-v4.2.0.yml
 17c3c7b3aa68ca0a680d583a16f73ee78701e361e0feabc9ce41445f5e84ab6a  ./.github/workflows/tests.yml
 2f8f78acbb440926d5061d532d4bc5762ac4345ee7ffb5e9874ef17f4f160db2  ./.gitignore
 24d87832aeeae55d58ac0012ba304dc8a2a704c9cc9f424d6eb3a8c75f8eada5  ./CHANGELOG.md
