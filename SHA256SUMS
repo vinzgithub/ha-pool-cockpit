@@ -6,8 +6,8 @@ b088630f680cd825924ea54f1cf4bb316223334266dc6777f971f3907e1012a2  ./.github/work
 709c700f20a5ddbc280e2cab0a36decd05e2b2d459c2c6ed6be7a72a0e8cbe0e  ./COMMERCIAL-LICENSE.md
 ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8  ./LICENSE
 a70b91b7d441289996b48ddd23af3bd8c9abddb050d956062af4054409c62fd1  ./NOTICE
-afdafffe4db80cad25d63ffd630f916179b2676afcbbd6271abcb2d8ab3d4b23  ./README.fr.md
-cee890a4fed65d97d1739d50accf4236a45224eda936f816672543605bd1772b  ./README.md
+e42e1614e0d559a9a65378c67f9933756b60117263415a391ce53c4d81172010  ./README.fr.md
+d14a8ec2a9eb406e2fa31cdf573d45772b1f29dbd77805d47ece5b7199077bbb  ./README.md
 018c8c8a25a448a228389a8e4d3e3f610e0d44696a516b66801daad4b052e1a4  ./conftest.py
 9266c19d6a57ae48139566125a19f5cf1cf3ea42e04661836d658622c6dab9b6  ./docs/developer/ARCHITECTURE.md
 be12b03c4cc6e7275fe7ab9793fade69db6ef49061c6c6539f609bac6e71e83d  ./docs/developer/DESIGN_SYSTEM.md
@@ -28,7 +28,7 @@ bbdcde726274ab576b16647b8fc2d86e4c019eaf80476f31deb970a7af4652d0  ./docs/images/
 495533854d2e7e3348083b5ac6b4fc79ec43b91117c523ca1fa0af67824eccfa  ./docs/images/v4-rc1/overview.webp
 5beba485aceeb485406cb93eccd690036966f0519a88ba268b483486d6c704bd  ./docs/images/v4-rc1/planning.webp
 011f2163d1a2068e4d6d3657f5a9cd17cc7b725a945ddfb5c6d29647cd583d66  ./docs/images/v4-rc1/water.webp
-7861d6c579812f47716326d606d1343246e20c2b9304919d5a95fded0273287e  ./docs/releases/V4.1.0.md
+7e955a94e55bfbba9fd84328101d437c42f5ca745f4ccc3988ad1d0a9213019f  ./docs/releases/V4.1.0.md
 a52df9410a28ce41689f6eac78cca54870bb521e015962fb3ed76be2b0634452  ./docs/user/CONFIGURATION.md
 e1b8badff148e91f736bbdf4bb36e56d5e23c20bbaaabec4c590bbdcc637b23e  ./docs/user/DASHBOARD.md
 00ffec8c90cf6b1afe8cf8e2156a46ad5c335c295e4cca441497b8af19f046ce  ./docs/user/INSTALLATION.md
@@ -75,7 +75,7 @@ bb88e6cde58d5c0f16e0ca7c7bf9656963e10f4b5b787e1141a43e3837876d5b  ./release/v4-r
 4797242154265f46afea892ba74e887d7c70888d295648769edf976b01bce199  ./release/v4-rc8-2/assets/pool-dashboard-background-beta25-2.webp
 cfc12f801afea2260c703268a53cd86d573ec598707e61620958c212075e92f6  ./release/v4-rc8-2/hero-ocean.svg
 665d856c4d454b39ded404ed8ec15731b3431038602393020935592cf122405e  ./release/v4-rc8-2/pool-dashboard-v4-rc8-2.js
-a28fb01384f21adbc3231d2b586c4dd39458a2eb050eea55a2e09aa8a8fd9f9d  ./release/v4.1.0/INSTALLATION.md
+c89710dc7db9eea057ce6fa5f025795234fdf89873985a797e237b17fd798e62  ./release/v4.1.0/INSTALLATION.md
 276711099e15934439d7283d25483dc1ec09fbd5aeeadc8db59afc25b264c869  ./release/v4.1.0/assets/demo-pool-camera.jpg
 e5bfed20e69f976071f60189da649bbe07cb06ec1962239c4679124a7e1d7940  ./release/v4.1.0/pool-cockpit-dual-mode-card.js
 ee264428db6363d7d2e06b9d5c12afeb8e5594f22ba405c8c4a613f12382031b  ./src/adaptateurs/home-assistant/construire-entrees-eau-meteo.js
