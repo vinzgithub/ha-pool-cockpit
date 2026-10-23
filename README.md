@@ -12,7 +12,7 @@
 
 ![Pool Cockpit promotional illustration](docs/images/v4-rc1/hero-en.webp)
 
-<sub>Promotional artwork and screenshots below date from the early V4 RC1. The released V4.1.0 interface has since evolved.</sub>
+<sub>Pool Cockpit promotional illustration; see current V4.2.0 interface screenshots below.</sub>
 
 </div>
 
@@ -24,29 +24,27 @@ V4.2.0 combines the engine and Demonstration in one `pool-cockpit.js`, with publ
 
 This is a **frontend upgrade for existing V4.1.0 installs**. For a fresh installation, first install the full V4.1.0 package below.
 
-## What is Pool Cockpit?
+## Discover V4.2.0
 
-**Pool Cockpit** is a six-view Home Assistant dashboard for monitoring swimming pool water, understanding measurements, viewing connected equipment and managing schedules. V4.1.0 ships as a **complete installation**, not as a demo-only patch or an extension that requires a previously installed V4.
+**Pool Cockpit** is a Home Assistant dashboard for swimming pool water monitoring, filtration, heat-pump status, connected equipment, advice and schedules—all in one interface.
 
-**The main addition in V4.1.0 is the Real / Demonstration selector.**
+V4.2.0 combines the pool engine and Demonstration mode in **a single JavaScript resource**. Configured systems open in **Real pool**; users without sensors can explore **Demonstration** without controlling actual devices.
 
-- **Real pool:** your configured Home Assistant entities only; no simulated measurements are presented as real. Configured installations open in Real mode by default.
-- **Demonstration:** explore the interface using explicitly labelled fictional sensors, weather, camera and equipment controls. Demo actions never operate real equipment.
-- **No configured devices:** the fresh installation opens in Demonstration mode. Choosing Real pool shows a setup message instead of an empty grey screen.
+## V4.2.0 interface gallery
 
-## Screenshots
+The screenshots below come from the **actual V4.2.0 frontend running in a browser in Demonstration mode**. Values are simulated, and appearance may vary depending on theme, sensors and setup.
 
-The following **historical RC1 screenshots** illustrate the six-view concept; they are not final V4.1.0 screenshots.
+![Pool Cockpit V4.2.0 overview](docs/images/v4.2.0/overview.png)
 
-![Historical overview (RC1)](docs/images/v4-rc1/overview.webp)
+| Advice | Measurements |
+|:--:|:--:|
+| ![Advice V4.2.0](docs/images/v4.2.0/advice.png) | ![Measurements V4.2.0](docs/images/v4.2.0/measurements.png) |
 
-| Advice | Measurement devices |
-|:---:|:---:|
-| ![Historical RC1 advice](docs/images/v4-rc1/advice.webp) | ![Historical RC1 measurements](docs/images/v4-rc1/measurements.webp) |
+| Equipment | Scheduling |
+|:--:|:--:|
+| ![Equipment V4.2.0](docs/images/v4.2.0/equipment.png) | ![Scheduling V4.2.0](docs/images/v4.2.0/planning.png) |
 
-| Equipment | Planning |
-|:---:|:---:|
-| ![Historical RC1 equipment](docs/images/v4-rc1/equipment.webp) | ![Historical RC1 planning](docs/images/v4-rc1/planning.webp) |
+![History V4.2.0](docs/images/v4.2.0/history.png)
 
 ## Features
 
