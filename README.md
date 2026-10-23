@@ -30,6 +30,10 @@ V4.2.0 now offers a direct fresh-install route and a separate upgrade path for V
 
 V4.2.0 combines the pool engine and Demonstration mode in **a single JavaScript resource**. Configured systems open in **Real pool**; users without sensors can explore **Demonstration** without controlling actual devices.
 
+**Requirements — real pool:** Pool Cockpit runs **inside Home Assistant**; it is not a standalone app. For actual measurements, first connect and configure your sensors and equipment in Home Assistant using integrations suited to your devices. For example, [Blue Connect Local by Adrien40](https://github.com/Adrien40/ha-blue-connect-local) supplies Home Assistant readings from compatible Blue Connect probes; [Flipr Local](https://github.com/Adrien40/ha-flipr-local) is an option for compatible Flipr probes. These are **independent, optional projects**; they are not bundled with Pool Cockpit. You can then map your Home Assistant entities in Pool Cockpit.
+
+**Requirements — Demonstration:** No real pool, probes, equipment or device integrations needed. **Home Assistant is still required** to display the dashboard. Demo data is fictional and does not control actual devices.
+
 ## V4.2.0 interface gallery
 
 The screenshots below come from the **actual V4.2.0 frontend running in a browser in Demonstration mode**. Values are simulated, and appearance may vary depending on theme, sensors and setup.
