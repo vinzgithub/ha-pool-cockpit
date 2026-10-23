@@ -6,7 +6,7 @@
  */
 import { chromium } from "playwright";
 import { createServer } from "node:http";
-import { readFile, mkdir, stat } from "node:fs/promises";
+import { readFile, mkdir } from "node:fs/promises";
 import { join, extname, resolve } from "node:path";
 
 const root = resolve(".");
@@ -73,12 +73,6 @@ try {
     },tab);
     if(!clicked)throw new Error("Cannot find V4 tab "+tab);
     await page.waitForTimeout(850);
-    const path=join(screenshots,`${file}.webp`);
-    await page.screenshot({path,type:"jpeg",quality:80}).catch(async()=>{
-      // Playwright supports png and jpeg; write optimised WebP via sharp separately.
-      await page.screenshot({path:path.replace(/\.webp$/,".png"),type:"png"});
-    });
-    // The previous call should not be treated as a WebP: use png directly.
     await page.screenshot({path:join(screenshots,`${file}.png`),type:"png",fullPage:false});
     console.log("Captured",tab,join(screenshots,`${file}.png`));
   }
