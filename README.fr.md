@@ -30,6 +30,10 @@ La V4.2.0 propose désormais une installation neuve directe et un chemin de mise
 
 La V4.2.0 réunit le moteur de la piscine et la Démonstration dans **une seule ressource JavaScript**. Une installation équipée démarre en **Piscine réelle** ; une installation sans capteurs peut explorer le mode **Démonstration**, sans action sur les équipements.
 
+**Prérequis du mode Réel :** Pool Cockpit fonctionne dans Home Assistant. Il faut d'abord y installer et configurer les intégrations correspondant à vos équipements (par exemple [Blue Connect Local](https://github.com/Adrien40/ha-blue-connect-local) ou [Flipr Local](https://github.com/Adrien40/ha-flipr-local), développées par Adrien40, pour les sondes compatibles), puis associer les entités à Pool Cockpit. Ces intégrations sont indépendantes et ne sont pas livrées avec Pool Cockpit.
+
+**Mode Démonstration :** vous pouvez découvrir l'interface sans piscine, sonde ou intégration de matériel supplémentaire. Home Assistant reste nécessaire. Les données sont fictives et les commandes ne pilotent aucun équipement réel.
+
 ## Aperçu de l'interface V4.2.0
 
 Les captures ci-dessous proviennent du **moteur V4.2.0 exécuté dans un navigateur en mode Démonstration**. Les valeurs représentées sont fictives ; la présentation peut différer selon le thème, les appareils et les réglages.
