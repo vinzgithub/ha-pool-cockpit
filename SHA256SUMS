@@ -1,7 +1,8 @@
+f0ef6cfdb90d779e03f45a5ab621dd14083893811c5460150f07628860b423c3  ./.github/workflows/build-v42-single-js.yml
 a53d4c593450b3e08f8db61bec562cfdd9268e40d964f85bb747f9e4626c7908  ./.github/workflows/prepare-v41-manifest.yml
 b088630f680cd825924ea54f1cf4bb316223334266dc6777f971f3907e1012a2  ./.github/workflows/publish-v4.1.0.yml
 17c3c7b3aa68ca0a680d583a16f73ee78701e361e0feabc9ce41445f5e84ab6a  ./.github/workflows/tests.yml
-4cc84ee957eb3ba771b11fb920f21aecae26fc6425da9b5420105ccfe46df572  ./.gitignore
+2f8f78acbb440926d5061d532d4bc5762ac4345ee7ffb5e9874ef17f4f160db2  ./.gitignore
 24d87832aeeae55d58ac0012ba304dc8a2a704c9cc9f424d6eb3a8c75f8eada5  ./CHANGELOG.md
 709c700f20a5ddbc280e2cab0a36decd05e2b2d459c2c6ed6be7a72a0e8cbe0e  ./COMMERCIAL-LICENSE.md
 ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8  ./LICENSE
@@ -78,6 +79,8 @@ cfc12f801afea2260c703268a53cd86d573ec598707e61620958c212075e92f6  ./release/v4-r
 c89710dc7db9eea057ce6fa5f025795234fdf89873985a797e237b17fd798e62  ./release/v4.1.0/INSTALLATION.md
 276711099e15934439d7283d25483dc1ec09fbd5aeeadc8db59afc25b264c869  ./release/v4.1.0/assets/demo-pool-camera.jpg
 e5bfed20e69f976071f60189da649bbe07cb06ec1962239c4679124a7e1d7940  ./release/v4.1.0/pool-cockpit-dual-mode-card.js
+9b25309defbe5fe458c8d4818a27dca220ce6f0ec4867b4f3a3857eaddcd3713  ./release/v4.2.0/README.md
+327735a959fbba37c6e9b7a177549b3ef18378ed367ca1843e568e4fe9bb03e0  ./release/v4.2.0/pool-cockpit.js
 ee264428db6363d7d2e06b9d5c12afeb8e5594f22ba405c8c4a613f12382031b  ./src/adaptateurs/home-assistant/construire-entrees-eau-meteo.js
 b5b7097a8feef29e8a15beae2a09dc54680c2b9177d95c3d4d28c80fa06837d2  ./src/configuration/fonctionnalites.js
 b384a2b7535e779bd8fc217473872c8201549b428c46ac64c4ff6e58eaf1498d  ./src/controleurs/evaluer-recommandation-eau-meteo-temps-reel.js
@@ -178,6 +181,7 @@ e188951ca0d8597dbedb36cd9c0a78c276a6888db3d9b6631b999c8e517d6221  ./tests/test_s
 7562727932a6a6e44b6e6071e831cba5238145dab76e7b8155bd18faf62d8ee7  ./tests/test_treatment_journal.py
 9d3a6b31267d1727835fddb398851171c53160d92a0285f2c1973c0f3b6360b8  ./tests/test_v41_default_mode.js
 425d61b518426727e40ff49f9de8dfff0b50081c3c8e461889ef70c4fbe2bc7d  ./tests/test_v41_full_install.py
+81abce2133567ead556ed18a50da38ed8cbd85d242c018aee06fdbddcb69836b  ./tests/test_v42_single_bundle.py
 398a9c3892fab016fbf00f79268e3c9b6617bdb9ae22a0a7005e9ef6cd678052  ./tests/test_weather.py
 c93530a55a731d352f41b2b59adb0870c7945e78a5befc0c99a53c42de19c058  ./tests/unitaires/assistant-expert-adaptateur.test.mjs
 312fd2d195ead92358d514c7afe58dcb07dbb8116bf7b5e441f709055edebeb1  ./tests/unitaires/assistant-expert-etat-popup.test.mjs
@@ -211,6 +215,7 @@ af93dcefe5930f7b881377d24bb443aea41c93cb3b81b88f3f01be6d38b98fab  ./tests/unitai
 21e402141320d58d1de7dd5b986fbb0f36d6777ae096c80d1c5a04abeaf70550  ./tests/unitaires/securite-pac.test.mjs
 1b1dee07d2f97a3b1f06a7d63a356a7d564d9a484e68f1c21c4beb96cbaff6ef  ./tests/unitaires/selecteurs-entites.test.mjs
 ccf09d5814f13005ea0129d51f38bf5bace58dcfa96422c6eeae18d7beed73b1  ./tests/unitaires/themes-interface.test.mjs
+8704d99eb409daad2468b229edacef69a1575c2d2824695e389c6771b3b73741  ./tools/build_unified_pool_cockpit.py
 328d1c11d19e9bcb02a7ece823e968e0dce9a58f7ddfdd503f523c1e051f288c  ./tools/build_v41_public_release.py
 bb629024b08504862fc4de70cf472447fcdeab10b9cf32439641d1b236b4eaef  ./tools/generate_sha256s.py
 bc4b8b2ae82f1471c43050bdcd585ccaddbb8a7a134f22afb40cfd4c88d781d9  ./uninstall_pool_dashboard.py
