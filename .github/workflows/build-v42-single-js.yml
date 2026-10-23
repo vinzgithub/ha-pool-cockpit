@@ -1,0 +1,43 @@
+name: Assemble Pool Cockpit single JS
+on:
+  push:
+    branches: [feat/v4.2-unified-js]
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.repository == 'vinzgithub/ha-pool-cockpit'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v4.2-unified-js
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate the standalone browser resource and validate it
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/build_unified_pool_cockpit.py
+          node --check release/v4.2.0/pool-cockpit.js
+          python3 -m unittest discover -s tests -p test_v42_single_bundle.py -v
+          python3 tools/generate_sha256s.py
+          sha256sum release/v4.2.0/pool-cockpit.js
+      - name: Commit generated file and integrity manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -f release/v4.2.0/pool-cockpit.js
+          git add SHA256SUMS
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "build(v4.2): refresh single JS release and source checksums"
+            git push origin HEAD:feat/v4.2-unified-js
+          fi
