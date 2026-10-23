@@ -12,7 +12,7 @@
 
 ![Illustration promotionnelle Pool Cockpit](docs/images/v4-rc1/hero-fr.webp)
 
-<sub>Illustration et captures historiques issues de la RC1. L'interface publiée en V4.1.0 a évolué depuis.</sub>
+<sub>Illustration promotionnelle de Pool Cockpit ; les captures de l'interface V4.2.0 sont disponibles ci-dessous.</sub>
 
 </div>
 
@@ -24,29 +24,27 @@ La V4.2.0 regroupe le moteur et la Démonstration dans un seul `pool-cockpit.js`
 
 Cette version met à jour le **frontend d'une installation V4.1.0 existante**. Pour une installation neuve, commencer par la V4.1.0 complète ci-dessous.
 
-## Présentation
+## Découvrez la V4.2.0
 
-**Pool Cockpit** est un tableau de bord Home Assistant à six vues pour surveiller l'eau d'une piscine, comprendre les mesures, consulter les équipements et gérer la programmation. La V4.1.0 est livrée sous forme d'**installation complète** : elle ne nécessite ni V4 déjà installée ni module de démonstration séparé.
+**Pool Cockpit** est un tableau de bord Home Assistant pour suivre les mesures de l'eau, la filtration, la pompe à chaleur, les équipements, les conseils et les programmations depuis une interface unique.
 
-**La nouveauté principale de la V4.1.0 est le choix Piscine réelle / Démonstration.**
+La V4.2.0 réunit le moteur de la piscine et la Démonstration dans **une seule ressource JavaScript**. Une installation équipée démarre en **Piscine réelle** ; une installation sans capteurs peut explorer le mode **Démonstration**, sans action sur les équipements.
 
-- **Piscine réelle :** uniquement les entités Home Assistant effectivement configurées. Les données fictives ne sont jamais affichées comme des mesures réelles. Ce mode est sélectionné par défaut si la piscine est configurée.
-- **Démonstration :** découverte du tableau de bord avec des capteurs, une météo, une caméra et des commandes d'équipements fictifs clairement signalés. Les commandes de démo ne pilotent aucun équipement réel.
-- **Aucun appareil configuré :** une installation neuve ouvre directement la Démonstration. Un clic sur Piscine réelle affiche un message de configuration, sans écran gris.
+## Aperçu de l'interface V4.2.0
 
-## Aperçu de l'interface
+Les captures ci-dessous proviennent du **moteur V4.2.0 exécuté dans un navigateur en mode Démonstration**. Les valeurs représentées sont fictives ; la présentation peut différer selon le thème, les appareils et les réglages.
 
-Les **captures historiques de la RC1** ci-dessous illustrent le principe des six vues. Elles ne représentent pas exactement l'interface finale V4.1.0.
+![Vue d'ensemble Pool Cockpit V4.2.0](docs/images/v4.2.0/overview.png)
 
-![Vue d'ensemble historique RC1](docs/images/v4-rc1/overview.webp)
-
-| Conseils | Appareils de mesure |
-|:---:|:---:|
-| ![Conseils RC1](docs/images/v4-rc1/advice.webp) | ![Mesures RC1](docs/images/v4-rc1/measurements.webp) |
+| Conseils | Mesures |
+|:--:|:--:|
+| ![Conseils V4.2.0](docs/images/v4.2.0/advice.png) | ![Mesures V4.2.0](docs/images/v4.2.0/measurements.png) |
 
 | Équipements | Planning |
-|:---:|:---:|
-| ![Équipements RC1](docs/images/v4-rc1/equipment.webp) | ![Planning RC1](docs/images/v4-rc1/planning.webp) |
+|:--:|:--:|
+| ![Équipements V4.2.0](docs/images/v4.2.0/equipment.png) | ![Planning V4.2.0](docs/images/v4.2.0/planning.png) |
+
+![Historique V4.2.0](docs/images/v4.2.0/history.png)
 
 ## Fonctionnalités
 
