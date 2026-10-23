@@ -80,7 +80,7 @@ Remplacez ce chemin par celui du dossier de configuration accessible **depuis la
 ## Sauvegardes, limites et sécurité
 
 - **Sauvegardes :** copies de l'installateur dans `.pool_cockpit_backups/`, à compléter par une sauvegarde Home Assistant entière. Restaurer uniquement les fichiers YAML **ne constitue pas** une désinstallation complète.
-- **V3 :** aucune migration automatique. Ancienne version conservée dans [`old-v3`](https://github.com/vinzgithub/ha-pool-cockpit/tree/old-v3).
+- **V3 :** aucune migration automatique depuis la V3. Les sources de la V3 restent accessibles via le [tag Git `v3.0.2`](https://github.com/vinzgithub/ha-pool-cockpit/tree/v3.0.2).
 - **Autres installations :** Home Assistant OS/Supervised sans accès en écriture au dossier de configuration n'est pas couvert par l'installateur automatique.
 - **Confidentialité :** ne partagez jamais vos mots de passe, jetons, identifiants privés ou mesures sensibles.
 - **Sécurité :** Pool Cockpit ne remplace ni les dispositifs de protection, ni les automatismes de sécurité, ni l'entretien de la piscine. Vérifiez les commandes des équipements réels avant leur mise en service.
