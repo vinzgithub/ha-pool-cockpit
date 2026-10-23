@@ -1,4 +1,5 @@
 f0ef6cfdb90d779e03f45a5ab621dd14083893811c5460150f07628860b423c3  ./.github/workflows/build-v42-single-js.yml
+1d3e7b33b67350e41de55bf38defdccd08d9f8ef42286183bf99c06ecdfcbac4  ./.github/workflows/capture-v42-screenshots.yml
 a53d4c593450b3e08f8db61bec562cfdd9268e40d964f85bb747f9e4626c7908  ./.github/workflows/prepare-v41-manifest.yml
 b088630f680cd825924ea54f1cf4bb316223334266dc6777f971f3907e1012a2  ./.github/workflows/publish-v4.1.0.yml
 673abe44ba1085bf98d4f58826b728fedb8a6bd53e72477624c02709c64bbeb0  ./.github/workflows/publish-v4.2.0.yml
@@ -8,8 +9,8 @@ b088630f680cd825924ea54f1cf4bb316223334266dc6777f971f3907e1012a2  ./.github/work
 709c700f20a5ddbc280e2cab0a36decd05e2b2d459c2c6ed6be7a72a0e8cbe0e  ./COMMERCIAL-LICENSE.md
 ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8  ./LICENSE
 a70b91b7d441289996b48ddd23af3bd8c9abddb050d956062af4054409c62fd1  ./NOTICE
-0d7586b61377f922dee74172dbe4fa078c33b6bef9facce1c31efe9f12db2dec  ./README.fr.md
-b4b2256a97c8049c813efbc596e3f9a5f1af13df39c3b725a3838710f092a2f1  ./README.md
+6f5acb19f53c07fec01c3424e36c3fd29ca3acc44ab7dbd7b65f4adf5959be8d  ./README.fr.md
+eac9851869d289fb5f274838e5364b01d581e38db23a2f1ee717b34f61aa8322  ./README.md
 018c8c8a25a448a228389a8e4d3e3f610e0d44696a516b66801daad4b052e1a4  ./conftest.py
 9266c19d6a57ae48139566125a19f5cf1cf3ea42e04661836d658622c6dab9b6  ./docs/developer/ARCHITECTURE.md
 be12b03c4cc6e7275fe7ab9793fade69db6ef49061c6c6539f609bac6e71e83d  ./docs/developer/DESIGN_SYSTEM.md
@@ -30,6 +31,12 @@ bbdcde726274ab576b16647b8fc2d86e4c019eaf80476f31deb970a7af4652d0  ./docs/images/
 495533854d2e7e3348083b5ac6b4fc79ec43b91117c523ca1fa0af67824eccfa  ./docs/images/v4-rc1/overview.webp
 5beba485aceeb485406cb93eccd690036966f0519a88ba268b483486d6c704bd  ./docs/images/v4-rc1/planning.webp
 011f2163d1a2068e4d6d3657f5a9cd17cc7b725a945ddfb5c6d29647cd583d66  ./docs/images/v4-rc1/water.webp
+fbc497036b05bd10c42e04d9cae9233f1a79f55754de274b532bc03cf2e7e293  ./docs/images/v4.2.0/advice.png
+1f481b6ab325240b2806e84c0c1f8e35aebe1d629e756ff11333d6ed2947c45c  ./docs/images/v4.2.0/equipment.png
+4ea789bc79fa14a0a4968dd2e6dc66173d2941139d9f2b76e5602216862845d5  ./docs/images/v4.2.0/history.png
+17a61396087a5ebffd51b764f7895d373675bcbc435895b9f39199c188640c58  ./docs/images/v4.2.0/measurements.png
+d24cea49d1d671cccad39e31b8c7ca93f9f37ba22ebc76940599bb1218ea4b4f  ./docs/images/v4.2.0/overview.png
+f58fb1e027050a14ea86d89750daa45b8a711c5966ffd2b1ad6ba52444a825ec  ./docs/images/v4.2.0/planning.png
 7e955a94e55bfbba9fd84328101d437c42f5ca745f4ccc3988ad1d0a9213019f  ./docs/releases/V4.1.0.md
 eeee9baed6447b0aff592e95872f8c9214254b3eb3dfb3ec295df9458092fb57  ./docs/releases/V4.2.0.md
 a52df9410a28ce41689f6eac78cca54870bb521e015962fb3ed76be2b0634452  ./docs/user/CONFIGURATION.md
@@ -219,5 +226,6 @@ af93dcefe5930f7b881377d24bb443aea41c93cb3b81b88f3f01be6d38b98fab  ./tests/unitai
 ccf09d5814f13005ea0129d51f38bf5bace58dcfa96422c6eeae18d7beed73b1  ./tests/unitaires/themes-interface.test.mjs
 8704d99eb409daad2468b229edacef69a1575c2d2824695e389c6771b3b73741  ./tools/build_unified_pool_cockpit.py
 328d1c11d19e9bcb02a7ece823e968e0dce9a58f7ddfdd503f523c1e051f288c  ./tools/build_v41_public_release.py
+f04945f46d2463fc886e34fc5ea3c413da6c3d38396c4ffcb25aa4e5f85550c4  ./tools/capture_v42_showcase.mjs
 bb629024b08504862fc4de70cf472447fcdeab10b9cf32439641d1b236b4eaef  ./tools/generate_sha256s.py
 bc4b8b2ae82f1471c43050bdcd585ccaddbb8a7a134f22afb40cfd4c88d781d9  ./uninstall_pool_dashboard.py
