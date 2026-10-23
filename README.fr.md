@@ -1,132 +1,105 @@
-# Pool Cockpit V4.1.0 — Installation complète
-
-Installer depuis Git (Home Assistant Core/Docker) :
-```bash
-git clone https://github.com/vinzgithub/ha-pool-cockpit.git
-cd ha-pool-cockpit
-python3 install_v41.py --config /config --dry-run
-python3 install_v41.py --config /config --yes
-```
-Pour mettre à jour une V4.0.0 reconnue, ajouter `--upgrade` à l'installation (toujours tester avec `--dry-run`). Adapter le chemin `/config`. Le paquet inclut le moteur, le backend et Réel/Démo. [Documentation](release/v4.1.0/INSTALLATION.md).
-
----
-
 <div align="center">
 
-# 🌊 Pool Cockpit V4.0.0
+# 🌊 Pool Cockpit V4.1.0
 
 ### Votre piscine. Un cockpit élégant.
 
-**Surveillance de l’eau · Conseils · Appareils · Équipements · Planning · Historique**
+**Surveillance · Conseils · Mesures · Équipements · Planning · Historique**
 
 [**English**](README.md) · **Français**
 
-![Version](https://img.shields.io/badge/version-4.0.0-126caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![Licence](https://img.shields.io/badge/licence-PolyForm%20Noncommercial-0d355d)
+![Version](https://img.shields.io/badge/version-4.1.0-126caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![Licence](https://img.shields.io/badge/licence-PolyForm%20Noncommercial-0d355d)
 
-![Présentation de Pool Cockpit V4](docs/images/v4-rc1/hero-fr.webp)
+![Illustration promotionnelle Pool Cockpit](docs/images/v4-rc1/hero-fr.webp)
 
-<sub>Illustration promotionnelle issue de la RC1. Les captures ci-dessous présentent cette interface de préversion ; certains éléments ont évolué depuis.</sub>
+<sub>Illustration et captures historiques issues de la RC1. L'interface publiée en V4.1.0 a évolué depuis.</sub>
 
 </div>
 
-## ✨ Découvrez Pool Cockpit
+## Présentation
 
-Pool Cockpit transforme Home Assistant en tableau de bord dédié à la piscine. Il centralise les mesures, les conseils de traitement, les appareils connectés, les équipements et la programmation. **Une piscine entièrement connectée n'est pas indispensable pour ouvrir le dashboard** : les valeurs absentes sont signalées, jamais inventées.
+**Pool Cockpit** est un tableau de bord Home Assistant à six vues pour surveiller l'eau d'une piscine, comprendre les mesures, consulter les équipements et gérer la programmation. La V4.1.0 est livrée sous forme d'**installation complète** : elle ne nécessite ni V4 déjà installée ni module de démonstration séparé.
 
-### Vue d'ensemble
+**La nouveauté principale de la V4.1.0 est le choix Piscine réelle / Démonstration.**
 
-![Capture de l'interface V4 RC1 — Vue d'ensemble](docs/images/v4-rc1/overview.webp)
+- **Piscine réelle :** uniquement les entités Home Assistant effectivement configurées. Les données fictives ne sont jamais affichées comme des mesures réelles. Ce mode est sélectionné par défaut si la piscine est configurée.
+- **Démonstration :** découverte du tableau de bord avec des capteurs, une météo, une caméra et des commandes d'équipements fictifs clairement signalés. Les commandes de démo ne pilotent aucun équipement réel.
+- **Aucun appareil configuré :** une installation neuve ouvre directement la Démonstration. Un clic sur Piscine réelle affiche un message de configuration, sans écran gris.
 
-### Conseils et mesures
+## Aperçu de l'interface
+
+Les **captures historiques de la RC1** ci-dessous illustrent le principe des six vues. Elles ne représentent pas exactement l'interface finale V4.1.0.
+
+![Vue d'ensemble historique RC1](docs/images/v4-rc1/overview.webp)
 
 | Conseils | Appareils de mesure |
 |:---:|:---:|
-| ![Capture V4 RC1 — Conseils](docs/images/v4-rc1/advice.webp) | ![Capture V4 RC1 — Mesures](docs/images/v4-rc1/measurements.webp) |
-
-### Équipements et planning
+| ![Conseils RC1](docs/images/v4-rc1/advice.webp) | ![Mesures RC1](docs/images/v4-rc1/measurements.webp) |
 
 | Équipements | Planning |
 |:---:|:---:|
-| ![Capture V4 RC1 — Équipements](docs/images/v4-rc1/equipment.webp) | ![Capture V4 RC1 — Planning](docs/images/v4-rc1/planning.webp) |
+| ![Équipements RC1](docs/images/v4-rc1/equipment.webp) | ![Planning RC1](docs/images/v4-rc1/planning.webp) |
 
-La V4.0.0 comporte **six onglets** : Vue d'ensemble, Conseils, Mesures, Équipements, Planning et Historique. L'ancien onglet « Eau » de la RC1 a été supprimé ; ses informations essentielles sont regroupées dans les vues pertinentes. Les captures historiques RC1 sont conservées à titre illustratif ; elles ne documentent pas les corrections finales RC8.2.
+## Fonctionnalités
 
-## 🚀 Fonctionnalités
+- **Six rubriques :** Vue d'ensemble, Conseils, Mesures, Équipements, Planning et Historique.
+- **Analyse de l'eau :** température, pH, ORP et autres données fournies par Home Assistant.
+- **Association des appareils :** paramétrage des capteurs et des entités compatibles.
+- **Équipements :** états de filtration, PAC et éclairage ; commandes réelles uniquement après vérification des associations et des sécurités.
+- **Planning et historique :** programmations, mesures et tendances disponibles.
+- **Interface :** thème Océan, quatre thèmes proposés, neuf choix de langues et présentation adaptée aux différents écrans.
+- **Modes Réel / Démonstration isolés :** les commandes et les données fictives ne modifient pas les équipements réels ni leur configuration.
 
-- **Mesures de l'eau** : température, pH, ORP et autres métriques lorsqu'elles sont exposées par Home Assistant.
-- **Découverte dynamique** : rechercher et associer des appareils de mesure et d'autres équipements compatibles, puis gérer leur visibilité.
-- **Équipements** : visualiser les états et, après configuration et validation, accéder aux commandes de filtration, PAC et éclairage.
-- **Planning et historique** : programmation, suivi des mesures et tendances selon les données disponibles.
-- **Interface premium** : quatre thèmes, neuf langues proposées et affichage adapté aux mobiles.
-- **Gestion des indisponibilités** : absence de capteur ≠ mesure à zéro ; pas de données fictives en mode réel.
+Certaines traductions héritées de la V3 et certaines intégrations matérielles peuvent nécessiter des ajustements selon l'installation.
 
-Certaines traductions héritées du moteur V3 et certaines fonctionnalités matérielles peuvent nécessiter des ajustements selon l'installation.
+## Installer la V4.1.0 depuis Git
 
-## 📦 Installation simplifiée — Nouvelle installation
-
-> **Périmètre validé : Home Assistant Core / Docker**, avec accès au dossier de configuration `/config` (ou son chemin correspondant sur l'hôte). La V4 a été testée sur un Home Assistant neuf avec Docker, sans V3 et sans capteur. **L'installateur `install_v4.py` refuse volontairement de remplacer une installation Pool Cockpit existante.** Ce n'est pas encore un outil de migration de V3 vers V4.
-
-### 1. Prérequis
-
-- Une instance Home Assistant opérationnelle, avec accès au dossier de configuration et possibilité de redémarrer Home Assistant.
-- Python 3 sur la machine exécutant l'installateur et Git pour récupérer le dépôt.
-- Une **sauvegarde Home Assistant** réalisée avant installation.
-
-### 2. Récupérer Pool Cockpit
-
-Sur la machine ayant accès au dossier de configuration Home Assistant :
+**Périmètre validé :** Home Assistant Core / Docker, testé sur une instance Home Assistant neuve sans capteur de piscine, avec accès au dossier réel de configuration depuis la machine qui exécute l'installateur. Git et Python 3 sont requis. **Effectuez une sauvegarde complète Home Assistant avant l'installation.** Ce n'est ni une installation HACS ni un outil de migration automatique depuis la V3.
 
 ```bash
-git clone --branch main https://github.com/vinzgithub/ha-pool-cockpit.git
+git clone https://github.com/vinzgithub/ha-pool-cockpit.git
 cd ha-pool-cockpit
+python3 install_v41.py --config /chemin/vers/homeassistant/config --dry-run
+python3 install_v41.py --config /chemin/vers/homeassistant/config --yes
 ```
 
-### 3. Vérifier sans modifier
+Remplacez `/chemin/vers/homeassistant/config` par **le dossier accessible depuis la machine qui exécute Python**, contenant `configuration.yaml`. En Docker, le chemin de l'hôte est souvent différent du `/config` visible depuis le conteneur.
 
-Indiquez **le chemin réel du dossier de configuration Home Assistant vu depuis cette machine**. Exemple lorsque `/config` est accessible :
+- `--dry-run` effectue les vérifications **sans rien modifier**.
+- `--yes` autorise explicitement l'installation et crée une sauvegarde datée de la configuration existante.
+- L'installateur place le moteur V4, le backend, le module Réel/Démonstration et les ressources graphiques, puis crée le menu **Piscine**.
+- **Vérifiez la configuration Home Assistant**, redémarrez Home Assistant manuellement et actualisez le navigateur.
+- Ouvrez **Piscine** et utilisez les modes **Piscine réelle** ou **Démonstration**.
+
+Pour protéger les installations existantes, l'installateur refuse les configurations Lovelace incompatibles, les fichiers Pool Cockpit déjà présents et les chemins non pris en charge. Il ne redémarre pas Home Assistant automatiquement.
+
+### Mise à jour depuis une V4.0.0 compatible
+
+Réservée aux **installations officielles V4.0.0 reconnues et non modifiées** :
 
 ```bash
-python3 install_v4.py --config /config --dry-run
+python3 install_v41.py --config /chemin/vers/homeassistant/config --upgrade --dry-run
+python3 install_v41.py --config /chemin/vers/homeassistant/config --upgrade --yes
 ```
 
-Un message `PRÊT` confirme que les contrôles préalables sont passés. Si le script refuse l'installation, **ne forcez pas la modification manuelle** : vérifiez notamment la présence éventuelle d'une installation antérieure ou d'un bloc `lovelace:` existant.
+L'outil refuse les installations modifiées ou incompatibles. Le moteur V4, le backend et les paramètres personnalisés sont préservés. Effectuez une sauvegarde complète et consultez les conditions de mise à jour et de retour arrière.
 
-### 4. Installer et vérifier
+### Télécharger l'archive ZIP
 
-```bash
-python3 install_v4.py --config /config
-```
+Le [**paquet V4.1.0**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.1.0) propose une archive ZIP complète et son empreinte SHA-256. Vérifiez l'archive et le fichier interne `SHA256SUMS` avant de lancer le même installateur.
 
-L'installateur copie le bundle JavaScript, ses assets et le backend, crée le dashboard et ajoute sa configuration Lovelace. Il sauvegarde au préalable `configuration.yaml` dans `.pool_cockpit_backups/`.
+📖 [Guide complet d'installation, de mise à jour et de retour arrière](release/v4.1.0/INSTALLATION.md) · [Notes de version](docs/releases/V4.1.0.md)
 
-**Avant de redémarrer Home Assistant**, utilisez la vérification de configuration disponible dans votre installation. Redémarrez ensuite Home Assistant, rechargez le navigateur et ouvrez le menu **Piscine**. Vous pouvez ensuite associer vos appareils depuis la configuration du dashboard.
+## Sauvegardes, limites et sécurité
 
-**Important :** les commandes d'équipements réels demandent une configuration explicite et une validation sur le matériel. Ne présumez jamais qu'une commande est sûre sans vérification locale.
+- **Sauvegardes :** copies de l'installateur dans `.pool_cockpit_backups/`, à compléter par une sauvegarde Home Assistant entière. Restaurer uniquement les fichiers YAML **ne constitue pas** une désinstallation complète.
+- **V3 :** aucune migration automatique. Ancienne version conservée dans [`old-v3`](https://github.com/vinzgithub/ha-pool-cockpit/tree/old-v3).
+- **Autres installations :** Home Assistant OS/Supervised sans accès en écriture au dossier de configuration n'est pas couvert par l'installateur automatique.
+- **Confidentialité :** ne partagez jamais vos mots de passe, jetons, identifiants privés ou mesures sensibles.
+- **Sécurité :** Pool Cockpit ne remplace ni les dispositifs de protection, ni les automatismes de sécurité, ni l'entretien de la piscine. Vérifiez les commandes des équipements réels avant leur mise en service.
 
-### Vérification d'intégrité
-
-Les fichiers de la distribution frontend historique RC8.2 se trouvent dans `release/v4-rc8-2/` et sont contrôlables avec :
-
-```bash
-cd release/v4-rc8-2
-sha256sum -c SHA256SUMS
-```
-
-Le nom de fichier `pool-dashboard-v4-rc8-2.js` est conservé pour la traçabilité du bundle validé ; l'installateur de la version publique annonce **4.0.0**.
-
-## 🔁 Sauvegarde, migration et retour arrière
-
-- **Nouvelle installation uniquement** pour `install_v4.py`. Ne l'utilisez pas pour écraser une V3 ou une V4 déjà installée.
-- Le dossier `.pool_cockpit_backups/` contient une copie de `configuration.yaml` antérieure à l'installation. Pour revenir à l'état précédent, il faut également retirer les fichiers et le dashboard créés par l'installateur, puis vérifier la configuration et redémarrer Home Assistant. **La sauvegarde du seul YAML ne constitue pas une désinstallation complète.**
-- Conservez aussi une sauvegarde complète Home Assistant avant chaque opération.
-- La **V3 historique est conservée** sur la branche [`old-v3`](https://github.com/vinzgithub/ha-pool-cockpit/tree/old-v3). Elle n'est pas automatiquement migrée par cet installateur.
-
-## 🛡️ Confidentialité et sécurité
-
-Pool Cockpit exploite les entités et services de votre propre Home Assistant. Il ne remplace pas les automatismes de sécurité, interverrouillages ni procédures de maintenance des équipements. N'ajoutez jamais au dépôt GitHub vos secrets, jetons, mots de passe, identifiants d'appareil ou données privées.
-
-**Licence :** [PolyForm Noncommercial 1.0.0](LICENSE). Usage commercial soumis aux dispositions de la licence.
+**Licence :** [PolyForm Noncommercial 1.0.0](LICENSE). Tout usage commercial doit respecter les dispositions de la licence.
 
 ---
 
-<div align="center"><sub>Pool Cockpit V4.0.0 · Home Assistant · Votre piscine, votre cockpit.</sub></div>
+<div align="center"><sub>Pool Cockpit V4.1.0 · Home Assistant · Votre piscine, votre cockpit.</sub></div>
