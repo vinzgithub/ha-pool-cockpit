@@ -2,6 +2,9 @@ name: Capture Pool Cockpit V4.2 screenshots
 on:
   push:
     branches: [docs/v42-refresh-screenshots]
+    paths:
+      - tools/capture_v42_showcase.mjs
+      - .github/workflows/capture-v42-screenshots.yml
 permissions:
   contents: write
 jobs:
@@ -19,7 +22,8 @@ jobs:
       - run: node tools/capture_v42_showcase.mjs
       - name: Commit updated real-interface screenshots
         run: |
-          git add docs/images/v4.2.0/*.png
+          python3 tools/generate_sha256s.py
+          git add docs/images/v4.2.0/*.png SHA256SUMS
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
