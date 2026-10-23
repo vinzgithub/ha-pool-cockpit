@@ -20,9 +20,9 @@
 
 La V4.2.0 regroupe le moteur et la Démonstration dans un seul `pool-cockpit.js`, avec la carte `custom:pool-cockpit-card`. Les capteurs et réglages existants sont préservés.
 
-[**Télécharger la V4.2.0**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) · [**Guide de mise à jour**](release/v4.2.0/README.md)
+[**Télécharger la V4.2.0**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) · [**Guide d'installation / mise à jour**](release/v4.2.0/README.md)
 
-Cette version met à jour le **frontend d'une installation V4.1.0 existante**. Pour une installation neuve, commencer par la V4.1.0 complète ci-dessous.
+La V4.2.0 propose désormais une installation neuve directe et un chemin de mise à jour distinct pour les utilisateurs de V4.1.0.
 
 ## Découvrez la V4.2.0
 
@@ -58,43 +58,24 @@ Les captures ci-dessous proviennent du **moteur V4.2.0 exécuté dans un navigat
 
 Certaines traductions héritées de la V3 et certaines intégrations matérielles peuvent nécessiter des ajustements selon l'installation.
 
-## Installer la V4.1.0 depuis Git
+## Installer directement Pool Cockpit V4.2.0
 
-**Périmètre validé :** Home Assistant Core / Docker, testé sur une instance Home Assistant neuve sans capteur de piscine, avec accès au dossier réel de configuration depuis la machine qui exécute l'installateur. Git et Python 3 sont requis. **Effectuez une sauvegarde complète Home Assistant avant l'installation.** Ce n'est ni une installation HACS ni un outil de migration automatique depuis la V3.
+L'installation neuve utilise **un seul JavaScript**, `pool-cockpit.js`, et la carte `custom:pool-cockpit-card`. Elle installe aussi le backend Home Assistant et les ressources graphiques nécessaires.
+
+**Pré-requis :** Home Assistant Core / Docker avec accès au dossier réel contenant `configuration.yaml`, Python 3 et Git. Il ne s'agit pas d'une installation HACS. **Sauvegardez Home Assistant avant toute intervention.**
 
 ```bash
 git clone https://github.com/vinzgithub/ha-pool-cockpit.git
 cd ha-pool-cockpit
-python3 install_v41.py --config /chemin/vers/homeassistant/config --dry-run
-python3 install_v41.py --config /chemin/vers/homeassistant/config --yes
+python3 install_v42.py --config /chemin/vers/homeassistant/config --dry-run
+python3 install_v42.py --config /chemin/vers/homeassistant/config --yes
 ```
 
-Remplacez `/chemin/vers/homeassistant/config` par **le dossier accessible depuis la machine qui exécute Python**, contenant `configuration.yaml`. En Docker, le chemin de l'hôte est souvent différent du `/config` visible depuis le conteneur.
+Remplacez ce chemin par celui du dossier de configuration accessible **depuis la machine qui lance Python**. La commande `--dry-run` vérifie sans modifier ; `--yes` autorise l'installation, sauvegarde la configuration, copie les composants et déclare la ressource Lovelace. Vérifiez la configuration Home Assistant avant de redémarrer manuellement.
 
-- `--dry-run` effectue les vérifications **sans rien modifier**.
-- `--yes` autorise explicitement l'installation et crée une sauvegarde datée de la configuration existante.
-- L'installateur place le moteur V4, le backend, le module Réel/Démonstration et les ressources graphiques, puis crée le menu **Piscine**.
-- **Vérifiez la configuration Home Assistant**, redémarrez Home Assistant manuellement et actualisez le navigateur.
-- Ouvrez **Piscine** et utilisez les modes **Piscine réelle** ou **Démonstration**.
+**Installation existante ?** L'installateur neuf refuse les installations Pool Cockpit et les configurations Lovelace déjà personnalisées pour éviter les écrasements. Pour une V4.1.0 en place, utilisez uniquement le [guide de mise à jour vers V4.2.0](release/v4.2.0/README.md) : vos capteurs et paramètres sont conservés.
 
-Pour protéger les installations existantes, l'installateur refuse les configurations Lovelace incompatibles, les fichiers Pool Cockpit déjà présents et les chemins non pris en charge. Il ne redémarre pas Home Assistant automatiquement.
-
-### Mise à jour depuis une V4.0.0 compatible
-
-Réservée aux **installations officielles V4.0.0 reconnues et non modifiées** :
-
-```bash
-python3 install_v41.py --config /chemin/vers/homeassistant/config --upgrade --dry-run
-python3 install_v41.py --config /chemin/vers/homeassistant/config --upgrade --yes
-```
-
-L'outil refuse les installations modifiées ou incompatibles. Le moteur V4, le backend et les paramètres personnalisés sont préservés. Effectuez une sauvegarde complète et consultez les conditions de mise à jour et de retour arrière.
-
-### Télécharger l'archive ZIP
-
-Le [**paquet V4.1.0**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.1.0) propose une archive ZIP complète et son empreinte SHA-256. Vérifiez l'archive et le fichier interne `SHA256SUMS` avant de lancer le même installateur.
-
-📖 [Guide complet d'installation, de mise à jour et de retour arrière](release/v4.1.0/INSTALLATION.md) · [Notes de version](docs/releases/V4.1.0.md)
+📖 [Télécharger le frontend V4.2.0](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) · [Documentation de mise à jour](release/v4.2.0/README.md)
 
 ## Sauvegardes, limites et sécurité
 
