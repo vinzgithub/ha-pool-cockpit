@@ -22,3 +22,5 @@ coverage/
 .idea/
 .DS_Store
 Thumbs.db
+# Generated unified Pool Cockpit 4.2 distribution; build from reviewed sources
+/release/v4.2.0/pool-cockpit.js

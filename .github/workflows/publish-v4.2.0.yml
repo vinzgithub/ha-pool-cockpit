@@ -1,0 +1,35 @@
+name: Publish Pool Cockpit V4.2.0
+on:
+  push:
+    branches: [release/v4.2.0]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: github.repository == 'vinzgithub/ha-pool-cockpit'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check unified frontend
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s tests -p test_v42_single_bundle.py -v
+          python3 tools/build_unified_pool_cockpit.py
+          git diff --exit-code -- release/v4.2.0/pool-cockpit.js
+          node --check release/v4.2.0/pool-cockpit.js
+          (cd release/v4.2.0 && sha256sum pool-cockpit.js > pool-cockpit.js.sha256)
+          (cd release/v4.2.0 && sha256sum -c pool-cockpit.js.sha256)
+      - name: Publish release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create v4.2.0 release/v4.2.0/pool-cockpit.js release/v4.2.0/pool-cockpit.js.sha256 --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "Pool Cockpit V4.2.0 — JavaScript unifié" --notes-file docs/releases/V4.2.0.md --latest

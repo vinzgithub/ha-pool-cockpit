@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🌊 Pool Cockpit V4.1.0
+# 🌊 Pool Cockpit V4.2.0
 
 ### Your pool. One elegant cockpit.
 
@@ -8,13 +8,21 @@
 
 **English** · [**Français**](README.fr.md)
 
-![Version](https://img.shields.io/badge/version-4.1.0-126caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-0d355d)
+![Version](https://img.shields.io/badge/version-4.2.0-126caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-0d355d)
 
 ![Pool Cockpit promotional illustration](docs/images/v4-rc1/hero-en.webp)
 
 <sub>Promotional artwork and screenshots below date from the early V4 RC1. The released V4.1.0 interface has since evolved.</sub>
 
 </div>
+
+## What's new in V4.2.0 — One JavaScript resource
+
+V4.2.0 combines the engine and Demonstration in one `pool-cockpit.js`, with public card `custom:pool-cockpit-card`. Existing sensors and settings are preserved.
+
+[**Download V4.2.0**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) · [**Upgrade guide**](release/v4.2.0/README.md)
+
+This is a **frontend upgrade for existing V4.1.0 installs**. For a fresh installation, first install the full V4.1.0 package below.
 
 ## What is Pool Cockpit?
 
@@ -102,4 +110,4 @@ Prefer a packaged archive? Download the ZIP and SHA-256 checksum from the [**V4.
 
 ---
 
-<div align="center"><sub>Pool Cockpit V4.1.0 · Home Assistant · Your pool. One elegant cockpit.</sub></div>
+<div align="center"><sub>Pool Cockpit V4.2.0 · Home Assistant · Your pool. One elegant cockpit.</sub></div>
