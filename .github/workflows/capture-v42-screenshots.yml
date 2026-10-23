@@ -1,0 +1,27 @@
+name: Capture Pool Cockpit V4.2 screenshots
+on:
+  push:
+    branches: [docs/v42-refresh-screenshots]
+permissions:
+  contents: write
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    if: github.repository == 'vinzgithub/ha-pool-cockpit'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node tools/capture_v42_showcase.mjs
+      - name: Commit updated real-interface screenshots
+        run: |
+          git add docs/images/v4.2.0/*.png
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "docs: refresh screenshots from actual V4.2 Demo"
+            git push origin HEAD:docs/v42-refresh-screenshots
+          fi
