@@ -4,13 +4,14 @@ a53d4c593450b3e08f8db61bec562cfdd9268e40d964f85bb747f9e4626c7908  ./.github/work
 b088630f680cd825924ea54f1cf4bb316223334266dc6777f971f3907e1012a2  ./.github/workflows/publish-v4.1.0.yml
 673abe44ba1085bf98d4f58826b728fedb8a6bd53e72477624c02709c64bbeb0  ./.github/workflows/publish-v4.2.0.yml
 17c3c7b3aa68ca0a680d583a16f73ee78701e361e0feabc9ce41445f5e84ab6a  ./.github/workflows/tests.yml
+fcd507cfa06e9b4239f7d672a887a2717861d2d5d1451a94788514dcb2d43513  ./.github/workflows/v42-install-manifest.yml
 2f8f78acbb440926d5061d532d4bc5762ac4345ee7ffb5e9874ef17f4f160db2  ./.gitignore
 24d87832aeeae55d58ac0012ba304dc8a2a704c9cc9f424d6eb3a8c75f8eada5  ./CHANGELOG.md
 709c700f20a5ddbc280e2cab0a36decd05e2b2d459c2c6ed6be7a72a0e8cbe0e  ./COMMERCIAL-LICENSE.md
 ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8  ./LICENSE
 a70b91b7d441289996b48ddd23af3bd8c9abddb050d956062af4054409c62fd1  ./NOTICE
-6f5acb19f53c07fec01c3424e36c3fd29ca3acc44ab7dbd7b65f4adf5959be8d  ./README.fr.md
-eac9851869d289fb5f274838e5364b01d581e38db23a2f1ee717b34f61aa8322  ./README.md
+e33422051457e76739227474b4b9ff3348439e8833ba6550625b55a9fe83452e  ./README.fr.md
+85e912eaf9c344dfd3cbb106d77badcef34ca59c0b5b04604d7b19f8d17b8f5d  ./README.md
 018c8c8a25a448a228389a8e4d3e3f610e0d44696a516b66801daad4b052e1a4  ./conftest.py
 9266c19d6a57ae48139566125a19f5cf1cf3ea42e04661836d658622c6dab9b6  ./docs/developer/ARCHITECTURE.md
 be12b03c4cc6e7275fe7ab9793fade69db6ef49061c6c6539f609bac6e71e83d  ./docs/developer/DESIGN_SYSTEM.md
@@ -71,6 +72,7 @@ a92c53fd12da96d6ca2275eede912351f94d40fba79c2b56321845c680007419  ./home_assista
 532f6309fe82dee3985c580ed3a2999081f7a4d2d81f7f8f0eaab665679572c0  ./install_pool_dashboard.py
 aedb3c231c130cad9496974034189205761881a24ec4a07a6e31eb8b2d08cf10  ./install_v4.py
 5c773286d0017de2e5076dd34d2b3492ebc1fea7365af83352fcb45e6199449b  ./install_v41.py
+d63595d99e01c2b188609bb623128a761a2778288f53a253d65364d79f2b721a  ./install_v42.py
 0b619f1121d9788994ca0d60c75e9d57d2220209c24cec956260c307cd58da35  ./outils/construire-bundle.mjs
 3d3267f74f94212e4b5b8afcebcdc09fc5c379e71da55c1b4f83612f6b218751  ./outils/lib/construction-bundle.mjs
 11ed8dfa7689bb9e713019e151be776cef6b9eda03ef83d226701feef3f764b8  ./outils/verifier-dom-flag-desactive.mjs
@@ -88,7 +90,7 @@ cfc12f801afea2260c703268a53cd86d573ec598707e61620958c212075e92f6  ./release/v4-r
 c89710dc7db9eea057ce6fa5f025795234fdf89873985a797e237b17fd798e62  ./release/v4.1.0/INSTALLATION.md
 276711099e15934439d7283d25483dc1ec09fbd5aeeadc8db59afc25b264c869  ./release/v4.1.0/assets/demo-pool-camera.jpg
 e5bfed20e69f976071f60189da649bbe07cb06ec1962239c4679124a7e1d7940  ./release/v4.1.0/pool-cockpit-dual-mode-card.js
-d73982692c48ca455a6bb94db50b6d6a11b15c1a901721135806ad1868d39730  ./release/v4.2.0/README.md
+aca7aeb0ff36ec1121a81d030255dbf87742838d64ac1883702abc0f10575fc9  ./release/v4.2.0/README.md
 327735a959fbba37c6e9b7a177549b3ef18378ed367ca1843e568e4fe9bb03e0  ./release/v4.2.0/pool-cockpit.js
 ee264428db6363d7d2e06b9d5c12afeb8e5594f22ba405c8c4a613f12382031b  ./src/adaptateurs/home-assistant/construire-entrees-eau-meteo.js
 b5b7097a8feef29e8a15beae2a09dc54680c2b9177d95c3d4d28c80fa06837d2  ./src/configuration/fonctionnalites.js
@@ -190,6 +192,7 @@ e188951ca0d8597dbedb36cd9c0a78c276a6888db3d9b6631b999c8e517d6221  ./tests/test_s
 7562727932a6a6e44b6e6071e831cba5238145dab76e7b8155bd18faf62d8ee7  ./tests/test_treatment_journal.py
 9d3a6b31267d1727835fddb398851171c53160d92a0285f2c1973c0f3b6360b8  ./tests/test_v41_default_mode.js
 425d61b518426727e40ff49f9de8dfff0b50081c3c8e461889ef70c4fbe2bc7d  ./tests/test_v41_full_install.py
+0881f27aca935f5a8d332d46c96f75b1c483ebf33adde058666031945e8830f2  ./tests/test_v42_fresh_install.py
 81abce2133567ead556ed18a50da38ed8cbd85d242c018aee06fdbddcb69836b  ./tests/test_v42_single_bundle.py
 398a9c3892fab016fbf00f79268e3c9b6617bdb9ae22a0a7005e9ef6cd678052  ./tests/test_weather.py
 c93530a55a731d352f41b2b59adb0870c7945e78a5befc0c99a53c42de19c058  ./tests/unitaires/assistant-expert-adaptateur.test.mjs
