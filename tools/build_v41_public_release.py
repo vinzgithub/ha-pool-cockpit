@@ -12,6 +12,7 @@ FILES = (
     "README.fr.md",
     "LICENSE",
     "tests/test_v41_full_install.py",
+    "tests/test_v41_default_mode.js",
     "release/v4.1.0/INSTALLATION.md",
     "docs/releases/V4.1.0.md",
 )

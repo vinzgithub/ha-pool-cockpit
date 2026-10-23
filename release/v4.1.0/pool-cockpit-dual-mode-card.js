@@ -103,7 +103,12 @@
     setConfig(config){
       if(!config||typeof config!=="object")throw Error("Configuration Pool Cockpit requise");
       this._config={...config};
-      this._mode=this._standalone||config.initial_mode==="demo"?"demo":"real";
+      // On a fresh HA instance with no pool devices, show a safe, clearly
+      // labelled simulation instead of an uninitialized real dashboard.
+      // Explicit initial_mode takes precedence; configured pools start in Real.
+      const configured=Array.isArray(config.devices)&&config.devices.length>0;
+      this._mode=this._standalone||config.initial_mode==="demo"||
+        (config.initial_mode!=="real"&&!configured)?"demo":"real";
       this._render();
     }
     set hass(value){
@@ -119,6 +124,8 @@
     }
     _render(){
       if(!this.isConnected)return;
+      this._v41ConfigObserver?.disconnect();
+      this._v41ConfigObserver=null;
       const demo=this._mode==="demo";
       const words=this._config.language==="en"
         ?["Real pool","Demonstration","DEMO MODE — SIMULATED DATA"]
@@ -136,10 +143,23 @@
       this.shadowRoot.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>this._switch(b.dataset.mode)));
       const toggle=this.shadowRoot.querySelector("[data-collapse]");
       if(toggle)toggle.addEventListener("click",()=>{this._collapsed=!this._collapsed;try{localStorage.setItem("pool-cockpit-v41-modebar-collapsed",this._collapsed?"1":"0");}catch{}const bar=this.shadowRoot.querySelector(".bar");bar.classList.toggle("is-collapsed",this._collapsed);toggle.setAttribute("aria-expanded",String(!this._collapsed));toggle.setAttribute("aria-label",this._collapsed?"Afficher la barre Réel / Démo":"Masquer la barre Réel / Démo");toggle.textContent=this._collapsed?"⌄":"⌃";});
+      // Never feed an empty Real configuration into the V4 engine: its
+      // first-run path has no initialized device state, and its global
+      // last-valid-config fallback could otherwise reuse DEMO device IDs.
+      if(!demo&&(!Array.isArray(this._config.devices)||this._config.devices.length===0)){
+        this._child=null;
+        const mount=this.shadowRoot.querySelector(".mount");
+        mount.innerHTML='<section data-v41-real-empty role="status" style="padding:24px;border-radius:18px;background:linear-gradient(135deg,#08355b,#12648b);color:#f3fbff;font-family:Arial,sans-serif;line-height:1.6"><h2 style="margin:0 0 10px;font-size:1.2rem">Piscine réelle : aucun appareil configuré</h2><p style="margin:0">Aucune mesure réelle disponible. Ajoutez vos appareils dans la configuration de cette carte Home Assistant, ou sélectionnez Démonstration pour découvrir Pool Cockpit avec des données fictives.</p></section>';
+        return;
+      }
       const child=document.createElement(REAL);
       const config={...this._config,type:"custom:"+REAL};
       delete config.initial_mode;
       if(demo){
+        // V4 caches the last valid card config in browser localStorage.
+        // Prevent demo sensors from polluting that global Real-mode cache.
+        child.rc30ReadLastValidConfig=()=>null;
+        child.rc30RememberValidConfig=()=>{};
         for(const key of Object.keys(config))delete config[key];
         config.type="custom:"+REAL;
         config.language=this._config.language||"fr";
@@ -209,7 +229,6 @@
         }
       };
       // V4.1 : conserver les retouches validées après chaque rendu du moteur V4.
-      this._v41ConfigObserver?.disconnect();
       if(root && typeof MutationObserver==="function" && typeof root.appendChild==="function"){
         const applyConfigStyle=()=>{
           if(root.querySelector("style[data-v41-config-css]"))return;

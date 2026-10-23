@@ -15,6 +15,11 @@ jobs:
           python-version: "3.12"
       - name: Test safe clean install, upgrade and rollback
         run: python -m unittest discover -s tests -p test_v41_full_install.py -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Test initial Real/Demo rendering and fake-data isolation
+        run: node --test tests/test_v41_default_mode.js
       - name: Build and verify complete ZIP
         shell: bash
         run: |
@@ -26,7 +31,8 @@ jobs:
           mkdir -p "$RUNNER_TEMP/validate-v41"
           unzip -q "$zip" -d "$RUNNER_TEMP/validate-v41"
           (cd "$RUNNER_TEMP/validate-v41" && sha256sum -c SHA256SUMS)
-          (cd "$RUNNER_TEMP/validate-v41" && python -m unittest discover -s tests -p test_v41_full_install.py -v) 
+          (cd "$RUNNER_TEMP/validate-v41" && python -m unittest discover -s tests -p test_v41_full_install.py -v)
+          (cd "$RUNNER_TEMP/validate-v41" && node --test tests/test_v41_default_mode.js) 
           sha256sum -c "$zip.sha256"
       - name: Replace assets on existing v4.1.0 release only after successful checks
         shell: bash

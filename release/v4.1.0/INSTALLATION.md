@@ -29,4 +29,4 @@ L'outil enregistre les sauvegardes dans `.pool_cockpit_backups/v4.1.0-<date>/`. 
 
 Une installation neuve n'écrase jamais une installation existante et refuse les blocs Lovelace préexistants demandant une intégration manuelle. L'outil n'effectue aucun redémarrage ou contrôle des équipements. L'installation Home Assistant OS/Supervised sans accès à son dossier de configuration n'est pas automatisée.
 
-Aucun capteur n'est requis pour ouvrir l'interface. La Démo utilise des données et commandes fictives isolées ; la commande d'un équipement réel nécessite une configuration séparée.
+Aucun capteur n'est requis pour ouvrir l'interface. **Sans capteur configuré, la Démonstration est ouverte automatiquement** avec une bannière signalant explicitement les données fictives. Cliquer sur Piscine réelle affiche une aide de première configuration et jamais des mesures fictives. Avec des appareils configurés, le mode Réel est sélectionné au démarrage. La Démo utilise des commandes fictives isolées, sans écrire sa liste d'appareils dans les réglages réels du navigateur ; la commande d'un équipement réel nécessite une configuration séparée.
