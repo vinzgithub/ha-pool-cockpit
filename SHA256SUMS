@@ -30,6 +30,7 @@ bbdcde726274ab576b16647b8fc2d86e4c019eaf80476f31deb970a7af4652d0  ./docs/images/
 5beba485aceeb485406cb93eccd690036966f0519a88ba268b483486d6c704bd  ./docs/images/v4-rc1/planning.webp
 011f2163d1a2068e4d6d3657f5a9cd17cc7b725a945ddfb5c6d29647cd583d66  ./docs/images/v4-rc1/water.webp
 7e955a94e55bfbba9fd84328101d437c42f5ca745f4ccc3988ad1d0a9213019f  ./docs/releases/V4.1.0.md
+eeee9baed6447b0aff592e95872f8c9214254b3eb3dfb3ec295df9458092fb57  ./docs/releases/V4.2.0.md
 a52df9410a28ce41689f6eac78cca54870bb521e015962fb3ed76be2b0634452  ./docs/user/CONFIGURATION.md
 e1b8badff148e91f736bbdf4bb36e56d5e23c20bbaaabec4c590bbdcc637b23e  ./docs/user/DASHBOARD.md
 00ffec8c90cf6b1afe8cf8e2156a46ad5c335c295e4cca441497b8af19f046ce  ./docs/user/INSTALLATION.md
@@ -79,7 +80,7 @@ cfc12f801afea2260c703268a53cd86d573ec598707e61620958c212075e92f6  ./release/v4-r
 c89710dc7db9eea057ce6fa5f025795234fdf89873985a797e237b17fd798e62  ./release/v4.1.0/INSTALLATION.md
 276711099e15934439d7283d25483dc1ec09fbd5aeeadc8db59afc25b264c869  ./release/v4.1.0/assets/demo-pool-camera.jpg
 e5bfed20e69f976071f60189da649bbe07cb06ec1962239c4679124a7e1d7940  ./release/v4.1.0/pool-cockpit-dual-mode-card.js
-a66531fd2c6ca9a1fd5daf92501d8716f7e8624d48fefdc08f83c8cba1b6d79a  ./release/v4.2.0/README.md
+d73982692c48ca455a6bb94db50b6d6a11b15c1a901721135806ad1868d39730  ./release/v4.2.0/README.md
 327735a959fbba37c6e9b7a177549b3ef18378ed367ca1843e568e4fe9bb03e0  ./release/v4.2.0/pool-cockpit.js
 ee264428db6363d7d2e06b9d5c12afeb8e5594f22ba405c8c4a613f12382031b  ./src/adaptateurs/home-assistant/construire-entrees-eau-meteo.js
 b5b7097a8feef29e8a15beae2a09dc54680c2b9177d95c3d4d28c80fa06837d2  ./src/configuration/fonctionnalites.js
