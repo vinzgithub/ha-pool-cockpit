@@ -79,7 +79,7 @@ cfc12f801afea2260c703268a53cd86d573ec598707e61620958c212075e92f6  ./release/v4-r
 c89710dc7db9eea057ce6fa5f025795234fdf89873985a797e237b17fd798e62  ./release/v4.1.0/INSTALLATION.md
 276711099e15934439d7283d25483dc1ec09fbd5aeeadc8db59afc25b264c869  ./release/v4.1.0/assets/demo-pool-camera.jpg
 e5bfed20e69f976071f60189da649bbe07cb06ec1962239c4679124a7e1d7940  ./release/v4.1.0/pool-cockpit-dual-mode-card.js
-9b25309defbe5fe458c8d4818a27dca220ce6f0ec4867b4f3a3857eaddcd3713  ./release/v4.2.0/README.md
+a66531fd2c6ca9a1fd5daf92501d8716f7e8624d48fefdc08f83c8cba1b6d79a  ./release/v4.2.0/README.md
 327735a959fbba37c6e9b7a177549b3ef18378ed367ca1843e568e4fe9bb03e0  ./release/v4.2.0/pool-cockpit.js
 ee264428db6363d7d2e06b9d5c12afeb8e5594f22ba405c8c4a613f12382031b  ./src/adaptateurs/home-assistant/construire-entrees-eau-meteo.js
 b5b7097a8feef29e8a15beae2a09dc54680c2b9177d95c3d4d28c80fa06837d2  ./src/configuration/fonctionnalites.js
