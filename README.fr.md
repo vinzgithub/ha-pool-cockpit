@@ -2,7 +2,7 @@
 
 Installer depuis Git (Home Assistant Core/Docker) :
 ```bash
-git clone --branch release/v4.1.0 https://github.com/vinzgithub/ha-pool-cockpit.git
+git clone https://github.com/vinzgithub/ha-pool-cockpit.git
 cd ha-pool-cockpit
 python3 install_v41.py --config /config --dry-run
 python3 install_v41.py --config /config --yes
