@@ -10,7 +10,7 @@
 
 ![Version](https://img.shields.io/badge/version-4.2.0-126caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-0d355d)
 
-![Pool Cockpit promotional illustration](docs/images/v4-rc1/hero-en.webp)
+![Pool Cockpit promotional illustration](docs/images/v4.2.0/pool-cockpit-v4.2-hero.webp)
 
 <sub>Pool Cockpit promotional illustration; see current V4.2.0 interface screenshots below.</sub>
 
