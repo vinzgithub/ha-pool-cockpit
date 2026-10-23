@@ -49,3 +49,17 @@ ne prétend pas encore avoir refactorisé tous ces identifiants internes.
 Aucun remplacement automatique de la V4.1.0 ou du dashboard de production d'Épinay
 n'est fourni par ce prototype. La migration devra remplacer deux ressources
 par une seule **après** validation sur une instance distincte et sauvegarde de la configuration.
+
+## Installation manuelle sur une V4.1.0 existante (Épinay)
+
+**Pré-requis :** moteur/backend existants inchangés, sauvegarde de `pool-dashboard-v4-test.yaml` et `.storage/lovelace_resources`. La V4.2 unifiée n'est pas encore une release stable.
+
+1. Télécharger seulement `release/v4.2.0/pool-cockpit.js` depuis cette branche de développement sous le nom `www/ha-pool-dashboard/pool-cockpit.js`, sans supprimer les fichiers V4.1.0.
+2. Dans Lovelace → Ressources, **ajouter d'abord** `/local/ha-pool-dashboard/pool-cockpit.js?v=4.2.0` comme module JavaScript, en conservant les deux ressources V4.1.0 pendant le test.
+3. Dans `pool-dashboard-v4-test.yaml`, changer **seulement** le type de carte, de `custom:pool-cockpit-dual-mode-card` à `custom:pool-cockpit-card`. Ne pas modifier les capteurs, la météo, les équipements ni les autres paramètres.
+4. Forcer le rechargement du navigateur, contrôler l'affichage et les deux modes.
+5. **Seulement après validation**, supprimer les deux anciennes ressources V4/4.1 du gestionnaire Lovelace. Garder les fichiers sur disque pour faciliter le retour arrière.
+
+Retour arrière : restaurer `type: custom:pool-cockpit-dual-mode-card` dans le YAML et conserver/recréer les deux ressources JavaScript antérieures. Le moteur et le backend ne changent pas.
+
+**Ne pas activer de commande de filtration, de PAC ou d'éclairage pendant le contrôle initial.**
