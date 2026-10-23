@@ -80,7 +80,7 @@ Replace the sample path with the actual Home Assistant configuration directory a
 ## Backups, limitations and security
 
 - **Backups:** installer snapshots are saved in `.pool_cockpit_backups/`; keep a separate full Home Assistant backup. Restoring YAML alone is **not** a complete uninstall.
-- **V3:** no automatic V3 migration. Historical source remains on [`old-v3`](https://github.com/vinzgithub/ha-pool-cockpit/tree/old-v3).
+- **V3:** no automatic migration from V3. The historical V3 release remains available through the [`v3.0.2` Git tag](https://github.com/vinzgithub/ha-pool-cockpit/tree/v3.0.2).
 - **Other installations:** Home Assistant OS/Supervised without writable access to the configuration directory is not covered by this automated installer.
 - **Privacy:** do not publish Home Assistant credentials, device IDs, tokens or sensitive telemetry.
 - **Safety:** Pool Cockpit is not a substitute for physical interlocks, safety devices or pool maintenance. Verify every real equipment command before use.
