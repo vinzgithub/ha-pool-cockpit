@@ -1,0 +1,29 @@
+name: Refresh V4.2 install manifest
+on:
+  push:
+    branches: [fix/v42-complete-install-readme]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    if: github.repository == 'vinzgithub/ha-pool-cockpit'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify fresh installation
+        run: |
+          python3 -m unittest discover -s tests -p test_v42_fresh_install.py -v
+          python3 -m unittest discover -s tests -p test_v42_single_bundle.py -v
+      - name: Update SHA256SUMS
+        run: |
+          python3 tools/generate_sha256s.py
+          git add SHA256SUMS
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'build: refresh V4.2 install manifest'
+            git push origin HEAD:fix/v42-complete-install-readme
+          fi

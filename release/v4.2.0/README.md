@@ -1,8 +1,21 @@
-# Pool Cockpit V4.2.0 — Mise à jour du frontend
+# Pool Cockpit V4.2.0 — Installation et mise à jour
 
-La V4.2.0 réunit le moteur et la Démonstration dans **un seul fichier JavaScript**. Elle conserve les réglages, capteurs, équipements et le backend Home Assistant. Cette livraison est **une mise à jour depuis V4.1.0**, pas un installateur autonome neuf.
+La V4.2.0 réunit le moteur et la Démonstration dans **un seul fichier JavaScript**. Elle conserve les réglages, capteurs, équipements et le backend Home Assistant. Pour une installation neuve, utilisez l'installateur V4.2.0 ; pour une V4.1.0 existante, suivez la mise à jour manuelle ci-dessous.
 
-## Installer depuis V4.1.0
+## Installation neuve V4.2.0
+
+La V4.2.0 peut être installée directement depuis le dépôt GitHub sur une configuration Home Assistant Core / Docker compatible, sans installer d'abord la V4.1.0. L'installateur copie le frontend unifié, le backend et les ressources graphiques ; une seule ressource Lovelace est déclarée.
+
+```bash
+git clone https://github.com/vinzgithub/ha-pool-cockpit.git
+cd ha-pool-cockpit
+python3 install_v42.py --config /chemin/vers/homeassistant/config --dry-run
+python3 install_v42.py --config /chemin/vers/homeassistant/config --yes
+```
+
+L'outil exige un accès au véritable dossier `configuration.yaml`. Il refuse toute installation Pool Cockpit préexistante ou configuration Lovelace incompatible. Sauvegarder Home Assistant et vérifier la configuration avant le redémarrage manuel.
+
+## Mise à jour depuis V4.1.0
 
 1. Sauvegarder la configuration du dashboard et la liste des ressources Lovelace. Garder les anciens fichiers sur disque.
 2. Télécharger `pool-cockpit.js` depuis [la version V4.2.0](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) et le copier dans `<config>/www/ha-pool-dashboard/pool-cockpit.js`.
