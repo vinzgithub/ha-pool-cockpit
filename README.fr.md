@@ -16,23 +16,40 @@
 
 </div>
 
-## Nouveauté V4.2.0 — Un seul JavaScript
+## Pool Cockpit, c'est quoi ?
 
-La V4.2.0 regroupe le moteur et la Démonstration dans un seul `pool-cockpit.js`, avec la carte `custom:pool-cockpit-card`. Les capteurs et réglages existants sont préservés.
+**Pool Cockpit est un tableau de bord pour suivre et gérer sa piscine depuis Home Assistant.** Home Assistant est un logiciel de domotique qui permet de réunir au même endroit les informations de vos appareils connectés.
 
-[**Télécharger la V4.2.0**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) · [**Guide d'installation / mise à jour**](release/v4.2.0/README.md)
+Au lieu de consulter plusieurs applications pour voir la température de l'eau, le pH, la filtration ou la pompe à chaleur, vous retrouvez **l'essentiel de votre piscine sur un seul écran**, accessible depuis Home Assistant sur ordinateur, tablette ou téléphone.
 
-La V4.2.0 propose désormais une installation neuve directe et un chemin de mise à jour distinct pour les utilisateurs de V4.1.0.
+Pool Cockpit organise ces informations en **six rubriques** :
 
-## Découvrez la V4.2.0
+- **Vue d'ensemble :** l'état de la piscine en un coup d'œil.
+- **Conseils :** des indications fondées sur les informations disponibles.
+- **Mesures :** la température de l'eau, le pH, le Redox (ORP) et les autres valeurs transmises par vos capteurs.
+- **Équipements :** le suivi de la filtration, de la pompe à chaleur et de l'éclairage, selon votre installation.
+- **Planning :** les programmations disponibles.
+- **Historique :** l'évolution des mesures et des événements.
 
-**Pool Cockpit** est un tableau de bord Home Assistant pour suivre les mesures de l'eau, la filtration, la pompe à chaleur, les équipements, les conseils et les programmations depuis une interface unique.
+Les informations et commandes réellement accessibles dépendent des équipements que vous possédez et de leur configuration dans Home Assistant.
 
-La V4.2.0 réunit le moteur de la piscine et la Démonstration dans **une seule ressource JavaScript**. Une installation équipée démarre en **Piscine réelle** ; une installation sans capteurs peut explorer le mode **Démonstration**, sans action sur les équipements.
+### Deux façons de l'utiliser
 
-**Prérequis du mode Réel :** Pool Cockpit fonctionne dans Home Assistant. Il faut d'abord y installer et configurer les intégrations correspondant à vos équipements (par exemple [Blue Connect Local](https://github.com/Adrien40/ha-blue-connect-local) ou [Flipr Local](https://github.com/Adrien40/ha-flipr-local), développées par Adrien40, pour les sondes compatibles), puis associer les entités à Pool Cockpit. Ces intégrations sont indépendantes et ne sont pas livrées avec Pool Cockpit.
+**🏊 Mode Réel — votre propre piscine**
 
-**Mode Démonstration :** vous pouvez découvrir l'interface sans piscine, sonde ou intégration de matériel supplémentaire. Home Assistant reste nécessaire. Les données sont fictives et les commandes ne pilotent aucun équipement réel.
+Pour voir les vraies valeurs de votre piscine, **Home Assistant doit être installé et vos capteurs ou équipements doivent déjà y être configurés**, grâce aux intégrations adaptées à votre matériel. Pool Cockpit ne se connecte pas directement à toutes les sondes : il utilise les informations remontées dans Home Assistant, auxquelles vous associez ensuite les entités correspondantes.
+
+Par exemple, pour certains appareils compatibles, vous pouvez installer dans Home Assistant les projets indépendants d'**Adrien40** : [Blue Connect Local](https://github.com/Adrien40/ha-blue-connect-local) pour des sondes Blue Connect, ou [Flipr Local](https://github.com/Adrien40/ha-flipr-local) pour des sondes Flipr. **Ces intégrations ne sont pas incluses dans Pool Cockpit** et ne sont utiles que si vous disposez du matériel concerné. D'autres intégrations Home Assistant peuvent convenir.
+
+**🎮 Mode Démonstration — découvrir sans matériel**
+
+Vous n'avez pas de piscine connectée ? Vous pouvez tout de même parcourir Pool Cockpit avec **des mesures fictives** et découvrir ses écrans. **Aucune sonde, aucun équipement ni aucune intégration matérielle supplémentaire n'est nécessaire**. Home Assistant et Pool Cockpit restent nécessaires pour afficher l'interface. Les données et commandes de démonstration n'agissent jamais sur vos équipements réels.
+
+### Nouveautés de la V4.2.0
+
+Cette version regroupe l'interface et le mode Démonstration dans **un seul fichier JavaScript**, `pool-cockpit.js`, avec une carte unique `custom:pool-cockpit-card`. Elle peut être installée directement sur un Home Assistant compatible, ou remplacer la V4.1.0 en conservant la configuration existante selon le guide de mise à jour.
+
+[**Télécharger Pool Cockpit V4.2.0**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) · [**Installation et mise à jour**](#installer-directement-pool-cockpit-v420)
 
 ## Aperçu de l'interface V4.2.0
 
