@@ -16,23 +16,40 @@
 
 </div>
 
-## What's new in V4.2.0 — One JavaScript resource
+## What is Pool Cockpit?
 
-V4.2.0 combines the engine and Demonstration in one `pool-cockpit.js`, with public card `custom:pool-cockpit-card`. Existing sensors and settings are preserved.
+**Pool Cockpit is a dashboard for monitoring and managing your swimming pool in Home Assistant.** Home Assistant is a home-automation platform that brings information from your connected devices together.
 
-[**Download V4.2.0**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) · [**Installation / upgrade guide**](release/v4.2.0/README.md)
+Instead of switching between multiple apps to check water temperature, pH, filtration or your heat pump, you get **a clear view of your pool in one place**, accessible through Home Assistant on a computer, tablet or phone.
 
-V4.2.0 now offers a direct fresh-install route and a separate upgrade path for V4.1.0 users.
+Pool Cockpit brings the information together in **six sections**:
 
-## Discover V4.2.0
+- **Overview:** see the pool's current status at a glance.
+- **Advice:** review guidance based on the information available.
+- **Measurements:** track water temperature, pH, ORP (redox) and other readings provided by your sensors.
+- **Equipment:** follow filtration, heat pump and lighting status, depending on your setup.
+- **Planning:** access available schedules.
+- **History:** see how readings and events have changed over time.
 
-**Pool Cockpit** is a Home Assistant dashboard for swimming pool water monitoring, filtration, heat-pump status, connected equipment, advice and schedules—all in one interface.
+The features and controls available depend on your actual devices and how they are configured in Home Assistant.
 
-V4.2.0 combines the pool engine and Demonstration mode in **a single JavaScript resource**. Configured systems open in **Real pool**; users without sensors can explore **Demonstration** without controlling actual devices.
+### Two ways to use it
 
-**Requirements — real pool:** Pool Cockpit runs **inside Home Assistant**; it is not a standalone app. For actual measurements, first connect and configure your sensors and equipment in Home Assistant using integrations suited to your devices. For example, [Blue Connect Local by Adrien40](https://github.com/Adrien40/ha-blue-connect-local) supplies Home Assistant readings from compatible Blue Connect probes; [Flipr Local](https://github.com/Adrien40/ha-flipr-local) is an option for compatible Flipr probes. These are **independent, optional projects**; they are not bundled with Pool Cockpit. You can then map your Home Assistant entities in Pool Cockpit.
+**🏊 Real Pool mode — monitor your own pool**
 
-**Requirements — Demonstration:** No real pool, probes, equipment or device integrations needed. **Home Assistant is still required** to display the dashboard. Demo data is fictional and does not control actual devices.
+To see real measurements, **Home Assistant must already be installed, and your sensors and equipment must be connected and configured there** through the integrations suited to your devices. Pool Cockpit does not directly discover every sensor: it uses information already available in Home Assistant, whose entities you then map in the dashboard.
+
+For compatible devices, examples of separate integrations by **Adrien40** include [Blue Connect Local](https://github.com/Adrien40/ha-blue-connect-local) for Blue Connect probes and [Flipr Local](https://github.com/Adrien40/ha-flipr-local) for Flipr probes. **These integrations are not bundled with Pool Cockpit** and are only needed if you own the relevant hardware. Other Home Assistant integrations may work with your setup.
+
+**🎮 Demonstration mode — explore without hardware**
+
+No connected pool? You can explore Pool Cockpit with **simulated measurements** and discover its interface. **No physical sensors, pool equipment or extra device integrations are needed.** Home Assistant and Pool Cockpit are still required to display the dashboard. Demo data and controls never operate real devices.
+
+### What's new in V4.2.0?
+
+V4.2.0 combines the dashboard and Demonstration mode into **one JavaScript file**, `pool-cockpit.js`, using a single `custom:pool-cockpit-card`. You can install this version directly on a compatible Home Assistant system, or upgrade from V4.1.0 while preserving existing settings by following the upgrade guide.
+
+[**Download Pool Cockpit V4.2.0**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) · [**Installation and upgrade guide**](#install-pool-cockpit-v420-directly)
 
 ## V4.2.0 interface gallery
 
