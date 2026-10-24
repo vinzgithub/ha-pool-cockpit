@@ -1,0 +1,26 @@
+name: Update V4.2.0 release notes
+on:
+  push:
+    branches:
+      - docs/v42-readme-first
+    paths:
+      - .github/workflows/sync-v42-release-notes.yml
+permissions:
+  contents: write
+
+jobs:
+  update-release-notes:
+    if: github.repository == 'vinzgithub/ha-pool-cockpit'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Use V4.2.0 change notes without README overview
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release edit v4.2.0 --repo "$GITHUB_REPOSITORY" --notes-file docs/releases/V4.2.0.md
+          gh release view v4.2.0 --repo "$GITHUB_REPOSITORY" --json body -q .body > /tmp/v42-published-notes.md
+          diff -u docs/releases/V4.2.0.md /tmp/v42-published-notes.md
