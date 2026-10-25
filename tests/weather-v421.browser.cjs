@@ -34,7 +34,7 @@ const {PNG}=require("pngjs");
    for(const [level,severity,label] of levels){
     await page.evaluate(({level,severity,label})=>{const c=document.querySelector("pool-cockpit-card").shadowRoot.querySelector("pool-dashboard-v4-test-card");c._preferences={...c._preferences,animations:false};c.currentWeatherAlert=()=>({configured:true,available:true,active:severity>0,severity,levelKey:level,levelLabel:label,department:"Sainte-Gemme-la-Plaine — Vendée",source:"Capteur fictif de test",alerts:severity?[{key:"wind",icon:"🌬️",label:"Vent violent",levelLabel:label,severity}]:[]});c.render();},{level,severity,label});
     for(const tab of tabs){
-     const state=await page.evaluate(tab=>{const c=document.querySelector("pool-cockpit-card").shadowRoot.querySelector("pool-dashboard-v4-test-card"),root=c.shadowRoot;const nav=root.querySelector('[data-v4-view="'+tab+'"]');if(!nav)return{error:"No tab "+tab};nav.click();const shell=root.querySelector(".pool-cockpit-v4"),alert=shell?.querySelector(":scope>.rc26-weather-banner"),r=alert?.getBoundingClientRect();return{tab:c._v4Ui.ongletActif,count:root.querySelectorAll(".rc26-weather-banner").length,direct:shell?.querySelectorAll(":scope>.rc26-weather-banner").length||0,legacy:root.querySelectorAll(".v4-legacy-stage .rc26-weather-banner").length,before:alert?.nextElementSibling?.classList.contains("v4-navigation"),link:alert?.querySelector("a")?.href,location:alert?.querySelector("small")?.textContent,rect:r?{x:r.x,y:r.y,width:r.width,height:r.height}:null};},tab);
+     const state=await page.evaluate(tab=>{const c=document.querySelector("pool-cockpit-card").shadowRoot.querySelector("pool-dashboard-v4-test-card"),root=c.shadowRoot;const nav=root.querySelector('[data-v4-view="'+tab+'"]');if(!nav)return{error:"No tab "+tab};nav.click();window.scrollTo(0,0);const shell=root.querySelector(".pool-cockpit-v4"),alert=shell?.querySelector(":scope>.rc26-weather-banner"),r=alert?.getBoundingClientRect();return{tab:c._v4Ui.ongletActif,count:root.querySelectorAll(".rc26-weather-banner").length,direct:shell?.querySelectorAll(":scope>.rc26-weather-banner").length||0,legacy:root.querySelectorAll(".v4-legacy-stage .rc26-weather-banner").length,before:alert?.nextElementSibling?.classList.contains("v4-navigation"),link:alert?.querySelector("a")?.href,location:alert?.querySelector("small")?.textContent,rect:r?{x:r.x,y:r.y,width:r.width,height:r.height}:null};},tab);
      assert.equal(state.error,undefined);assert.equal(state.tab,tab);assert.equal(state.count,severity?1:0);assert.equal(state.direct,state.count);assert.equal(state.legacy,0);checks+=5;
      if(severity){
       assert.equal(state.before,true);assert.ok(state.link?.startsWith("https://vigilance.meteofrance.fr/fr"));assert.ok(state.location?.includes("Vendée"));checks+=3;
@@ -42,6 +42,15 @@ const {PNG}=require("pngjs");
       const screenshot=await page.screenshot({clip:{x:Math.max(0,r.x),y:Math.max(0,r.y),width:Math.min(r.width,width-Math.max(0,r.x)),height:r.height},animations:"disabled"});
       const painted=ratio(PNG.sync.read(screenshot),level);
       assert.ok(painted>0.12,"NOT PAINTED: "+width+"px "+tab+" "+level+" ratio="+painted.toFixed(3));checks++;
+      if(width===390&&level==="orange"&&tab==="advice"){
+        const n=await page.evaluate(()=>{const el=document.querySelector("pool-cockpit-card").shadowRoot.querySelector(".notice"),r=el?.getBoundingClientRect();return r?{x:r.x,y:r.y,width:r.width,height:r.height,text:el.textContent.trim()}:null;});
+        assert.ok(n&&n.text.includes("DONNÉES FICTIVES"),"The DEMO warning must remain available");
+        assert.ok(n.y>=0&&n.y+n.height<=960&&n.height>20,"DEMO warning outside viewport");checks+=2;
+        const shot=await page.screenshot({clip:{x:n.x,y:n.y,width:n.width,height:n.height},animations:"disabled"});
+        const img=PNG.sync.read(shot);let yellow=0,total=0;
+        for(let y=4;y<img.height-4;y+=3)for(let x=4;x<img.width-4;x+=3){const j=(y*img.width+x)*4,r=img.data[j],g=img.data[j+1],b=img.data[j+2];total++;if(r>225&&g>175&&g<245&&b>120&&b<195)yellow++;}
+        assert.ok(yellow/Math.max(total,1)>0.20,"DEMO label is hidden by the legacy background");checks++;
+      }
       if(width===390&&level==="orange"&&["equipment","advice"].includes(tab))await page.screenshot({path:join(out,"after-"+tab+"-390.png"),animations:"disabled"});
      }
     }

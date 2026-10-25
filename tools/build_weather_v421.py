@@ -25,6 +25,10 @@ def between(text: str, first: str, last: str, replacement: str) -> str:
 
 def generate() -> bytes:
     text = v420.generate().decode("utf-8")
+    # V4.2.1-only: raise real/demo controls and explicit fictitious-data notice
+    # above the legacy mobile background, without changing the frozen V4.1 wrapper.
+    text = once(text, ":host{display:block}.bar{",
+                ":host{display:block}.bar,.notice{position:relative;z-index:1}.bar{")
     weather_css = (SOURCE / "weather.css").read_text(encoding="utf-8")
     renderer = (SOURCE / "render-cockpit.js").read_text(encoding="utf-8")
     handler = (SOURCE / "host.js").read_text(encoding="utf-8")

@@ -30086,7 +30086,7 @@ console.info("%c HA POOL DASHBOARD %c v"+VERSION,"background:#1388ef;color:white
         ?["Real pool","Demonstration","DEMO MODE — SIMULATED DATA"]
         :["Piscine réelle","Démonstration","MODE DÉMO — DONNÉES FICTIVES"];
       this.shadowRoot.innerHTML=`<style>
-        :host{display:block}.bar{display:flex;align-items:center;justify-content:flex-end;gap:4px;padding:2px 10px;margin-bottom:3px;background:transparent;color:var(--primary-text-color,#fff)}
+        :host{display:block}.bar,.notice{position:relative;z-index:1}.bar{display:flex;align-items:center;justify-content:flex-end;gap:4px;padding:2px 10px;margin-bottom:3px;background:transparent;color:var(--primary-text-color,#fff)}
         button{font:inherit;font-size:12px;font-weight:600;min-height:32px;padding:4px 10px;border:0;border-radius:9px;background:rgba(45,101,153,.12);color:inherit;cursor:pointer}
         button[aria-pressed=true]{background:var(--primary-color,#367fae);color:white}
         button:focus-visible{outline:3px solid #ffe080;outline-offset:2px}
