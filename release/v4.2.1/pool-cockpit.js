@@ -15741,7 +15741,7 @@ function rendreCockpitV4({
 </style>
 
     <style data-pool-cockpit-v421-weather>/* V4.2.1: single weather alert in the V4 shell, before navigation. */
-.pool-cockpit-v4>.rc26-weather-banner{box-sizing:border-box;width:100%;max-width:100%;min-width:0}
+ .pool-cockpit-v4>.rc26-weather-banner{position:relative;z-index:2;box-sizing:border-box;width:100%;max-width:100%;min-width:0}
 .pool-cockpit-v4>.rc26-weather-banner>span:nth-child(2){min-width:0;overflow-wrap:anywhere}
 @media(max-width:760px){
  .pool-cockpit-v4>.rc26-weather-banner{position:relative!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:5px 8px!important;margin:0 0 9px!important;padding:9px 11px!important;border-radius:13px!important;box-shadow:0 5px 14px rgba(10,40,80,.14)!important}
@@ -15751,8 +15751,12 @@ function rendreCockpitV4({
  .pool-cockpit-v4>.rc26-weather-banner small{font-size:.66rem;line-height:1.25}
  .pool-cockpit-v4>.rc26-weather-banner>button{grid-column:1;grid-row:3}
  .pool-cockpit-v4>.rc26-weather-banner>a{grid-column:2;grid-row:3}
- .pool-cockpit-v4>.rc26-weather-banner>button,.pool-cockpit-v4>.rc26-weather-banner>a{display:flex!important;align-items:center;justify-content:center;white-space:normal!important;text-align:center;line-height:1.15!important;min-width:0!important;min-height:32px!important;padding:5px 6px!important;font-size:.63rem!important}
+ .pool-cockpit-v4>.rc26-weather-banner>button,.pool-cockpit-v4>.rc26-weather-banner>a{display:flex!important;align-items:center;justify-content:center;white-space:normal!important;text-align:center;line-height:1.15!important;min-width:0!important;min-height:44px!important;padding:8px 7px!important;font-size:.72rem!important}
 }
+
+/* B2: reveal only the Météo-France detail card in Advice. */
+.pool-cockpit-v4 .v4-legacy-stage[data-v4-legacy-view="advice"] .v3-section[data-rc271-section="information"]{display:block!important}
+.pool-cockpit-v4 .v4-legacy-stage[data-v4-legacy-view="advice"] .v3-info-grid>:not(#rc26-weather-card){display:none!important}
 </style>
     <div
       class="pool-cockpit-v4"
@@ -29889,10 +29893,7 @@ class PoolDashboardCard extends HTMLElement{
     this.shadowRoot.querySelectorAll("[data-weather-alert-focus]").forEach(control=>control.addEventListener("click",()=>{
       // Navigate first: the V3 information card exists only in Advice on some tabs.
       if(this._v4Ui?.ongletActif!=="advice")this.v4NaviguerVers("advice");
-      if(this.rc271IsCollapsed("information")){
-        this.rc271SetCollapsed("information",false);
-        this.render();
-      }
+      // The V4 bridge expands historical display without changing saved V3 preferences.
       const card=this.shadowRoot.querySelector('.v4-legacy-stage[data-v4-legacy-view="advice"] #rc26-weather-card')||this.shadowRoot.querySelector("#rc26-weather-card");
       const details=card?.querySelector("[data-weather-alert-details]");
       if(details)details.open=true;

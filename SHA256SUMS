@@ -5,8 +5,8 @@ b088630f680cd825924ea54f1cf4bb316223334266dc6777f971f3907e1012a2  ./.github/work
 673abe44ba1085bf98d4f58826b728fedb8a6bd53e72477624c02709c64bbeb0  ./.github/workflows/publish-v4.2.0.yml
 17c3c7b3aa68ca0a680d583a16f73ee78701e361e0feabc9ce41445f5e84ab6a  ./.github/workflows/tests.yml
 fcd507cfa06e9b4239f7d672a887a2717861d2d5d1451a94788514dcb2d43513  ./.github/workflows/v42-install-manifest.yml
-77b9aae2b4d82777a26d51b5212b2da5a84274239fa3be2132127f021f551141  ./.github/workflows/weather-v421-manifest.yml
-a461467bf47c6c81010069d48b234615fdc257068bfccbb4fbeabdce2e6e9526  ./.github/workflows/weather-v421.yml
+b98d383d9eb6d0838cc202f456bb067a0ec035a1251139cf2688530532efa1c5  ./.github/workflows/weather-v421-manifest.yml
+0a971094d73343f32c18afad67cca4874cf68aec7b4f2ce3b193b3ce8772f3e2  ./.github/workflows/weather-v421.yml
 2f8f78acbb440926d5061d532d4bc5762ac4345ee7ffb5e9874ef17f4f160db2  ./.gitignore
 24d87832aeeae55d58ac0012ba304dc8a2a704c9cc9f424d6eb3a8c75f8eada5  ./CHANGELOG.md
 709c700f20a5ddbc280e2cab0a36decd05e2b2d459c2c6ed6be7a72a0e8cbe0e  ./COMMERCIAL-LICENSE.md
@@ -43,7 +43,7 @@ f58fb1e027050a14ea86d89750daa45b8a711c5966ffd2b1ad6ba52444a825ec  ./docs/images/
 1514ecf5f578510d05fcf2b4985eda599922bf7cd481e113944c68a1acbecb73  ./docs/images/v4.2.0/pool-cockpit-v4.2-hero.webp
 7e955a94e55bfbba9fd84328101d437c42f5ca745f4ccc3988ad1d0a9213019f  ./docs/releases/V4.1.0.md
 37d49534bb189111ec314c6436b8e7e8f1e1269fe70f6c7d9cde76428ce62e49  ./docs/releases/V4.2.0.md
-798dd624e70a9191c42364e3e818f8898d59374332478b7923f0d0081e7307ca  ./docs/releases/V4.2.1.md
+abc7a837cab1ae12da9251c27daedec59029d2eeab52757b8273e4e972c882a2  ./docs/releases/V4.2.1.md
 a52df9410a28ce41689f6eac78cca54870bb521e015962fb3ed76be2b0634452  ./docs/user/CONFIGURATION.md
 e1b8badff148e91f736bbdf4bb36e56d5e23c20bbaaabec4c590bbdcc637b23e  ./docs/user/DASHBOARD.md
 00ffec8c90cf6b1afe8cf8e2156a46ad5c335c295e4cca441497b8af19f046ce  ./docs/user/INSTALLATION.md
@@ -52,9 +52,9 @@ e1b8badff148e91f736bbdf4bb36e56d5e23c20bbaaabec4c590bbdcc637b23e  ./docs/user/DA
 cfc12f801afea2260c703268a53cd86d573ec598707e61620958c212075e92f6  ./frontend/dist/hero-ocean.svg
 e929f7c71dc820ad72010d9e499097906ccb8808723d5cbb8be68633fe0be98b  ./frontend/dist/pool-dashboard.js
 5649a15695c66d694c4a6f90f04c2b57e561c567485eea5bdceeefdad4170144  ./frontend/pool-dashboard.template.js
-55a273483d566ca3bcba85be145a24239af8526ad7877c08f269be078156ee69  ./frontend/v4.2.1/host.js
+1fede5a37e997858720c613e95ddfbbda1a5cac259e3115093d1b07756c4c8c1  ./frontend/v4.2.1/host.js
 3292ebf74be9f56ad96fbdea8d5c5401d8382d2146a1fb49808c16e25bfd2be6  ./frontend/v4.2.1/render-cockpit.js
-b3aec3775e9b28838a7898eccee717b2c2bb7279ac06963f039fec2c0c152cee  ./frontend/v4.2.1/weather.css
+65c32bc71bfc931d37e785618fe0c30b2700d84da26f71c6572b3df92313dc3e  ./frontend/v4.2.1/weather.css
 e44ebc7dd750aa930a2b1a352559133c65957f62459b7c1b37e4486c78aaa476  ./ha_pool_dashboard/__init__.py
 b604dc3ce0786498c2b0d6b93c8d991c9ff3f5d022da23cab1080efb47cb902a  ./ha_pool_dashboard/backup.py
 0e7c5b16337197a536df55a90f6990fdd60065e9d878ced351f1270060e08675  ./ha_pool_dashboard/dashboard_generator.py
@@ -99,8 +99,8 @@ c89710dc7db9eea057ce6fa5f025795234fdf89873985a797e237b17fd798e62  ./release/v4.1
 e5bfed20e69f976071f60189da649bbe07cb06ec1962239c4679124a7e1d7940  ./release/v4.1.0/pool-cockpit-dual-mode-card.js
 aca7aeb0ff36ec1121a81d030255dbf87742838d64ac1883702abc0f10575fc9  ./release/v4.2.0/README.md
 327735a959fbba37c6e9b7a177549b3ef18378ed367ca1843e568e4fe9bb03e0  ./release/v4.2.0/pool-cockpit.js
-798dd624e70a9191c42364e3e818f8898d59374332478b7923f0d0081e7307ca  ./release/v4.2.1/README.md
-282a5b147f102886428c710b5b88ada762e0c9913ddb516817e32d0a75c9ad8d  ./release/v4.2.1/pool-cockpit.js
+6e3a50c9091b181c1e3f8f122596907db1cb142ef49fe634b7b79d8b5725f99e  ./release/v4.2.1/README.md
+3e916e04ebe6ae9daeadc4fbb77ff208875bb6b5b0956333c81a8ff90cacb9f5  ./release/v4.2.1/pool-cockpit.js
 ee264428db6363d7d2e06b9d5c12afeb8e5594f22ba405c8c4a613f12382031b  ./src/adaptateurs/home-assistant/construire-entrees-eau-meteo.js
 b5b7097a8feef29e8a15beae2a09dc54680c2b9177d95c3d4d28c80fa06837d2  ./src/configuration/fonctionnalites.js
 b384a2b7535e779bd8fc217473872c8201549b428c46ac64c4ff6e58eaf1498d  ./src/controleurs/evaluer-recommandation-eau-meteo-temps-reel.js
@@ -201,7 +201,7 @@ e188951ca0d8597dbedb36cd9c0a78c276a6888db3d9b6631b999c8e517d6221  ./tests/test_s
 7562727932a6a6e44b6e6071e831cba5238145dab76e7b8155bd18faf62d8ee7  ./tests/test_treatment_journal.py
 9d3a6b31267d1727835fddb398851171c53160d92a0285f2c1973c0f3b6360b8  ./tests/test_v41_default_mode.js
 425d61b518426727e40ff49f9de8dfff0b50081c3c8e461889ef70c4fbe2bc7d  ./tests/test_v41_full_install.py
-3f99118cfc9abe8efb2e6a1fabe3ef13cb2c1936a3df402235c7d586ffa3cbf7  ./tests/test_v421_weather_build.py
+b737610c37e3352862d0d9e4e1a50e3f644c754215900f354a0fe54e6bb7e0a1  ./tests/test_v421_weather_build.py
 0881f27aca935f5a8d332d46c96f75b1c483ebf33adde058666031945e8830f2  ./tests/test_v42_fresh_install.py
 81abce2133567ead556ed18a50da38ed8cbd85d242c018aee06fdbddcb69836b  ./tests/test_v42_single_bundle.py
 398a9c3892fab016fbf00f79268e3c9b6617bdb9ae22a0a7005e9ef6cd678052  ./tests/test_weather.py
@@ -237,6 +237,7 @@ af93dcefe5930f7b881377d24bb443aea41c93cb3b81b88f3f01be6d38b98fab  ./tests/unitai
 21e402141320d58d1de7dd5b986fbb0f36d6777ae096c80d1c5a04abeaf70550  ./tests/unitaires/securite-pac.test.mjs
 1b1dee07d2f97a3b1f06a7d63a356a7d564d9a484e68f1c21c4beb96cbaff6ef  ./tests/unitaires/selecteurs-entites.test.mjs
 ccf09d5814f13005ea0129d51f38bf5bace58dcfa96422c6eeae18d7beed73b1  ./tests/unitaires/themes-interface.test.mjs
+81c019c54e6de169a7322d4ace94d92cb6674f610975291f51fe1c20d89fa61e  ./tests/weather-v421.browser.cjs
 d4a1fb54a4fc0ff38af43027811ea77e8f16871822f14d2f1f8862c80e604e52  ./tools/build_unified_pool_cockpit.py
 328d1c11d19e9bcb02a7ece823e968e0dce9a58f7ddfdd503f523c1e051f288c  ./tools/build_v41_public_release.py
 1be59db1a73eb881b9e9916332651a61a24333778c5c3d35f5385e7f9ae46a69  ./tools/build_weather_v421.py
