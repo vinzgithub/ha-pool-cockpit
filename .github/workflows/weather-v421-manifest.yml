@@ -1,0 +1,25 @@
+name: Verify V4.2.1 Integrity
+on:
+  push:
+    branches: [fix/v4.2.1-weather-alert]
+permissions:
+  contents: read
+jobs:
+  verify-only:
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compare generated bundle
+        run: |
+          python tools/build_unified_pool_cockpit.py --version 4.2.1 --output "$RUNNER_TEMP/pool-cockpit.js"
+          cmp "$RUNNER_TEMP/pool-cockpit.js" release/v4.2.1/pool-cockpit.js
+      - name: Verify manifest without writing to GitHub
+        run: |
+          sha256sum --check SHA256SUMS
+          python tools/generate_sha256s.py
+          git diff --exit-code -- SHA256SUMS

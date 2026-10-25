@@ -81,7 +81,12 @@ def build(destination: Path = DESTINATION) -> tuple[Path, str]:
 
 if __name__ == "__main__":
     cli = argparse.ArgumentParser(description="Generate the Pool Cockpit single JavaScript resource")
-    cli.add_argument("--output", type=Path, default=DESTINATION)
+    cli.add_argument("--version", choices=("4.2.0", "4.2.1"), default="4.2.0")
+    cli.add_argument("--output", type=Path)
     args = cli.parse_args()
-    p, digest = build(args.output)
+    if args.version == "4.2.1":
+        import build_weather_v421
+        p, digest = build_weather_v421.build(args.output or build_weather_v421.DESTINATION)
+    else:
+        p, digest = build(args.output or DESTINATION)
     print(f"Built: {p} ({p.stat().st_size} bytes); SHA256: {digest}")
