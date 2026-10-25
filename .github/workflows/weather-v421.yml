@@ -1,0 +1,25 @@
+name: V4.2.1 Weather Corrective
+on:
+  pull_request:
+  push:
+    branches: [fix/v4.2.1-weather-alert]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci && npm test
+      - run: python -m pip install pytest && python -m pytest
+      - run: python tools/build_unified_pool_cockpit.py --version 4.2.1
+      - run: git diff --exit-code -- release/v4.2.1/pool-cockpit.js
+      - run: python -m unittest discover -s tests -p test_v421_weather_build.py
+      - run: node --check release/v4.2.1/pool-cockpit.js
