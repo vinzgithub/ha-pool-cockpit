@@ -1,0 +1,13 @@
+/* V4.2.1: single weather alert in the V4 shell, before navigation. */
+.pool-cockpit-v4>.rc26-weather-banner{box-sizing:border-box;width:100%;max-width:100%;min-width:0}
+.pool-cockpit-v4>.rc26-weather-banner>span:nth-child(2){min-width:0;overflow-wrap:anywhere}
+@media(max-width:760px){
+ .pool-cockpit-v4>.rc26-weather-banner{position:relative!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:5px 8px!important;margin:0 0 9px!important;padding:9px 11px!important;border-radius:13px!important;box-shadow:0 5px 14px rgba(10,40,80,.14)!important}
+ .pool-cockpit-v4>.rc26-weather-banner>.rc26-weather-banner__level{grid-column:1/-1;grid-row:1;justify-self:start;padding:3px 8px;font-size:.66rem;line-height:1.2}
+ .pool-cockpit-v4>.rc26-weather-banner>span:nth-child(2){grid-column:1/-1;grid-row:2;display:flex;gap:0!important;font-size:.76rem;line-height:1.3}
+ .pool-cockpit-v4>.rc26-weather-banner>span:nth-child(2) b{font-size:.76rem;line-height:1.3}
+ .pool-cockpit-v4>.rc26-weather-banner small{font-size:.66rem;line-height:1.25}
+ .pool-cockpit-v4>.rc26-weather-banner>button{grid-column:1;grid-row:3}
+ .pool-cockpit-v4>.rc26-weather-banner>a{grid-column:2;grid-row:3}
+ .pool-cockpit-v4>.rc26-weather-banner>button,.pool-cockpit-v4>.rc26-weather-banner>a{display:flex!important;align-items:center;justify-content:center;white-space:normal!important;text-align:center;line-height:1.15!important;min-width:0!important;min-height:32px!important;padding:5px 6px!important;font-size:.63rem!important}
+}
