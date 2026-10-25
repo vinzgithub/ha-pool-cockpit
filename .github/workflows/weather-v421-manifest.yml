@@ -1,0 +1,28 @@
+name: Refresh V4.2.1 integrity
+on:
+  push:
+    branches: [fix/v4.2.1-weather-alert]
+permissions:
+  contents: write
+jobs:
+  integrity:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/v4.2.1-weather-alert
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tools/build_unified_pool_cockpit.py --version 4.2.1
+      - run: python tools/generate_sha256s.py
+      - name: Commit checksum manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add SHA256SUMS release/v4.2.1/pool-cockpit.js
+          if ! git diff --cached --quiet; then
+            git commit -m "build(v4.2.1): refresh checksums and bundle"
+            git push origin HEAD:fix/v4.2.1-weather-alert
+          fi

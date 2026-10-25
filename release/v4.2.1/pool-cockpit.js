@@ -30165,7 +30165,7 @@ console.info("%c HA POOL DASHBOARD %c v"+VERSION,"background:#1388ef;color:white
         );
         root.adoptedStyleSheets=[...root.adoptedStyleSheets,sheet];
       }
-      // V4.2.1: weather banner is part of the V4 renderer.
+      // V4.2.1: V4 renders the single banner; never move it.
       // V4.1 : conserver les retouches validées après chaque rendu du moteur V4.
       if(root && typeof MutationObserver==="function" && typeof root.appendChild==="function"){
         const applyConfigStyle=()=>{
