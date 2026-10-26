@@ -1,3 +1,13 @@
+## V4.2.1 — Correctifs météo et affichage mobile (26 octobre 2026)
+
+- Visibilité du bandeau unique des vigilances Météo-France dans l'interface V4, notamment sur mobile.
+- « Voir les conseils » ouvre l'onglet et le détail météo ; commandes et préférences inchangées.
+- Barre Réel/Démo et avertissement de simulation visibles sur les onglets mobiles.
+- Tests Chromium du bundle de livraison et contrôles d'intégrité SHA256.
+- Installateur de première installation `install_v421.py` ; mise à jour manuelle V4.2.0 → V4.2.1, avec sauvegarde et retour arrière documentés.
+- Limite connue : mise à jour différée sur Planning et Configuration ([issue #12](https://github.com/vinzgithub/ha-pool-cockpit/issues/12)).
+- Backend, moteurs de calcul, commandes et automatismes Home Assistant inchangés.
+
 ## Refactor maintenabilité — carte coordination étape 17
 
 - Extraction isolée de `src/interface/carte-coordination.js` depuis l’étape 16 validée.
