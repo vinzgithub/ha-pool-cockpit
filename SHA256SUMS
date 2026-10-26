@@ -100,7 +100,7 @@ c89710dc7db9eea057ce6fa5f025795234fdf89873985a797e237b17fd798e62  ./release/v4.1
 e5bfed20e69f976071f60189da649bbe07cb06ec1962239c4679124a7e1d7940  ./release/v4.1.0/pool-cockpit-dual-mode-card.js
 aca7aeb0ff36ec1121a81d030255dbf87742838d64ac1883702abc0f10575fc9  ./release/v4.2.0/README.md
 327735a959fbba37c6e9b7a177549b3ef18378ed367ca1843e568e4fe9bb03e0  ./release/v4.2.0/pool-cockpit.js
-055bebbaf04a8d5026010bafe1f7e88d020950b72876375a56a5832ebb31018f  ./release/v4.2.1/README.md
+3e4b1d2a4c6be23e0350612fdfa6aefdb84f8f8ed5aad260fb807b832c8da102  ./release/v4.2.1/README.md
 5080ca2c2f399a3470b7f38e75133737b520564e33cc6c407f8e8f06e44b03ac  ./release/v4.2.1/pool-cockpit.js
 bb78820b896cb986cd169a4392775e83a7a6f2e9ad26d46a3aeca3263c5f518c  ./release/v4.2.1/pool-cockpit.js.sha256
 ee264428db6363d7d2e06b9d5c12afeb8e5594f22ba405c8c4a613f12382031b  ./src/adaptateurs/home-assistant/construire-entrees-eau-meteo.js

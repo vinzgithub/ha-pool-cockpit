@@ -30,8 +30,10 @@ L'installateur de première installation refuse un système Pool Cockpit existan
 3. Conserver l'ancien fichier **hors de `www/`** (remplacer `<config>` par le bon dossier) :
 
    ```bash
-   mkdir -p <config>/.pool_cockpit_backups
-   cp <config>/www/ha-pool-dashboard/pool-cockpit.js <config>/.pool_cockpit_backups/pool-cockpit-4.2.0.js
+   CONFIG_DIR="/chemin/vers/homeassistant/config"  # À adapter
+   mkdir -p "$CONFIG_DIR/.pool_cockpit_backups"
+   cp -p "$CONFIG_DIR/www/ha-pool-dashboard/pool-cockpit.js" \
+     "$CONFIG_DIR/.pool_cockpit_backups/pool-cockpit-4.2.0.js"
    ```
 
 4. Remplacer **d'abord** `<config>/www/ha-pool-dashboard/pool-cockpit.js` par le nouveau fichier vérifié. Conserver le même nom.
