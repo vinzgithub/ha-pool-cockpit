@@ -122,6 +122,7 @@ def install(config: Path) -> Path:
 
 
 def main() -> int:
+    print("NOTICE: install_v42.py installs historical V4.2.0; for new installations use install_v421.py.", file=sys.stderr)
     parser = argparse.ArgumentParser(description="Pool Cockpit V4.2.0 complete fresh install")
     parser.add_argument("--config", type=Path, required=True, help="Home Assistant configuration directory")
     parser.add_argument("--dry-run", action="store_true", help="Check without changing anything")

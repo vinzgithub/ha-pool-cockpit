@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🌊 Pool Cockpit V4.2.0
+# 🌊 Pool Cockpit V4.2.1
 
 ### Your pool. One elegant cockpit.
 
@@ -8,11 +8,11 @@
 
 **English** · [**Français**](README.fr.md)
 
-![Version](https://img.shields.io/badge/version-4.2.0-126caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-0d355d)
+![Version](https://img.shields.io/badge/version-4.2.1-126caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-0d355d)
 
 ![Pool Cockpit promotional illustration](docs/images/v4.2.0/pool-cockpit-v4.2-hero.webp)
 
-<sub>Pool Cockpit promotional illustration; see current V4.2.0 interface screenshots below.</sub>
+<sub>Pool Cockpit promotional illustration; the reference screenshots below were captured on V4.2.0; V4.2.1 corrects weather-alert presentation.</sub>
 
 </div>
 
@@ -45,13 +45,15 @@ For compatible devices, examples of separate integrations by **Adrien40** includ
 
 No connected pool? You can explore Pool Cockpit with **simulated measurements** and discover its interface. **No physical sensors, pool equipment or extra device integrations are needed.** Home Assistant and Pool Cockpit are still required to display the dashboard. Demo data and controls never operate real devices.
 
-### What's new in V4.2.0?
+### What's new in V4.2.1?
 
-V4.2.0 combines the dashboard and Demonstration mode into **one JavaScript file**, `pool-cockpit.js`, using a single `custom:pool-cockpit-card`. You can install this version directly on a compatible Home Assistant system, or upgrade from V4.1.0 while preserving existing settings by following the upgrade guide.
+This corrective release improves **Météo-France weather-warning banners** on mobile and across the dashboard. The “View advice” action now reveals the weather details; the Real/Demo mode bar and explicit simulated-data notice remain visible on mobile. V4.2.1 preserves the **single JavaScript resource** (`pool-cockpit.js`), the `custom:pool-cockpit-card` element and the existing backend, settings and automation logic.
 
-[**Download Pool Cockpit V4.2.0**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) · [**Installation and upgrade guide**](#install-pool-cockpit-v420-directly)
+**Known limitation:** while on Planning or Settings, live weather changes may remain pending until you change tabs. This predates V4.2.1 and is tracked in [issue #12](https://github.com/vinzgithub/ha-pool-cockpit/issues/12).
 
-## V4.2.0 interface gallery
+[**Pool Cockpit V4.2.1 release**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.1) · [**Installation and upgrade guide**](#install-pool-cockpit-v421-directly)
+
+## Interface gallery (V4.2.0 reference captures)
 
 The screenshots below come from the **actual V4.2.0 frontend running in a browser in Demonstration mode**. Values are simulated, and appearance may vary depending on theme, sensors and setup.
 
@@ -79,7 +81,7 @@ The screenshots below come from the **actual V4.2.0 frontend running in a browse
 
 Some older V3 strings and hardware-specific integrations may still need adjustment on individual installations.
 
-## Install Pool Cockpit V4.2.0 directly
+## Install Pool Cockpit V4.2.1 directly
 
 A fresh installation uses **one JavaScript resource**, `pool-cockpit.js`, with the public `custom:pool-cockpit-card`. The installer also copies the Home Assistant backend and required graphics.
 
@@ -88,15 +90,15 @@ A fresh installation uses **one JavaScript resource**, `pool-cockpit.js`, with t
 ```bash
 git clone https://github.com/vinzgithub/ha-pool-cockpit.git
 cd ha-pool-cockpit
-python3 install_v42.py --config /path/to/homeassistant/config --dry-run
-python3 install_v42.py --config /path/to/homeassistant/config --yes
+python3 install_v421.py --config /path/to/homeassistant/config --dry-run
+python3 install_v421.py --config /path/to/homeassistant/config --yes
 ```
 
 Replace the sample path with the actual Home Assistant configuration directory accessible **from the machine running Python**. `--dry-run` checks without writing; `--yes` authorizes installation, creates a configuration backup, copies required components and registers the Lovelace resource. Validate Home Assistant configuration before restarting it manually.
 
-**Already installed?** The fresh installer refuses existing Pool Cockpit installations and customized Lovelace configuration to prevent accidental overwrites. Existing V4.1.0 users should instead follow the [V4.2.0 upgrade guide](release/v4.2.0/README.md), preserving device settings.
+**Already installed?** The fresh installer refuses existing Pool Cockpit installations and customized Lovelace configuration to prevent accidental overwrites. Existing V4.2.0 users must [follow the manual V4.2.1 update/rollback procedure](release/v4.2.1/README.md); do not use the fresh installer with an existing installation. For V4.1.0, follow the historical [V4.2.0 upgrade guide](release/v4.2.0/README.md) first.
 
-📖 [Download the V4.2.0 frontend](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) · [Upgrade instructions](release/v4.2.0/README.md)
+📖 [V4.2.1 release assets](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.1) · [Safe manual upgrade and rollback](release/v4.2.1/README.md)
 
 ## Backups, limitations and security
 
@@ -110,4 +112,4 @@ Replace the sample path with the actual Home Assistant configuration directory a
 
 ---
 
-<div align="center"><sub>Pool Cockpit V4.2.0 · Home Assistant · Your pool. One elegant cockpit.</sub></div>
+<div align="center"><sub>Pool Cockpit V4.2.1 · Home Assistant · Your pool. One elegant cockpit.</sub></div>

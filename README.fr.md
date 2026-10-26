@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🌊 Pool Cockpit V4.2.0
+# 🌊 Pool Cockpit V4.2.1
 
 ### Votre piscine. Un cockpit élégant.
 
@@ -8,11 +8,11 @@
 
 [**English**](README.md) · **Français**
 
-![Version](https://img.shields.io/badge/version-4.2.0-126caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![Licence](https://img.shields.io/badge/licence-PolyForm%20Noncommercial-0d355d)
+![Version](https://img.shields.io/badge/version-4.2.1-126caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![Licence](https://img.shields.io/badge/licence-PolyForm%20Noncommercial-0d355d)
 
 ![Illustration promotionnelle Pool Cockpit](docs/images/v4.2.0/pool-cockpit-v4.2-hero.webp)
 
-<sub>Illustration promotionnelle de Pool Cockpit ; les captures de l'interface V4.2.0 sont disponibles ci-dessous.</sub>
+<sub>Illustration promotionnelle de Pool Cockpit ; les captures de référence ci-dessous proviennent de V4.2.0 ; V4.2.1 corrige l'affichage des vigilances.</sub>
 
 </div>
 
@@ -45,13 +45,15 @@ Par exemple, pour certains appareils compatibles, vous pouvez installer dans Hom
 
 Vous n'avez pas de piscine connectée ? Vous pouvez tout de même parcourir Pool Cockpit avec **des mesures fictives** et découvrir ses écrans. **Aucune sonde, aucun équipement ni aucune intégration matérielle supplémentaire n'est nécessaire**. Home Assistant et Pool Cockpit restent nécessaires pour afficher l'interface. Les données et commandes de démonstration n'agissent jamais sur vos équipements réels.
 
-### Nouveautés de la V4.2.0
+### Nouveautés de la V4.2.1
 
-Cette version regroupe l'interface et le mode Démonstration dans **un seul fichier JavaScript**, `pool-cockpit.js`, avec une carte unique `custom:pool-cockpit-card`. Elle peut être installée directement sur un Home Assistant compatible, ou remplacer la V4.1.0 en conservant la configuration existante selon le guide de mise à jour.
+Cette version corrective améliore **l'affichage des vigilances Météo-France** sur mobile et sur les différents onglets. Le bouton « Voir les conseils » affiche désormais le détail météorologique ; la barre Réel/Démo et la mention « MODE DÉMO — DONNÉES FICTIVES » restent visibles sur mobile. L'application conserve **une seule ressource JavaScript** (`pool-cockpit.js`), la carte `custom:pool-cockpit-card`, le même backend, les réglages et les automatismes.
 
-[**Télécharger Pool Cockpit V4.2.0**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) · [**Installation et mise à jour**](#installer-directement-pool-cockpit-v420)
+**Limite connue :** sur Planning et Configuration, une nouvelle vigilance peut ne s'afficher qu'après un changement d'onglet. Ce problème antérieur à la V4.2.1 est suivi dans le [ticket #12](https://github.com/vinzgithub/ha-pool-cockpit/issues/12).
 
-## Aperçu de l'interface V4.2.0
+[**Release Pool Cockpit V4.2.1**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.1) · [**Installation et mise à jour**](#installer-directement-pool-cockpit-v421)
+
+## Aperçu de l'interface (captures de référence V4.2.0)
 
 Les captures ci-dessous proviennent du **moteur V4.2.0 exécuté dans un navigateur en mode Démonstration**. Les valeurs représentées sont fictives ; la présentation peut différer selon le thème, les appareils et les réglages.
 
@@ -79,7 +81,7 @@ Les captures ci-dessous proviennent du **moteur V4.2.0 exécuté dans un navigat
 
 Certaines traductions héritées de la V3 et certaines intégrations matérielles peuvent nécessiter des ajustements selon l'installation.
 
-## Installer directement Pool Cockpit V4.2.0
+## Installer directement Pool Cockpit V4.2.1
 
 L'installation neuve utilise **un seul JavaScript**, `pool-cockpit.js`, et la carte `custom:pool-cockpit-card`. Elle installe aussi le backend Home Assistant et les ressources graphiques nécessaires.
 
@@ -88,15 +90,15 @@ L'installation neuve utilise **un seul JavaScript**, `pool-cockpit.js`, et la ca
 ```bash
 git clone https://github.com/vinzgithub/ha-pool-cockpit.git
 cd ha-pool-cockpit
-python3 install_v42.py --config /chemin/vers/homeassistant/config --dry-run
-python3 install_v42.py --config /chemin/vers/homeassistant/config --yes
+python3 install_v421.py --config /chemin/vers/homeassistant/config --dry-run
+python3 install_v421.py --config /chemin/vers/homeassistant/config --yes
 ```
 
 Remplacez ce chemin par celui du dossier de configuration accessible **depuis la machine qui lance Python**. La commande `--dry-run` vérifie sans modifier ; `--yes` autorise l'installation, sauvegarde la configuration, copie les composants et déclare la ressource Lovelace. Vérifiez la configuration Home Assistant avant de redémarrer manuellement.
 
-**Installation existante ?** L'installateur neuf refuse les installations Pool Cockpit et les configurations Lovelace déjà personnalisées pour éviter les écrasements. Pour une V4.1.0 en place, utilisez uniquement le [guide de mise à jour vers V4.2.0](release/v4.2.0/README.md) : vos capteurs et paramètres sont conservés.
+**Installation existante ?** L'installateur neuf refuse les installations Pool Cockpit et les configurations Lovelace déjà personnalisées pour éviter les écrasements. Pour une installation V4.2.0 existante, suivez la [procédure manuelle V4.2.1 avec retour arrière](release/v4.2.1/README.md) : n'utilisez pas l'installateur neuf. Pour une V4.1.0, consultez d'abord le [guide historique de migration vers V4.2.0](release/v4.2.0/README.md).
 
-📖 [Télécharger le frontend V4.2.0](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.0) · [Documentation de mise à jour](release/v4.2.0/README.md)
+📖 [Fichiers de release V4.2.1](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.1) · [Mise à jour et retour arrière](release/v4.2.1/README.md)
 
 ## Sauvegardes, limites et sécurité
 
@@ -110,4 +112,4 @@ Remplacez ce chemin par celui du dossier de configuration accessible **depuis la
 
 ---
 
-<div align="center"><sub>Pool Cockpit V4.2.0 · Home Assistant · Votre piscine, votre cockpit.</sub></div>
+<div align="center"><sub>Pool Cockpit V4.2.1 · Home Assistant · Votre piscine, votre cockpit.</sub></div>
