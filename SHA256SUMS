@@ -112,7 +112,7 @@ bb78820b896cb986cd169a4392775e83a7a6f2e9ad26d46a3aeca3263c5f518c  ./release/v4.2
 4a4987c82bd1e809b0fe74c453c7c4d470d2d266de93c3a6b97d4b8156557c4f  ./release/v4.3.0/README.md
 fc69a8f4f6d71b8db0c0d464979e9db24ab89a8568bc71b64dbfcaf76c6371f3  ./release/v4.3.0/TEST_REPORT.md
 5a370ea49e93b611d1b571085eb799062c63e9738f3d657391b576a3710a4099  ./release/v4.3.0/UX_REVIEW.md
-e80e43152fef6dd03e581400f26ae9bbf9cc17c91e3d5f0a10cef12e4ecb650b  ./release/v4.3.0/pool-cockpit.js
+bbe90972896ba7fca56522fed5f7d61b50552c70b466a59badaba81867b30594  ./release/v4.3.0/pool-cockpit.js
 24098b03eddf6bc3bd2fabe47a91f4c4202d7bc44d82d9c3d1374db328a3d291  ./release/v4.3.0/visuals/after-demo-1440.webp
 e2ea5035edc8ac4e819fb1123d5a42cec32bc4d65513dbc07e6e9d7eeb827455  ./release/v4.3.0/visuals/after-demo-390.webp
 1199e33d88667766d69a2ad7c0157538d8c6675923cc7713c754529c2d6b4d7b  ./release/v4.3.0/visuals/after-equipment-1440.webp
@@ -130,7 +130,7 @@ ae830ace0dd0d313fdba9b8a624269dfec6f8238dcc21e555e18c1637c9659eb  ./release/v4.3
 ee264428db6363d7d2e06b9d5c12afeb8e5594f22ba405c8c4a613f12382031b  ./src/adaptateurs/home-assistant/construire-entrees-eau-meteo.js
 b5b7097a8feef29e8a15beae2a09dc54680c2b9177d95c3d4d28c80fa06837d2  ./src/configuration/fonctionnalites.js
 b384a2b7535e779bd8fc217473872c8201549b428c46ac64c4ff6e58eaf1498d  ./src/controleurs/evaluer-recommandation-eau-meteo-temps-reel.js
-b6f4a594033793a247cbf0428227ab8ae37e318afa8c51976b65495d346074fd  ./src/hivernage/presentation.js
+0ba671b4c9043518ca8a70ab42bd0401cb6a1ef404496ea69bfe66845a8b7220  ./src/hivernage/presentation.js
 1f6b333a24008756b5ee4808613014ffb99f81b32a75ee635b6d7465dfa189ee  ./src/intelligence/confiance-capteurs/calculer-confiance-capteurs.js
 8d72b040670a84ec9a6fceb6f419360798ca087b1b4f1678c7ac51ca8ba09dde  ./src/intelligence/eau-meteo/calculer-score-eau-meteo.js
 0b31e1e1e90eabf24846d9cec1d95a150a031c308e46ce17223ec94cd15cf895  ./src/intelligence/eau-meteo/configuration-eau-meteo.js
@@ -255,7 +255,7 @@ d386e16daad379fb7242a1ebd93551242e9d2dd94a928f34a1275a49063a66fb  ./tests/unitai
 72f15b7146e36a57bf9201090d48fb82d48083266abbf89077a464929893cc9c  ./tests/unitaires/gemini-reformulation.test.mjs
 a760b660aa7946dafca24ad0854a12fa22e1da67c876bb8f735a146f52801f01  ./tests/unitaires/heures-creuses.test.mjs
 4f9c592d88f297f2022eb4bd846365e62e14522055f74f53d6f4f75f887589fd  ./tests/unitaires/historique-capteurs.test.mjs
-5681440339447bc15ff95bd1459b7d8ee5024a4a41bbb350b9ab6a0fcd93de8f  ./tests/unitaires/hivernage.test.mjs
+efe53c36a991fed495728497bdba36c3f4b022f9f97de916cce8326f44d12adf  ./tests/unitaires/hivernage.test.mjs
 6ae3268287866ccd84e204c55d2bb6ad495a2d508f88639d11ae93fbb808471b  ./tests/unitaires/journal-traitement.test.mjs
 8d114b6bdf5e97745d7e53575a18a43c1afdb2c4d18a5865128e29c9a6a093e2  ./tests/unitaires/mode-location.test.mjs
 8cf64450ee33b681461b0266ffb5f1fe6fe8d809bcd3cbc9e8aa76e65e114b7d  ./tests/unitaires/moteur-eau-meteo.test.mjs
