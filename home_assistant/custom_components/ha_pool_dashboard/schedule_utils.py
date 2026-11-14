@@ -6,6 +6,7 @@ from __future__ import annotations
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from typing import Any
+import math
 
 WEEKDAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
 
@@ -212,3 +213,93 @@ def adaptive_periods(hours: float | int | None, start_reference_minutes: int) ->
         {"enabled": False, "start": "00:00", "end": "00:00"},
         {"enabled": False, "start": "00:00", "end": "00:00"},
     ]
+
+
+# Âge maximal d'une mesure d'eau utilisable par le moteur adaptatif.
+# Même fenêtre que le dashboard, mais appliquée aux horodatages HA.
+WATER_MEASUREMENT_MAX_AGE_HOURS = 24
+
+
+def measurement_is_fresh(
+    reported_at: datetime | None,
+    now: datetime,
+    max_age_hours: float = WATER_MEASUREMENT_MAX_AGE_HOURS,
+) -> bool:
+    """Indique si une mesure est assez récente pour piloter la filtration.
+
+    Sans horodatage fiable, le calcul doit utiliser son repli saisonnier.
+    Les dates futures ou sans fuseau ne prouvent pas la fraîcheur.
+    """
+
+    if not isinstance(reported_at, datetime) or reported_at.utcoffset() is None or now.utcoffset() is None:
+        return False
+    age = (now.astimezone(timezone.utc) - reported_at.astimezone(timezone.utc)).total_seconds()
+    return 0 <= age <= max_age_hours * 3600
+
+
+def hydraulic_floor_hours(volume_m3: float | int | None, flow_m3h: float | int | None) -> float | None:
+    """Plancher hydraulique : un renouvellement théorique du bassin."""
+
+    try:
+        volume = float(volume_m3 or 0)
+        flow = float(flow_m3h or 0)
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(volume) or not math.isfinite(flow) or volume <= 0 or flow <= 0:
+        return None
+    # La durée finale ne peut dépasser 24 h ; borner avant division évite
+    # également un débordement avec un débit positif extrêmement petit.
+    return max(1.0, math.ceil(volume / flow)) if volume / 24 < flow else 24.0
+
+
+def adaptive_target_hours(
+    *,
+    water: float | None,
+    hydraulic_hours: float | None,
+    reference_hours: float,
+    base_profile: str = "",
+    heat_alert: bool = False,
+    cold_alert: bool = False,
+    water_condition: str = "",
+    recent_load: str = "",
+    sanitizer_low: bool = False,
+) -> tuple[float, str | None]:
+    """Calcule la durée quotidienne cible du programme adaptatif.
+
+    Le calcul repart de zéro à chaque appel, uniquement à partir des données
+    sources. Il ne reçoit jamais la durée produite par un calcul précédent :
+    une majoration (fréquentation, eau chaude) n'est donc appliquée qu'une
+    seule fois, quel que soit le nombre de recalculs.
+
+    Retourne la durée en heures et, lorsqu'une règle particulière s'applique,
+    le contexte correspondant (sinon ``None``).
+    """
+
+    candidates: list[float] = []
+    if water is not None:
+        candidates.append(max(1.0, math.ceil(water / 2)))
+    else:
+        # Perte de mesure != refroidissement. Ne pas réduire l'été au seul
+        # minimum hydraulique, ni réutiliser une recommandation déjà majorée.
+        candidates.append(float(reference_hours or 0))
+    if hydraulic_hours is not None:
+        candidates.append(float(hydraulic_hours))
+    target = max(candidates) if candidates else float(reference_hours or 0)
+
+    context: str | None = None
+    if water_condition in ("green", "cloudy") or recent_load == "polluted":
+        target, context = 24.0, "water_problem"
+    elif heat_alert and water is not None and water >= 28:
+        target, context = 24.0, "heat_alert"
+    elif sanitizer_low and water is not None and water >= 28:
+        target, context = 24.0, "sanitizer_hot"
+    elif cold_alert and base_profile == "winter":
+        target, context = 24.0, "frost"
+    elif recent_load == "busy":
+        target, context = target + 2.0, "busy"
+    elif water is not None and water > 30:
+        target, context = target + 4.0, "very_hot_water"
+    elif water is not None and water > 28:
+        target, context = target + max(1.0, math.ceil((water - 28) * 2)), "hot_water"
+
+    return max(0.0, min(24.0, target)), context

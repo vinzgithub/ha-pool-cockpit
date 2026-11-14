@@ -40,8 +40,9 @@ SEASONAL_DEFAULTS = {
     },
 }
 from .schedule_utils import (
-    adaptive_periods, astronomical_profile, effective_periods, next_boundary,
-    profile_start_minutes, reconcile_extension, schedule_is_active, scheduled_minutes,
+    adaptive_periods, adaptive_target_hours, astronomical_profile, effective_periods,
+    hydraulic_floor_hours, measurement_is_fresh, next_boundary, profile_start_minutes,
+    reconcile_extension, schedule_is_active, scheduled_minutes,
 )
 
 
@@ -199,7 +200,7 @@ class PoolScheduler:
         if isinstance(value, bool):
             return 1 if value else 0
         if isinstance(value, (int, float)):
-            return max(0, min(3, int(value)))
+            return max(0, min(3, int(value))) if math.isfinite(value) else 0
         text = cls._normalized_text(value)
         if "rouge" in text or "red" in text:
             return 3
@@ -219,40 +220,90 @@ class PoolScheduler:
             value = float(state.state)
         except (TypeError, ValueError):
             return None
+        if not math.isfinite(value):
+            return None
         if temperature:
             unit = str(state.attributes.get("unit_of_measurement") or "").lower()
             if "°f" in unit or unit == "f":
                 value = (value - 32) * 5 / 9
-        return value
+        return value if math.isfinite(value) else None
 
-    def _water_temperature(self) -> float | None:
-        ids = list(self.data.get("watch", {}).get("temperature_entities") or [])
-        values = [self._state_number(str(entity_id), temperature=True) for entity_id in ids]
-        usable = [value for value in values if value is not None and -5 <= value <= 60]
-        return sum(usable) / len(usable) if usable else None
+    @staticmethod
+    def _state_is_fresh(state: Any, now: datetime) -> bool:
+        if not state or str(state.state).lower() in ("unknown", "unavailable", "none"):
+            return False
+        if state.attributes.get("restored"):
+            return False
+        reported_at = getattr(state, "last_reported", None)
+        if reported_at is None:
+            reported_at = getattr(state, "last_updated", None)
+        return measurement_is_fresh(reported_at, now)
 
-    def _air_temperature(self) -> float | None:
+    def _frontend_context_is_fresh(self, now: datetime) -> bool:
+        try:
+            updated = _iso(self.data.get("watch", {}).get("context_updated_at"))
+        except (TypeError, ValueError, OverflowError):
+            return False
+        return measurement_is_fresh(updated, now, max_age_hours=0.25)
+
+    def _water_temperature(self, now: datetime | None = None) -> tuple[float | None, str]:
+        """Moyenne des températures d'eau exploitables et état de la mesure.
+
+        États : ``fresh`` (au moins une mesure récente), ``stale`` (des valeurs
+        existent mais leur fraîcheur n'est pas démontrée), ``unavailable`` (capteurs
+        configurés sans valeur lisible), ``none`` (aucun capteur configuré).
+        Une valeur périmée n'est jamais utilisée pour dimensionner la filtration.
+        """
+
+        now = now or dt_util.now()
+        ids = list(dict.fromkeys(str(entity_id) for entity_id in self.data.get("watch", {}).get("temperature_entities") or [] if entity_id))
+        if not ids:
+            return None, "none"
+        usable: list[float] = []
+        stale = False
+        for entity_id in ids:
+            value = self._state_number(entity_id, temperature=True)
+            if value is None or not -5 <= value <= 60:
+                continue
+            state = self.hass.states.get(entity_id)
+            if not self._state_is_fresh(state, now):
+                stale = True
+                continue
+            usable.append(value)
+        if usable:
+            return sum(usable) / len(usable), "fresh"
+        return None, "stale" if stale else "unavailable"
+
+    def _air_temperature(self, now: datetime) -> float | None:
         watch = self.data.get("watch", {})
-        explicit = self._state_number(str(watch.get("air_temperature_entity") or ""), temperature=True)
-        if explicit is not None:
+        explicit_id = str(watch.get("air_temperature_entity") or "")
+        explicit = self._state_number(explicit_id, temperature=True)
+        if explicit is not None and self._state_is_fresh(self.hass.states.get(explicit_id), now):
             return explicit
         entity_id = str(watch.get("weather_entity") or "")
         state = self.hass.states.get(entity_id) if entity_id else None
-        if not state:
+        if not self._state_is_fresh(state, now):
             return None
         try:
             value = float(state.attributes.get("temperature"))
         except (TypeError, ValueError):
             return None
+        if not math.isfinite(value):
+            return None
         unit = str(state.attributes.get("temperature_unit") or "°C").lower()
-        return (value - 32) * 5 / 9 if "°f" in unit or unit == "f" else value
+        value = (value - 32) * 5 / 9 if "°f" in unit or unit == "f" else value
+        return value if math.isfinite(value) else None
 
-    def _thermal_alerts(self) -> tuple[bool, bool, int]:
+    def _thermal_alerts(self, now: datetime) -> tuple[bool, bool, int]:
         watch = self.data.get("watch", {})
         entity_id = str(watch.get("weather_alert_entity") or "")
         state = self.hass.states.get(entity_id) if entity_id else None
         if not state:
+            if not self._frontend_context_is_fresh(now):
+                return False, False, 0
             return bool(watch.get("weather_heat_alert")), bool(watch.get("weather_cold_alert")), 0
+        if not self._state_is_fresh(state, now):
+            return False, False, 0
         heat = False
         cold = False
         severity = self._severity(state.state)
@@ -266,16 +317,6 @@ class PoolScheduler:
             if any(token in combined for token in ("grand froid", "froid", "cold", "gel", "freeze")):
                 cold = cold or item_severity >= 2
         return heat, cold, severity
-
-    def _fresh_frontend_recommended_hours(self, now: datetime) -> float | None:
-        updated = _iso(self.data.get("watch", {}).get("context_updated_at"))
-        if not updated or abs((now - updated).total_seconds()) > 15 * 60:
-            return None
-        try:
-            value = float(self.data.get("pump", {}).get("recommended_hours") or 0)
-        except (TypeError, ValueError):
-            return None
-        return max(0.0, min(24.0, value)) if value > 0 else None
 
     def _refresh_adaptive_schedule(self, now: datetime) -> bool:
         seasonal = self.data.get("seasonal_profiles", {})
@@ -294,9 +335,9 @@ class PoolScheduler:
             seasonal["suspended_at"] = ""
             return True
 
-        water = self._water_temperature()
-        air = self._air_temperature()
-        heat_alert, cold_alert, alert_severity = self._thermal_alerts()
+        water, water_status = self._water_temperature(now)
+        air = self._air_temperature(now)
+        heat_alert, cold_alert, alert_severity = self._thermal_alerts(now)
         effective = base
         context = "season"
         if heat_alert or (air is not None and air >= 30) or (water is not None and water >= 28):
@@ -310,60 +351,46 @@ class PoolScheduler:
         base_profile = dict(profiles.get(base) or SEASONAL_DEFAULTS[base])
         effective_profile = dict(profiles.get(effective) or SEASONAL_DEFAULTS[effective])
         reference_hours = scheduled_minutes(list(base_profile.get("periods") or [])) / 60
-        candidates: list[float] = []
-        if water is not None:
-            candidates.append(max(1.0, math.ceil(water / 2)))
+        if water is None:
+            reference_hours = max(reference_hours, scheduled_minutes(list(effective_profile.get("periods") or [])) / 60)
         watch = self.data.get("watch", {})
-        try:
-            volume = float(watch.get("pool_volume_m3") or 0)
-            flow = float(watch.get("pump_flow_m3h") or 0)
-        except (TypeError, ValueError):
-            volume = flow = 0
-        # Plancher hydraulique : un renouvellement théorique du bassin.
-        hydraulic_hours = max(1.0, math.ceil(volume / flow)) if volume > 0 and flow > 0 else None
-        if hydraulic_hours is not None:
-            candidates.append(hydraulic_hours)
-        fresh_recommended = self._fresh_frontend_recommended_hours(now)
-        if fresh_recommended is not None:
-            candidates.append(fresh_recommended)
-        target_hours = max(candidates) if candidates else reference_hours
+        hydraulic_hours = hydraulic_floor_hours(watch.get("pool_volume_m3"), watch.get("pump_flow_m3h"))
 
         water_condition = str(watch.get("water_condition") or "")
         recent_load = str(watch.get("recent_load") or "")
         try:
             sanitizer_level = float(watch.get("sanitizer_level"))
             sanitizer_min = float(watch.get("sanitizer_min"))
-            sanitizer_low = sanitizer_level < sanitizer_min
+            sanitizer_low = (
+                self._frontend_context_is_fresh(now)
+                and math.isfinite(sanitizer_level) and math.isfinite(sanitizer_min)
+                and 0 <= sanitizer_level < sanitizer_min
+            )
         except (TypeError, ValueError):
             sanitizer_low = False
 
-        if water_condition in ("green", "cloudy") or recent_load == "polluted":
-            target_hours = 24.0
-            context = "water_problem"
-        elif heat_alert and water is not None and water >= 28:
-            target_hours = 24.0
-            context = "heat_alert"
-        elif sanitizer_low and water is not None and water >= 28:
-            target_hours = 24.0
-            context = "sanitizer_hot"
-        elif cold_alert and base == "winter":
-            target_hours = 24.0
-            context = "frost"
-        elif recent_load == "busy":
-            target_hours = min(24.0, target_hours + 2.0)
-            context = "busy"
-        elif water is not None and water > 30:
-            target_hours = min(24.0, target_hours + 4.0)
-            context = "very_hot_water"
-        elif water is not None and water > 28:
-            target_hours = min(24.0, target_hours + max(1.0, math.ceil((water - 28) * 2)))
-            context = "hot_water"
-
-        target_hours = max(0.0, min(24.0, target_hours))
+        # La durée est recalculée de zéro à partir des données sources.
+        # `pump.recommended_hours` est une sortie de ce calcul : elle n'est
+        # jamais relue comme entrée, sinon une majoration serait rejouée à
+        # chaque cycle et une ancienne durée bloquerait la baisse.
+        target_hours, rule_context = adaptive_target_hours(
+            water=water,
+            hydraulic_hours=hydraulic_hours,
+            reference_hours=reference_hours,
+            base_profile=base,
+            heat_alert=heat_alert,
+            cold_alert=cold_alert,
+            water_condition=water_condition,
+            recent_load=recent_load,
+            sanitizer_low=sanitizer_low,
+        )
+        if rule_context:
+            context = rule_context
         start_reference = profile_start_minutes(list(effective_profile.get("periods") or []))
         periods = adaptive_periods(target_hours, start_reference)
         weekdays = [day for day in base_profile.get("weekdays", DEFAULT_WEEKDAYS) if day in DEFAULT_WEEKDAYS]
         signature = f"{base}|{effective}|{target_hours:.3f}|{weekdays}|{periods}|{round(water,1) if water is not None else '-'}|{round(air,1) if air is not None else '-'}|{hydraulic_hours if hydraulic_hours is not None else '-'}|{int(heat_alert)}|{int(cold_alert)}|{water_condition}|{recent_load}"
+        signature += f"|{water_status}|{context}|{alert_severity}"
         changed = (
             self.data.get("pump", {}).get("periods") != periods
             or self.data.get("pump", {}).get("weekdays") != weekdays
@@ -378,6 +405,7 @@ class PoolScheduler:
         watch["adaptive_effective_profile"] = effective
         watch["adaptive_context"] = context
         watch["adaptive_water_temperature_c"] = water
+        watch["adaptive_water_status"] = water_status
         watch["adaptive_air_temperature_c"] = air
         watch["adaptive_hydraulic_hours"] = hydraulic_hours
         watch["adaptive_heat_alert"] = heat_alert
