@@ -52,7 +52,7 @@ function installWinteringV430(Card){
   };
   p.rc30AdaptiveRecommendation=function(control,model){
     const s=control?.winter_status;
-    if(!s){return {...original.adaptive.call(this,control,model),context:'Backend v4.3.0 requis · suggestion locale non exécutable'};}
+    if(!s){return {...original.adaptive.call(this,control,model),context:this.config?.pool_id==='pool_cockpit_demo'?'Démonstration · recommandation simulée':'Backend v4.3.0 requis · suggestion locale non exécutable'};}
     const old=original.adaptive.call(this,control,{...model,filtrationHours:s.calculated_hours});
     const periods=s.proposed_periods||[],watch=control.watch||{};
     return {...old,hours:s.calculated_hours,periods,weekdays:control.pump?.weekdays||[],
@@ -106,13 +106,13 @@ function installWinteringV430(Card){
     const root=this.shadowRoot,shell=root?.querySelector?.('.pool-cockpit-v4');
     if(!shell)return;
     const view=this._v4Ui?.ongletActif||'overview';
-    if(!['overview','planning','equipment','settings'].includes(view))return;
     root.querySelector('[data-winter-card]')?.remove();
     if(this._rc27Control?.winter_status?.mode==='hivernage_actif')root.querySelectorAll('.rc30-adaptive-overview').forEach(el=>el.remove());
     const devices=(this.config?.devices||[]).map((d,i)=>({key:this.winterDeviceKey(d,i),name:d.name||d.brand||'Sonde'}));
-    const html=renderWinterCard({control:this._rc27Control,devices,settings:['settings','planning'].includes(view),error:this._winterError});
+    const html=renderWinterCard({control:this._rc27Control,devices,view,demo:this.config?.pool_id==='pool_cockpit_demo',settings:['settings','planning'].includes(view),error:this._winterError});
     const nav=shell.querySelector('.v4-navigation');
-    if(nav)nav.insertAdjacentHTML('afterend',html);else shell.insertAdjacentHTML('afterbegin',html);
+    const heading=['planning','equipment','settings'].includes(view)?shell.querySelector('.v4-view__header'):null;
+    if(heading)heading.insertAdjacentHTML('afterend',html);else if(nav)nav.insertAdjacentHTML('afterend',html);else shell.insertAdjacentHTML('afterbegin',html);
     const panel=root.querySelector('[data-winter-card]'),form=panel?.querySelector('[data-winter-form]');
     if(form){
       const details=panel.querySelector('.winter-config');details.open=Boolean(this._winterFormOpen);

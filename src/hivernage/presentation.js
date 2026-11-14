@@ -17,16 +17,17 @@ export function winterTimeline(day, segments, now, observed=false){
   const position=100*(now-begin)/span;
   return `<div class="winter-timeline ${observed?'is-observed':''}" role="img" aria-label="${observed?'Marche réellement observée ; zones hachurées : sans observation':'Plages prévues'}">${blocks}${position>=0&&position<=100?`<b class="winter-now" style="left:${position}%" title="Maintenant"></b>`:''}</div><div class="winter-axis"><span>00:00</span><span>Journée locale · ${day.elapsed_hours} h réelles</span><span>24:00</span></div>`;
 }
-export function renderWinterCard({control={},devices=[],now=Date.now(),settings=false,error=''}){
-  const s=control.winter_status||{},c=s.configuration||control.wintering||{},r=s.runtime||{},f=r.frost||{};
-  const live=winterBackendLive(control,now),master=live&&s.master===true;
+export function renderWinterCard({control={},devices=[],now=Date.now(),settings=false,error='',view='planning',demo=false}){
+  // Demo uses its own fictional control only; never render a cached real winter status.
+  const s=demo?{}:control.winter_status||{},c=s.configuration||(!demo&&control.wintering)||{},r=s.runtime||{},f=r.frost||{};
+  const live=!demo&&winterBackendLive(control,now),master=live&&s.master===true;
   const e=winterEscape,l=value=>winterLabels[value]||value||'Non renseigné';
   const statuses=[['pump','Pompe de filtration'],['pac','Pompe à chaleur'],...devices.map(d=>[d.key,d.name])];
   const options=(values,current)=>values.map(v=>`<option value="${e(v)}" ${v===current?'selected':''}>${e(l(v))}</option>`).join('');
   const field=(key,label,value,type='number',extra='')=>`<label>${e(label)}<input data-winter-field="${key}" type="${type}" value="${e(value??'')}" ${extra}></label>`;
   const frost=c.frost||{};
   const equipment=statuses.map(([key,name])=>`<label>${e(name)}<select data-winter-equipment="${e(key)}">${options(['en_service','hiverne','maintenance','indisponible'],c.equipment?.[key]?.status||'en_service')}</select></label>`).join('');
-  const form=settings?`<details class="winter-config"><summary>Configurer et confirmer</summary><form data-winter-form><fieldset ${master?'':'disabled'}>
+  const form=settings&&!demo?`<details class="winter-config"><summary>Paramètres d’hivernage · configurer et confirmer</summary><form data-winter-form><fieldset ${master?'':'disabled'}>
     <div class="winter-fields"><label>Mode du bassin<select data-winter-field="mode">${options(['normal','hivernage_actif','maintenance'],c.mode||'normal')}</select></label>
     ${field('base_hours','Base hivernale (h/j)',c.base_hours??4,'number','min="0.25" max="24" step="0.25" required')}${field('start','Départ nocturne',c.start||'02:00','time','required')}
     <label class="winter-check"><input data-winter-field="hydraulic_ready" type="checkbox" ${c.hydraulic_ready!==false?'checked':''}>Circuit en eau, pompe autorisée à fonctionner</label>
@@ -46,21 +47,30 @@ export function renderWinterCard({control={},devices=[],now=Date.now(),settings=
     </div><p>4 h/j est une suggestion à adapter et confirmer. La modification peut remplacer les plages actuelles. Une PAC hivernée doit être remise en service manuellement ; ce statut ne certifie pas sa vidange.</p>
     <p>Renseigner la date d’acquisition du capteur local, ou un attribut <code>measurement_timestamp</code>, <code>last_measurement</code> ou <code>last_sample</code>. Sans date fiable : protection non confirmée. La météo distante seule ne suffit pas.</p>
     <button type="submit">Vérifier et confirmer les changements</button></fieldset></form></details>`:'';
-  return `<section class="winter-card" data-winter-card aria-label="Hivernage actif">
-    <header><div><small>PISCINE · FONCTIONNEMENT</small><h2>${e(l(c.mode||'normal'))}</h2></div><span class="winter-badge">${!live?'Backend indisponible · protection non confirmée':!s.master?'Satellite · aucune exécution locale':e(l(f.status))}</span></header>
-    ${error?`<p role="alert" class="winter-alert">${e(error)}</p>`:''}
-    ${!live?'<p role="alert" class="winter-alert">État non confirmé. Les dernières données affichées ne prouvent pas que la pompe fonctionne.</p>':''}
-    ${(r.alerts||[]).map(a=>`<p role="alert" class="winter-alert">${e(a)}</p>`).join('')}
-    <div class="winter-metrics"><div><span>Base hivernale</span><strong>${e(c.base_hours??4)} h/j</strong></div><div><span>Recommandation backend</span><strong>${live?e(s.calculated_hours):'—'} h</strong></div><div><span>Programme appliqué</span><strong>${live?e(s.applied_hours):'—'} h</strong></div><div><span>Origine</span><strong>${e(l(s.origin||'Non confirmée'))}</strong></div></div>
-    ${s.different?`<p class="winter-alert">Recommandation : ${e(s.calculated_hours)} h / programme appliqué : ${e(s.applied_hours)} h — ${e(s.reason)}. Aucun remplacement silencieux.</p>`:''}
-    <p><b>${e(s.reason||'En attente du backend')}</b>. Pompe réellement observée : ${live?(r.pump_state==='on'?'en marche':r.pump_state==='off'?'arrêtée':'indisponible'):'non confirmée'} · Débit : ${live&&r.flow_verified?'vérifié par le capteur':'non vérifié'}.</p>
-    <p>Demande antigel : ${live&&f.requested?'oui':'non confirmée / inactive'} · Température locale : ${e(f.temperature_c??'—')} °C · ${e(l(f.sensor_status))}. Eau : ${e(l(s.water_status))}${s.water_temperature_c!=null?' · '+e(s.water_temperature_c)+' °C':''}.</p>
-    <ul class="winter-equipment">${statuses.map(([key,name])=>`<li>${e(name)} : <b>${e(l(c.equipment?.[key]?.status||'en_service'))}</b>${c.equipment?.[key]?.status==='hiverne'?' — remise en service manuelle nécessaire':''}</li>`).join('')}</ul>
-    <div data-winter-clock>${e(new Date(now).toLocaleString('fr-FR',{timeZone:s.timezone?.includes('/')?s.timezone:undefined}))} · ${e(s.timezone||'fuseau du navigateur')}</div>
-    <h3>Programme prévu</h3>${winterTimeline(s.program_day,s.program_day?.segments,now)}
-    <h3>Fonctionnement réellement constaté</h3>${winterTimeline(s.program_day,r.observations,now,true)}
-    <small>Vert : marche observée · gris : arrêt observé · hachures : aucune observation. Le repère rouge indique maintenant. Un ordre n’est pas une preuve de circulation.</small>
-    <details><summary>Pourquoi ce calcul ?</summary><p>Dernier recalcul : ${e(s.generated_at||'inconnu')} · Source : ${e(s.source)} · ${e(s.reason)}.</p><p>La validation concerne les prolongations proposées ; les plages régulières s’exécutent sans nouvelle validation. Une édition manuelle des plages passe en personnalisé.</p><ul>${(s.sensors||[]).map(row=>`<li>${e(row.name||row.key)} : ${e(l(row.status))} · ${e(row.value??'—')} °C · échantillon ${e(row.sample_at||'non daté')}</li>`).join('')}</ul><p>Durée et majorations calculées une fois côté backend ; l’antigel est arbitré séparément.</p><p>Commande pompe : ${e(r.command?.state||'aucune')} · demandée ${e(r.command?.requested_at||'—')} · confirmée ${e(r.command?.confirmed_at||'non confirmée')}.</p></details>
-    ${form}<p class="winter-warning">${e(s.warning||'Home Assistant doit être disponible. Une protection hors-gel matérielle indépendante peut être nécessaire.')} Une plage à 02:00 ne garantit pas le hors-gel.</p>
+  const alerts=[...(error&&!demo?[error]:[]),...(!live&&!demo?['Backend indisponible · protection non confirmée. Les dernières données ne prouvent pas que la pompe fonctionne.']:[]),...(r.alerts||[])];
+  const alertHtml=alerts.map(a=>`<p role="alert" class="winter-alert rc8-message">${e(a)}</p>`).join('');
+  // Even views without a winter panel retain safety diagnostics outside details.
+  if(!['overview','planning','equipment','settings'].includes(view))return alertHtml?`<section class="winter-card rc8-observation winter-alerts-only" data-winter-card aria-label="Alertes hivernage">${alertHtml}</section>`:'';
+  const pump=live?(r.pump_state==='on'?'En marche':r.pump_state==='off'?'Arrêtée':'Indisponible'):'Non confirmée';
+  const frostLabel=demo?'Antigel non simulé':!live?'Protection non confirmée':!s.master?'Satellite · aucune exécution locale':l(f.status);
+  const title=demo?'Démonstration':view==='overview'?l(c.mode||'normal'):view==='equipment'?'Équipements du bassin':view==='settings'?'Hivernage · paramètres':'Filtration et antigel';
+  const metric=(label,value)=>`<div class="rc8-device-row"><span>${e(label)}</span><strong>${e(value)}</strong></div>`;
+  const summary=`<div class="winter-summary"><span><b>Filtration</b> · ${demo?'Données simulées':e(pump)}${live?' · '+e(s.applied_hours)+' h programmées':''}</span><span><b>Antigel</b> · ${e(frostLabel)}</span></div>`;
+  const demoNote=demo?'<p class="rc8-message winter-demo" role="status">Données simulées · aucun état du backend réel présenté. La protection antigel n’est pas simulée.</p>':'';
+  const diagnostic=live?`<p class="winter-muted">Pompe observée : ${e(pump.toLowerCase())} · Débit : ${r.flow_verified?'vérifié par le capteur':'non vérifié'}. Un ordre ne prouve pas la circulation.</p>`:'';
+  const equipmentHtml=view==='equipment'?`<div class="winter-equipment">${statuses.map(([key,name])=>`<article class="rc8-device-row"><header><b>${e(name)}</b><span>${demo?'Équipement simulé':e(l(c.equipment?.[key]?.status||'en_service'))}</span></header>${!demo&&c.equipment?.[key]?.status==='hiverne'?'<p>Remise en service manuelle nécessaire.</p>':''}</article>`).join('')}</div>${diagnostic}`:'';
+  const planning=view==='planning'&&!demo?`
+    <div class="winter-metrics">${metric('Base hivernale',String(c.base_hours??4)+' h/j')}${metric('Durée recommandée',live?s.calculated_hours+' h':'Non confirmée')}${metric('Programme appliqué',live?s.applied_hours+' h':'Non confirmé')}${metric('Origine',l(s.origin))}</div>
+    ${s.different?`<p class="rc8-message">Recommandation : ${e(s.calculated_hours)} h / programme appliqué : ${e(s.applied_hours)} h — ${e(s.reason)}. Aucun remplacement silencieux.</p>`:''}
+    <p>${e(s.reason||'En attente du backend')}</p>${diagnostic}
+    <p class="winter-muted">Température locale : ${e(f.temperature_c??'—')} °C · ${e(l(f.sensor_status))}. Eau : ${e(l(s.water_status))}${s.water_temperature_c!=null?' · '+e(s.water_temperature_c)+' °C':''}.</p>
+    <div data-winter-clock class="winter-muted">${e(new Date(now).toLocaleString('fr-FR',{timeZone:s.timezone?.includes('/')?s.timezone:undefined}))} · ${e(s.timezone||'fuseau du navigateur')}</div>
+    <div class="winter-tracks"><div><h3>Programme prévu</h3>${winterTimeline(s.program_day,s.program_day?.segments,now)}</div><div><h3>Fonctionnement réellement constaté</h3>${winterTimeline(s.program_day,r.observations,now,true)}</div></div>
+    <p class="winter-legend">Vert : marche observée · gris : arrêt observé · hachures : aucune observation · repère rouge : maintenant.</p>
+    <details class="winter-explanation"><summary>Pourquoi ce calcul ?</summary><p>Dernier recalcul : ${e(s.generated_at||'inconnu')} · Source : ${e(s.source)} · ${e(s.reason)}.</p><p>La validation concerne les prolongations proposées ; les plages régulières s’exécutent sans nouvelle validation. Une édition manuelle passe en personnalisé.</p><ul>${(s.sensors||[]).map(row=>`<li>${e(row.name||row.key)} : ${e(l(row.status))} · ${e(row.value??'—')} °C · échantillon ${e(row.sample_at||'non daté')}</li>`).join('')}</ul><p>Durée et majorations calculées une fois côté backend ; l’antigel est arbitré séparément.</p><p>Commande pompe : ${e(r.command?.state||'aucune')} · demandée ${e(r.command?.requested_at||'—')} · confirmée ${e(r.command?.confirmed_at||'non confirmée')}.</p></details>`:'';
+  return `<section class="winter-card rc8-observation ${view==='overview'?'is-compact':''}" data-winter-card data-winter-view="${e(view)}" aria-label="Hivernage actif">
+    <header class="winter-header"><h2>${e(title)}</h2>${view!=='overview'?`<span class="winter-badge">${e(frostLabel)}</span>`:''}</header>
+    ${view==='overview'?summary:''}${demoNote}${alertHtml}${planning}${equipmentHtml}${form}
+    ${!demo&&['planning','settings'].includes(view)?`<p class="winter-warning">${e(s.warning||'Home Assistant doit être disponible. Une protection hors-gel matérielle indépendante peut être nécessaire.')} Une plage à 02:00 ne garantit pas le hors-gel.</p>`:''}
   </section>`;
 }

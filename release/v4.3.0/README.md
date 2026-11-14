@@ -54,3 +54,7 @@ Le manifest de l'intégration conserve son numéro historique 3.0.2 comme les di
 ## Vérification
 
 Voir [TEST_REPORT.md](TEST_REPORT.md) pour les commandes, résultats et limites. Aucun test sur Home Assistant réel, le Pi Vendée, une pompe physique ou un épisode de gel réel n'est revendiqué. La recette utilisateur reste nécessaire avant fusion et installation de production.
+
+## Révision ergonomique
+
+La synthèse compacte est dans Vue d’ensemble ; durées et frises dans Planning ; statuts dans Équipements. Les paramètres restent repliables et soumis à confirmation. Les alertes pertinentes restent visibles sur tous les onglets. [Captures avant/après et bilan](UX_REVIEW.md).

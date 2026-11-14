@@ -7,8 +7,9 @@ Base : correctif v4.2.2, commit `34ac6cdf0ed7bdee4050070bc375d74f3470dd25`, PR #
 | Commande | Résultat |
 |---|---|
 | `PYTHONDONTWRITEBYTECODE=1 python -m pytest -q` | 156 tests réussis |
-| `npm test` | 484 tests réussis (155 dashboard, 298 fonctions, 5 interface, 26 build) |
+| `npm test` | 488 tests réussis (155 dashboard, 302 fonctions, 5 interface, 26 build) |
 | `npm run test:smoke` | `rc28.3-runtime-ok` |
+| `node tests/wintering-visual.browser.cjs` | 64 assertions ergonomiques : onglets, thèmes, responsive, alertes et isolation Démonstration |
 | `node tests/wintering-v430.browser.cjs` | 21 assertions, Chromium, interface V4.3 reliée au backend Python simulé |
 | `HA_POOL_BROWSER_BUNDLE=release/v4.3.0/pool-cockpit.js node tests/weather-v421.browser.cjs` | 1 529 assertions, 7 vues, 6 largeurs, niveaux jaune/orange/rouge/absent |
 | `python tools/build_wintering_v430.py --output /tmp/pool-v430-check.js` puis `cmp` | Distribution reproductible |
@@ -48,3 +49,5 @@ Les tests navigateur utilisent le vrai bundle distribué et le vrai planificateu
 - L'hivernage passif et les intégrations futures de matériel ne font pas partie de cette livraison.
 
 Guide utilisateur, priorités, migration et retour arrière : [README.md](README.md).
+
+Révision ergonomique : [bilan et captures comparatives](UX_REVIEW.md). Aucun fichier du backend Python ni méthode de commande/confirmation modifié par cette révision.

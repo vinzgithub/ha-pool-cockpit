@@ -2,6 +2,8 @@
 import asyncio
 import json
 import sys
+import os
+from urllib.parse import urlsplit
 from datetime import timedelta
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
@@ -34,13 +36,13 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status);self.send_header('Content-Type',kind+'; charset=utf-8');self.end_headers();self.wfile.write(payload)
     def do_GET(self):
         if self.path=='/':return self.send(b'<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><main id="app"></main><script src="/bundle.js"></script></body></html>',kind='text/html')
-        if self.path=='/bundle.js':return self.send((ROOT/'release/v4.3.0/pool-cockpit.js').read_bytes(),kind='application/javascript')
+        if self.path=='/bundle.js':return self.send(Path(os.environ.get('WINTER_BUNDLE', ROOT/'release/v4.3.0/pool-cockpit.js')).read_bytes(),kind='application/javascript')
         if self.path=='/states':return self.send(states())
         if self.path=='/commands':return self.send(sim.hass.commands)
         if self.path.startswith('/local/ha-pool-dashboard/'):
-            name=Path(self.path).name
+            name=Path(urlsplit(self.path).path).name
             p=ROOT/'release/v4-rc8-2/assets'/name
-            if p.exists():return self.send(p.read_bytes(),kind='image/png')
+            if p.exists():return self.send(p.read_bytes(),kind='image/webp' if p.suffix=='.webp' else 'image/png')
         self.send({},404)
     def do_POST(self):
         req=json.loads(self.rfile.read(int(self.headers.get('Content-Length','0'))))

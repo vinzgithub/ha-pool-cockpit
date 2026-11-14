@@ -24,6 +24,14 @@ def generate():
     text = v421.once(text, '<style data-pool-cockpit-v421-weather>', '<style data-pool-cockpit-v430-wintering>'+css+'</style><style data-pool-cockpit-v421-weather>')
     # The old V4 distribution overrode the PAC lock; never restore that write path.
     text = v421.once(text, 'result.pac.write_enabled=result.coordination.role==="master";', 'result.pac.write_enabled=false;')
+    # The fictional demo probe needs an acquisition time under the unchanged
+    # v4.3 freshness rules. This only amends fakeHass, never real HA readings.
+    text = v421.once(text, 'temperature:"sensor.pool_cockpit_demo_temperature",',
+                    'temperature:"sensor.pool_cockpit_demo_temperature",sample:"sensor.pool_cockpit_demo_sample",')
+    text = v421.once(text, 'entities:{temperature:ids.temperature,ph:ids.ph,orp:ids.orp,battery:ids.battery,bluetooth_signal:ids.signal}',
+                    'entities:{temperature:ids.temperature,last_analysis:ids.sample,ph:ids.ph,orp:ids.orp,battery:ids.battery,bluetooth_signal:ids.signal}')
+    text = v421.once(text, '[ids.temperature]:state(ids.temperature,27.9,"°C"),',
+                    '[ids.temperature]:state(ids.temperature,27.9,"°C"),[ids.sample]:state(ids.sample,at),')
     return text.encode('utf-8')
 
 

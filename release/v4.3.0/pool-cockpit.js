@@ -15740,7 +15740,47 @@ function rendreCockpitV4({
 .v4-mobile-overview .v4-score__details--mobile{display:flex;margin:4px auto 9px}.v4-mobile-overview .v4-analysis-progress{margin:9px auto 0}
 </style>
 
-    <style data-pool-cockpit-v430-wintering>.winter-card{position:relative;z-index:2;margin:16px auto;padding:22px;background:#f7fafc;color:#16334b;border:1px solid var(--border,#c9dce8);border-radius:20px;max-width:1400px;font-size:14px;line-height:1.5;box-sizing:border-box}.winter-card *{box-sizing:border-box;min-width:0}.winter-card header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.winter-card h2{margin:3px 0 10px;font-size:24px}.winter-card h3{font-size:14px;margin-bottom:8px}.winter-badge{background:#e4f0f6;border-radius:16px;padding:7px 12px;color:#16334b}.winter-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.winter-metrics>div{border-radius:12px;background:#edf5f8;padding:12px;color:#16334b}.winter-metrics span,.winter-metrics strong{display:block}.winter-metrics strong{font-size:20px;overflow-wrap:anywhere}.winter-alert{background:#fff1db;border-left:4px solid #b66a15;padding:10px 14px;color:#583404;border-radius:6px}.winter-warning{font-size:12px;color:inherit;opacity:.85;margin-top:18px}.winter-card summary{cursor:pointer;padding:12px 0;font-weight:650;min-height:44px}.winter-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.winter-card label{display:flex;flex-direction:column;gap:5px;font-weight:550}.winter-card input,.winter-card select{font:inherit;padding:10px;border:1px solid #9cb5c3;border-radius:8px;width:100%;min-height:44px;background:#fff;color:#16334b}.winter-card .winter-check{display:flex;flex-direction:row;align-items:center}.winter-check input{width:20px;min-height:20px;flex:none}.winter-card fieldset{padding:0;border:0}.winter-card button{border:0;border-radius:9px;padding:12px 18px;background:#126caa;color:white;font:inherit;cursor:pointer;min-height:44px}.winter-card fieldset:disabled{opacity:.55}.winter-equipment{display:flex;flex-wrap:wrap;gap:8px 22px;padding-left:18px}.winter-timeline{height:24px;position:relative;background:#e4ebf0;border-radius:5px;overflow:hidden}.winter-timeline.is-observed{background:repeating-linear-gradient(135deg,#f8fafc,#f8fafc 4px,#d9e2e9 4px,#d9e2e9 6px)}.winter-slot{position:absolute;top:0;bottom:0;background:#1e8973}.winter-slot.is-off{background:#a0aebb}.winter-now{position:absolute;top:0;bottom:0;width:3px;background:#c33838;z-index:1}.winter-axis{display:flex;justify-content:space-between;font-size:11px;margin:3px 0 12px}.winter-card code{overflow-wrap:anywhere}@media(max-width:700px){.winter-card{padding:15px;margin:10px 6px}.winter-metrics,.winter-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.winter-card h2{font-size:21px}}@media(max-width:420px){.winter-fields{grid-template-columns:1fr}.winter-badge{font-size:12px}.winter-metrics strong{font-size:18px}}
+    <style data-pool-cockpit-v430-wintering>/* Native RC8 panel, device-row and message components supply theme colors. */
+.pool-cockpit-v4 .winter-card{margin:var(--v4-card-gap) 0;backdrop-filter:blur(8px);font:inherit;line-height:1.5;box-sizing:border-box}
+.pool-cockpit-v4 .winter-card *{box-sizing:border-box;min-width:0}
+.pool-cockpit-v4 .winter-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pool-cockpit-v4 .winter-card h2{font-size:1.15rem;line-height:1.5;margin:0;color:inherit}
+.pool-cockpit-v4 .winter-card h3{font-size:.9rem;margin:0 0 8px;color:inherit}
+.pool-cockpit-v4 .winter-badge{border:1px solid var(--v4-border);background:var(--v4-card-background);border-radius:12px;padding:6px 12px;font-size:.85rem;color:var(--v4-text)}
+.pool-cockpit-v4 .winter-summary{display:flex;flex-wrap:wrap;gap:6px 24px;margin-top:8px;color:var(--v4-muted);font-size:.9rem}
+.pool-cockpit-v4 .winter-summary b{color:var(--v4-text)}
+.pool-cockpit-v4 .winter-metrics,.pool-cockpit-v4 .winter-equipment{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:var(--v4-card-gap);margin-top:var(--v4-card-gap)}
+.pool-cockpit-v4 .winter-metrics span,.pool-cockpit-v4 .winter-metrics strong{display:block}
+.pool-cockpit-v4 .winter-metrics span{font-size:.85rem;color:var(--v4-muted)}
+.pool-cockpit-v4 .winter-metrics strong{font-size:1.2rem;overflow-wrap:anywhere;margin-top:4px}
+.pool-cockpit-v4 .winter-equipment p{font-size:.85rem;margin-bottom:0;color:var(--v4-muted)}
+.pool-cockpit-v4 .winter-alert.rc8-message{background:#fff1db;color:#583404;border-left:4px solid #bc741f;padding:12px 14px;opacity:1;overflow-wrap:anywhere}
+.pool-cockpit-v4:is([data-v4-theme="ocean"],[data-v4-theme="night"]) .winter-alert.rc8-message{background:rgba(86,48,12,.92);color:#fff0d6;border-color:#ffc260}
+.pool-cockpit-v4 .winter-card .winter-muted,.pool-cockpit-v4 .winter-warning,.pool-cockpit-v4 .winter-legend{font-size:.85rem;color:var(--v4-muted)}
+.pool-cockpit-v4 .winter-warning{margin:16px 0 0}
+.pool-cockpit-v4 .winter-card summary{cursor:pointer;padding:12px 0;font-weight:650;min-height:44px;color:inherit}
+.pool-cockpit-v4 .winter-config,.pool-cockpit-v4 .winter-explanation{border-top:1px solid var(--v4-border);margin-top:12px}
+.pool-cockpit-v4 .winter-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--v4-card-gap)}
+.pool-cockpit-v4 .winter-card label{display:flex;flex-direction:column;gap:6px;font-size:.85rem;font-weight:550}
+.pool-cockpit-v4 .winter-card input,.pool-cockpit-v4 .winter-card select{font:inherit;padding:10px;border:1px solid var(--v4-border);border-radius:10px;width:100%;min-height:44px;background:var(--v4-panel-background);color:var(--v4-text)}
+.pool-cockpit-v4:is([data-v4-theme="ocean"],[data-v4-theme="night"]) .winter-card select option{background:#173e65;color:#edf7ff}
+.pool-cockpit-v4 .winter-card .winter-check{flex-direction:row;align-items:center}
+.pool-cockpit-v4 .winter-check input{width:22px;min-height:22px;flex:none}
+.pool-cockpit-v4 .winter-card fieldset{padding:0;border:0;margin:0}
+.pool-cockpit-v4 .winter-card button{font:inherit;font-size:.85rem;min-height:44px;padding:10px 14px;border:1px solid var(--v4-border);border-radius:12px;background:#245f92;color:#fff;cursor:pointer}
+.pool-cockpit-v4 .winter-card fieldset:disabled{opacity:.65}
+.pool-cockpit-v4 .winter-card :is(button,input,select,summary):focus-visible{outline:3px solid #ffcc66;outline-offset:3px}
+.pool-cockpit-v4 .winter-tracks{display:grid;gap:var(--v4-card-gap);margin-top:var(--v4-card-gap)}
+.pool-cockpit-v4 .winter-timeline{height:24px;position:relative;background:var(--v4-card-background);border:1px solid var(--v4-border);border-radius:6px;overflow:hidden}
+.pool-cockpit-v4 .winter-timeline.is-observed{background:repeating-linear-gradient(135deg,transparent,transparent 4px,var(--v4-border) 4px,var(--v4-border) 6px)}
+.pool-cockpit-v4 .winter-slot{position:absolute;top:0;bottom:0;background:#38b9a0}
+.pool-cockpit-v4 .winter-slot.is-off{background:#869eb2}
+.pool-cockpit-v4 .winter-now{position:absolute;top:0;bottom:0;width:3px;background:#ff7272;z-index:1}
+.pool-cockpit-v4 .winter-axis{display:flex;justify-content:space-between;gap:8px;font-size:.75rem;color:var(--v4-muted);margin:4px 0}
+.pool-cockpit-v4 .winter-card code{overflow-wrap:anywhere}
+.pool-cockpit-v4 .winter-alerts-only .winter-alert{margin:0}
+@media(max-width:700px){.pool-cockpit-v4 .winter-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.pool-cockpit-v4 .winter-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pool-cockpit-v4 .winter-summary{flex-direction:column}}
+@media(max-width:420px){.pool-cockpit-v4 .winter-fields{grid-template-columns:1fr}}
 </style><style data-pool-cockpit-v421-weather>/* V4.2.1: single weather alert in the V4 shell, before navigation. */
  .pool-cockpit-v4>.rc26-weather-banner{position:relative;z-index:2;box-sizing:border-box;width:100%;max-width:100%;min-width:0}
 .pool-cockpit-v4>.rc26-weather-banner>span:nth-child(2){min-width:0;overflow-wrap:anywhere}
@@ -29967,16 +30007,17 @@ function winterTimeline(day, segments, now, observed=false){
   const position=100*(now-begin)/span;
   return `<div class="winter-timeline ${observed?'is-observed':''}" role="img" aria-label="${observed?'Marche réellement observée ; zones hachurées : sans observation':'Plages prévues'}">${blocks}${position>=0&&position<=100?`<b class="winter-now" style="left:${position}%" title="Maintenant"></b>`:''}</div><div class="winter-axis"><span>00:00</span><span>Journée locale · ${day.elapsed_hours} h réelles</span><span>24:00</span></div>`;
 }
-function renderWinterCard({control={},devices=[],now=Date.now(),settings=false,error=''}){
-  const s=control.winter_status||{},c=s.configuration||control.wintering||{},r=s.runtime||{},f=r.frost||{};
-  const live=winterBackendLive(control,now),master=live&&s.master===true;
+function renderWinterCard({control={},devices=[],now=Date.now(),settings=false,error='',view='planning',demo=false}){
+  // Demo uses its own fictional control only; never render a cached real winter status.
+  const s=demo?{}:control.winter_status||{},c=s.configuration||(!demo&&control.wintering)||{},r=s.runtime||{},f=r.frost||{};
+  const live=!demo&&winterBackendLive(control,now),master=live&&s.master===true;
   const e=winterEscape,l=value=>winterLabels[value]||value||'Non renseigné';
   const statuses=[['pump','Pompe de filtration'],['pac','Pompe à chaleur'],...devices.map(d=>[d.key,d.name])];
   const options=(values,current)=>values.map(v=>`<option value="${e(v)}" ${v===current?'selected':''}>${e(l(v))}</option>`).join('');
   const field=(key,label,value,type='number',extra='')=>`<label>${e(label)}<input data-winter-field="${key}" type="${type}" value="${e(value??'')}" ${extra}></label>`;
   const frost=c.frost||{};
   const equipment=statuses.map(([key,name])=>`<label>${e(name)}<select data-winter-equipment="${e(key)}">${options(['en_service','hiverne','maintenance','indisponible'],c.equipment?.[key]?.status||'en_service')}</select></label>`).join('');
-  const form=settings?`<details class="winter-config"><summary>Configurer et confirmer</summary><form data-winter-form><fieldset ${master?'':'disabled'}>
+  const form=settings&&!demo?`<details class="winter-config"><summary>Paramètres d’hivernage · configurer et confirmer</summary><form data-winter-form><fieldset ${master?'':'disabled'}>
     <div class="winter-fields"><label>Mode du bassin<select data-winter-field="mode">${options(['normal','hivernage_actif','maintenance'],c.mode||'normal')}</select></label>
     ${field('base_hours','Base hivernale (h/j)',c.base_hours??4,'number','min="0.25" max="24" step="0.25" required')}${field('start','Départ nocturne',c.start||'02:00','time','required')}
     <label class="winter-check"><input data-winter-field="hydraulic_ready" type="checkbox" ${c.hydraulic_ready!==false?'checked':''}>Circuit en eau, pompe autorisée à fonctionner</label>
@@ -29996,22 +30037,31 @@ function renderWinterCard({control={},devices=[],now=Date.now(),settings=false,e
     </div><p>4 h/j est une suggestion à adapter et confirmer. La modification peut remplacer les plages actuelles. Une PAC hivernée doit être remise en service manuellement ; ce statut ne certifie pas sa vidange.</p>
     <p>Renseigner la date d’acquisition du capteur local, ou un attribut <code>measurement_timestamp</code>, <code>last_measurement</code> ou <code>last_sample</code>. Sans date fiable : protection non confirmée. La météo distante seule ne suffit pas.</p>
     <button type="submit">Vérifier et confirmer les changements</button></fieldset></form></details>`:'';
-  return `<section class="winter-card" data-winter-card aria-label="Hivernage actif">
-    <header><div><small>PISCINE · FONCTIONNEMENT</small><h2>${e(l(c.mode||'normal'))}</h2></div><span class="winter-badge">${!live?'Backend indisponible · protection non confirmée':!s.master?'Satellite · aucune exécution locale':e(l(f.status))}</span></header>
-    ${error?`<p role="alert" class="winter-alert">${e(error)}</p>`:''}
-    ${!live?'<p role="alert" class="winter-alert">État non confirmé. Les dernières données affichées ne prouvent pas que la pompe fonctionne.</p>':''}
-    ${(r.alerts||[]).map(a=>`<p role="alert" class="winter-alert">${e(a)}</p>`).join('')}
-    <div class="winter-metrics"><div><span>Base hivernale</span><strong>${e(c.base_hours??4)} h/j</strong></div><div><span>Recommandation backend</span><strong>${live?e(s.calculated_hours):'—'} h</strong></div><div><span>Programme appliqué</span><strong>${live?e(s.applied_hours):'—'} h</strong></div><div><span>Origine</span><strong>${e(l(s.origin||'Non confirmée'))}</strong></div></div>
-    ${s.different?`<p class="winter-alert">Recommandation : ${e(s.calculated_hours)} h / programme appliqué : ${e(s.applied_hours)} h — ${e(s.reason)}. Aucun remplacement silencieux.</p>`:''}
-    <p><b>${e(s.reason||'En attente du backend')}</b>. Pompe réellement observée : ${live?(r.pump_state==='on'?'en marche':r.pump_state==='off'?'arrêtée':'indisponible'):'non confirmée'} · Débit : ${live&&r.flow_verified?'vérifié par le capteur':'non vérifié'}.</p>
-    <p>Demande antigel : ${live&&f.requested?'oui':'non confirmée / inactive'} · Température locale : ${e(f.temperature_c??'—')} °C · ${e(l(f.sensor_status))}. Eau : ${e(l(s.water_status))}${s.water_temperature_c!=null?' · '+e(s.water_temperature_c)+' °C':''}.</p>
-    <ul class="winter-equipment">${statuses.map(([key,name])=>`<li>${e(name)} : <b>${e(l(c.equipment?.[key]?.status||'en_service'))}</b>${c.equipment?.[key]?.status==='hiverne'?' — remise en service manuelle nécessaire':''}</li>`).join('')}</ul>
-    <div data-winter-clock>${e(new Date(now).toLocaleString('fr-FR',{timeZone:s.timezone?.includes('/')?s.timezone:undefined}))} · ${e(s.timezone||'fuseau du navigateur')}</div>
-    <h3>Programme prévu</h3>${winterTimeline(s.program_day,s.program_day?.segments,now)}
-    <h3>Fonctionnement réellement constaté</h3>${winterTimeline(s.program_day,r.observations,now,true)}
-    <small>Vert : marche observée · gris : arrêt observé · hachures : aucune observation. Le repère rouge indique maintenant. Un ordre n’est pas une preuve de circulation.</small>
-    <details><summary>Pourquoi ce calcul ?</summary><p>Dernier recalcul : ${e(s.generated_at||'inconnu')} · Source : ${e(s.source)} · ${e(s.reason)}.</p><p>La validation concerne les prolongations proposées ; les plages régulières s’exécutent sans nouvelle validation. Une édition manuelle des plages passe en personnalisé.</p><ul>${(s.sensors||[]).map(row=>`<li>${e(row.name||row.key)} : ${e(l(row.status))} · ${e(row.value??'—')} °C · échantillon ${e(row.sample_at||'non daté')}</li>`).join('')}</ul><p>Durée et majorations calculées une fois côté backend ; l’antigel est arbitré séparément.</p><p>Commande pompe : ${e(r.command?.state||'aucune')} · demandée ${e(r.command?.requested_at||'—')} · confirmée ${e(r.command?.confirmed_at||'non confirmée')}.</p></details>
-    ${form}<p class="winter-warning">${e(s.warning||'Home Assistant doit être disponible. Une protection hors-gel matérielle indépendante peut être nécessaire.')} Une plage à 02:00 ne garantit pas le hors-gel.</p>
+  const alerts=[...(error&&!demo?[error]:[]),...(!live&&!demo?['Backend indisponible · protection non confirmée. Les dernières données ne prouvent pas que la pompe fonctionne.']:[]),...(r.alerts||[])];
+  const alertHtml=alerts.map(a=>`<p role="alert" class="winter-alert rc8-message">${e(a)}</p>`).join('');
+  // Even views without a winter panel retain safety diagnostics outside details.
+  if(!['overview','planning','equipment','settings'].includes(view))return alertHtml?`<section class="winter-card rc8-observation winter-alerts-only" data-winter-card aria-label="Alertes hivernage">${alertHtml}</section>`:'';
+  const pump=live?(r.pump_state==='on'?'En marche':r.pump_state==='off'?'Arrêtée':'Indisponible'):'Non confirmée';
+  const frostLabel=demo?'Antigel non simulé':!live?'Protection non confirmée':!s.master?'Satellite · aucune exécution locale':l(f.status);
+  const title=demo?'Démonstration':view==='overview'?l(c.mode||'normal'):view==='equipment'?'Équipements du bassin':view==='settings'?'Hivernage · paramètres':'Filtration et antigel';
+  const metric=(label,value)=>`<div class="rc8-device-row"><span>${e(label)}</span><strong>${e(value)}</strong></div>`;
+  const summary=`<div class="winter-summary"><span><b>Filtration</b> · ${demo?'Données simulées':e(pump)}${live?' · '+e(s.applied_hours)+' h programmées':''}</span><span><b>Antigel</b> · ${e(frostLabel)}</span></div>`;
+  const demoNote=demo?'<p class="rc8-message winter-demo" role="status">Données simulées · aucun état du backend réel présenté. La protection antigel n’est pas simulée.</p>':'';
+  const diagnostic=live?`<p class="winter-muted">Pompe observée : ${e(pump.toLowerCase())} · Débit : ${r.flow_verified?'vérifié par le capteur':'non vérifié'}. Un ordre ne prouve pas la circulation.</p>`:'';
+  const equipmentHtml=view==='equipment'?`<div class="winter-equipment">${statuses.map(([key,name])=>`<article class="rc8-device-row"><header><b>${e(name)}</b><span>${demo?'Équipement simulé':e(l(c.equipment?.[key]?.status||'en_service'))}</span></header>${!demo&&c.equipment?.[key]?.status==='hiverne'?'<p>Remise en service manuelle nécessaire.</p>':''}</article>`).join('')}</div>${diagnostic}`:'';
+  const planning=view==='planning'&&!demo?`
+    <div class="winter-metrics">${metric('Base hivernale',String(c.base_hours??4)+' h/j')}${metric('Durée recommandée',live?s.calculated_hours+' h':'Non confirmée')}${metric('Programme appliqué',live?s.applied_hours+' h':'Non confirmé')}${metric('Origine',l(s.origin))}</div>
+    ${s.different?`<p class="rc8-message">Recommandation : ${e(s.calculated_hours)} h / programme appliqué : ${e(s.applied_hours)} h — ${e(s.reason)}. Aucun remplacement silencieux.</p>`:''}
+    <p>${e(s.reason||'En attente du backend')}</p>${diagnostic}
+    <p class="winter-muted">Température locale : ${e(f.temperature_c??'—')} °C · ${e(l(f.sensor_status))}. Eau : ${e(l(s.water_status))}${s.water_temperature_c!=null?' · '+e(s.water_temperature_c)+' °C':''}.</p>
+    <div data-winter-clock class="winter-muted">${e(new Date(now).toLocaleString('fr-FR',{timeZone:s.timezone?.includes('/')?s.timezone:undefined}))} · ${e(s.timezone||'fuseau du navigateur')}</div>
+    <div class="winter-tracks"><div><h3>Programme prévu</h3>${winterTimeline(s.program_day,s.program_day?.segments,now)}</div><div><h3>Fonctionnement réellement constaté</h3>${winterTimeline(s.program_day,r.observations,now,true)}</div></div>
+    <p class="winter-legend">Vert : marche observée · gris : arrêt observé · hachures : aucune observation · repère rouge : maintenant.</p>
+    <details class="winter-explanation"><summary>Pourquoi ce calcul ?</summary><p>Dernier recalcul : ${e(s.generated_at||'inconnu')} · Source : ${e(s.source)} · ${e(s.reason)}.</p><p>La validation concerne les prolongations proposées ; les plages régulières s’exécutent sans nouvelle validation. Une édition manuelle passe en personnalisé.</p><ul>${(s.sensors||[]).map(row=>`<li>${e(row.name||row.key)} : ${e(l(row.status))} · ${e(row.value??'—')} °C · échantillon ${e(row.sample_at||'non daté')}</li>`).join('')}</ul><p>Durée et majorations calculées une fois côté backend ; l’antigel est arbitré séparément.</p><p>Commande pompe : ${e(r.command?.state||'aucune')} · demandée ${e(r.command?.requested_at||'—')} · confirmée ${e(r.command?.confirmed_at||'non confirmée')}.</p></details>`:'';
+  return `<section class="winter-card rc8-observation ${view==='overview'?'is-compact':''}" data-winter-card data-winter-view="${e(view)}" aria-label="Hivernage actif">
+    <header class="winter-header"><h2>${e(title)}</h2>${view!=='overview'?`<span class="winter-badge">${e(frostLabel)}</span>`:''}</header>
+    ${view==='overview'?summary:''}${demoNote}${alertHtml}${planning}${equipmentHtml}${form}
+    ${!demo&&['planning','settings'].includes(view)?`<p class="winter-warning">${e(s.warning||'Home Assistant doit être disponible. Une protection hors-gel matérielle indépendante peut être nécessaire.')} Une plage à 02:00 ne garantit pas le hors-gel.</p>`:''}
   </section>`;
 }
 
@@ -30069,7 +30119,7 @@ function installWinteringV430(Card){
   };
   p.rc30AdaptiveRecommendation=function(control,model){
     const s=control?.winter_status;
-    if(!s){return {...original.adaptive.call(this,control,model),context:'Backend v4.3.0 requis · suggestion locale non exécutable'};}
+    if(!s){return {...original.adaptive.call(this,control,model),context:this.config?.pool_id==='pool_cockpit_demo'?'Démonstration · recommandation simulée':'Backend v4.3.0 requis · suggestion locale non exécutable'};}
     const old=original.adaptive.call(this,control,{...model,filtrationHours:s.calculated_hours});
     const periods=s.proposed_periods||[],watch=control.watch||{};
     return {...old,hours:s.calculated_hours,periods,weekdays:control.pump?.weekdays||[],
@@ -30123,13 +30173,13 @@ function installWinteringV430(Card){
     const root=this.shadowRoot,shell=root?.querySelector?.('.pool-cockpit-v4');
     if(!shell)return;
     const view=this._v4Ui?.ongletActif||'overview';
-    if(!['overview','planning','equipment','settings'].includes(view))return;
     root.querySelector('[data-winter-card]')?.remove();
     if(this._rc27Control?.winter_status?.mode==='hivernage_actif')root.querySelectorAll('.rc30-adaptive-overview').forEach(el=>el.remove());
     const devices=(this.config?.devices||[]).map((d,i)=>({key:this.winterDeviceKey(d,i),name:d.name||d.brand||'Sonde'}));
-    const html=renderWinterCard({control:this._rc27Control,devices,settings:['settings','planning'].includes(view),error:this._winterError});
+    const html=renderWinterCard({control:this._rc27Control,devices,view,demo:this.config?.pool_id==='pool_cockpit_demo',settings:['settings','planning'].includes(view),error:this._winterError});
     const nav=shell.querySelector('.v4-navigation');
-    if(nav)nav.insertAdjacentHTML('afterend',html);else shell.insertAdjacentHTML('afterbegin',html);
+    const heading=['planning','equipment','settings'].includes(view)?shell.querySelector('.v4-view__header'):null;
+    if(heading)heading.insertAdjacentHTML('afterend',html);else if(nav)nav.insertAdjacentHTML('afterend',html);else shell.insertAdjacentHTML('afterbegin',html);
     const panel=root.querySelector('[data-winter-card]'),form=panel?.querySelector('[data-winter-form]');
     if(form){
       const details=panel.querySelector('.winter-config');details.open=Boolean(this._winterFormOpen);
@@ -30164,7 +30214,7 @@ console.info("%c HA POOL DASHBOARD %c v"+VERSION,"background:#1388ef;color:white
   const DUAL="pool-cockpit-card";
   const STANDALONE="pool-cockpit-demo-card";
   const ids=Object.freeze({
-    temperature:"sensor.pool_cockpit_demo_temperature",
+    temperature:"sensor.pool_cockpit_demo_temperature",sample:"sensor.pool_cockpit_demo_sample",
     ph:"sensor.pool_cockpit_demo_ph",
     orp:"sensor.pool_cockpit_demo_orp",
     battery:"sensor.pool_cockpit_demo_battery",
@@ -30176,14 +30226,14 @@ console.info("%c HA POOL DASHBOARD %c v"+VERSION,"background:#1388ef;color:white
     weather:"weather.pool_cockpit_demo"
   });
   const devices=()=>[{key:"pool_cockpit_demo",name:"Blue Connect · Démo",brand:"blue_connect",
-    entities:{temperature:ids.temperature,ph:ids.ph,orp:ids.orp,battery:ids.battery,bluetooth_signal:ids.signal}}];
+    entities:{temperature:ids.temperature,last_analysis:ids.sample,ph:ids.ph,orp:ids.orp,battery:ids.battery,bluetooth_signal:ids.signal}}];
   function fakeHass(language="fr",notify=()=>{}){
     const at=new Date().toISOString();
     const state=(id,value,unit="")=>Object.freeze({entity_id:id,state:String(value),
       attributes:Object.freeze({friendly_name:id.split(".")[1].replaceAll("_"," "),unit_of_measurement:unit}),
       last_changed:at,last_updated:at});
     let states=Object.freeze({
-      [ids.temperature]:state(ids.temperature,27.9,"°C"),
+      [ids.temperature]:state(ids.temperature,27.9,"°C"),[ids.sample]:state(ids.sample,at),
       [ids.ph]:state(ids.ph,7.34),
       [ids.orp]:state(ids.orp,735,"mV"),
       [ids.battery]:state(ids.battery,86,"%"),

@@ -36,6 +36,7 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
           npx playwright install --with-deps chromium
       - run: node tests/wintering-v430.browser.cjs
+      - run: node tests/wintering-visual.browser.cjs
       - name: Weather regression on V4.3 distribution
         env:
           HA_POOL_BROWSER_BUNDLE: release/v4.3.0/pool-cockpit.js
@@ -46,5 +47,6 @@ jobs:
           name: pool-v430-visual-checks
           path: |
             ${{ runner.temp }}/pool-wintering-v430/*.png
+            ${{ runner.temp }}/pool-wintering-ux/*.png
             ${{ runner.temp }}/pool-weather-v421/*.png
           if-no-files-found: ignore
