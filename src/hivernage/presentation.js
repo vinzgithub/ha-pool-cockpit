@@ -77,7 +77,7 @@ export function renderWinterCard({control={},devices=[],now=Date.now(),settings=
   if(!['overview','planning','equipment','settings'].includes(view))return alertHtml?`<section class="winter-card rc8-observation winter-alerts-only" data-winter-card aria-label="Alertes hivernage">${alertHtml}</section>`:'';
   const pump=demo?'Fictif · arrêtée':live?(r.pump_state==='on'?'En marche':r.pump_state==='off'?'Arrêtée':'Indisponible'):'Non confirmée';
   const frostLabel=demo?'Antigel non simulé':!live?'Protection non confirmée':!s.master?'Satellite · aucune exécution locale':l(f.status);
-  const title=demo?'Démonstration':view==='overview'?l(c.mode||'normal'):view==='equipment'?'Équipements du bassin':view==='settings'?'Hivernage · paramètres':'Filtration et antigel';
+  const title=demo?'Hivernage actif · Démonstration':view==='overview'?l(c.mode||'normal'):view==='equipment'?'Équipements du bassin':view==='settings'?'Hivernage · paramètres':'Filtration et antigel';
   const metric=(label,value)=>`<div class="rc8-device-row"><span>${e(label)}</span><strong>${e(value)}</strong></div>`;
   const demoSettings=view==='settings'&&demo?
     '<details class="winter-config"><summary>Paramètres d’hivernage · aperçu non modifiable</summary>'+
@@ -94,7 +94,7 @@ export function renderWinterCard({control={},devices=[],now=Date.now(),settings=
     <p>${e(s.reason||'En attente du backend')}</p>${diagnostic}
     <p class="winter-muted">Température locale : ${e(f.temperature_c??'—')} °C · ${e(l(f.sensor_status))}. Eau : ${e(l(s.water_status))}${s.water_temperature_c!=null?' · '+e(s.water_temperature_c)+' °C':''}.</p>
     <div data-winter-clock class="winter-muted">${e(new Date(now).toLocaleString('fr-FR',{timeZone:s.timezone?.includes('/')?s.timezone:undefined}))} · ${e(s.timezone||'fuseau du navigateur')}</div>
-    <div class="winter-tracks"><div><h3>Programme prévu</h3>${winterTimeline(s.program_day,s.program_day?.segments,now)}</div><div><h3>Fonctionnement réellement constaté</h3>${winterTimeline(s.program_day,r.observations,now,true)}</div></div>
+    <div class="winter-tracks"><div><h3>Programme prévu</h3>${winterTimeline(s.program_day,s.program_day?.segments,now)}</div><div><h3>${demo?'Fonctionnement simulé':'Fonctionnement réellement constaté'}</h3>${winterTimeline(s.program_day,r.observations,now,true)}</div></div>
     <p class="winter-legend">${demo?'Frises entièrement fictives · aucune marche réelle constatée.':'Vert : marche observée · gris : arrêt observé · hachures : aucune observation · repère rouge : maintenant.'}</p>
     <details class="winter-explanation"><summary>Pourquoi ce calcul ?</summary><p>Dernier recalcul : ${e(s.generated_at||'inconnu')} · Source : ${e(s.source)} · ${e(s.reason)}.</p><p>La validation concerne les prolongations proposées ; les plages régulières s’exécutent sans nouvelle validation. Une édition manuelle passe en personnalisé.</p><ul>${(s.sensors||[]).map(row=>`<li>${e(row.name||row.key)} : ${e(l(row.status))} · ${e(row.value??'—')} °C · échantillon ${e(row.sample_at||'non daté')}</li>`).join('')}</ul><p>Durée et majorations calculées une fois côté backend ; l’antigel est arbitré séparément.</p><p>Commande pompe : ${e(r.command?.state||'aucune')} · demandée ${e(r.command?.requested_at||'—')} · confirmée ${e(r.command?.confirmed_at||'non confirmée')}.</p></details>`:'';
   return `<section class="winter-card rc8-observation ${view==='overview'?'is-compact':''}" data-winter-card data-winter-view="${e(view)}" aria-label="Hivernage actif">
