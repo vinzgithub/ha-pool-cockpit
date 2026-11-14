@@ -9,6 +9,8 @@ Le patch `v4.2.2-moteur-adaptatif.patch` fourni a été appliqué sur le tag, pu
 
 Les changements exécutables sont limités à `schedule_utils.py` et `scheduler.py`. Les fonctions pures de calcul sont appelées par le planificateur existant. Le stockage, les services, les installateurs, les bundles et les priorités de commande conservent leurs contrats existants. Les identifiants de version historiques du moteur restent inchangés, conformément aux tests de cohérence du dépôt.
 
+Le workflow navigateur existant est fixé sur `ubuntu-24.04` : `ubuntu-latest` est passé à Ubuntu 26.04, non pris en charge par Playwright 1.56.1. Aucun test n'est désactivé et la version du navigateur reste identique.
+
 | Anomalie | Correction et vérification |
 | --- | --- |
 | La durée précédente empêche une baisse et cumule la majoration fréquentation | `pump.recommended_hours` reste une sortie en mode adaptatif. Eau à 24 °C puis 12,7 °C : 12 h puis 7 h. Fréquentation élevée : 9 h stables sur plusieurs cycles et sauvegardes frontend. |
