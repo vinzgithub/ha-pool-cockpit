@@ -116,7 +116,7 @@ class _Hass:
             if entity_id:
                 self.states.items[entity_id] = _State("on" if service == "turn_on" else "off", NOW)
 
-        self.services = types.SimpleNamespace(async_call=call)
+        self.services = types.SimpleNamespace(async_call=call, has_service=lambda *_args: False)
         self.bus = types.SimpleNamespace(
             async_fire=lambda *args: self.events.append(args),
             async_listen=lambda *_args: None,
@@ -163,7 +163,7 @@ def engine(monkeypatch):
     package = types.ModuleType("v422_backend")
     package.__path__ = [str(BACKEND)]
     monkeypatch.setitem(sys.modules, "v422_backend", package)
-    for name in ("const", "schedule_utils", "scheduler"):
+    for name in ("const", "schedule_utils", "wintering", "wintering_runtime", "scheduler"):
         spec = spec_from_file_location(f"v422_backend.{name}", BACKEND / f"{name}.py")
         assert spec and spec.loader
         module = module_from_spec(spec)
@@ -398,7 +398,8 @@ def test_nonadaptive_state_is_untouched_even_after_temperature_loss(engine, sour
     before = deepcopy(scheduler.data)
     engine.hass.states.items['sensor.eau'].state = 'unavailable'
     assert scheduler._refresh_adaptive_schedule(NOW) is False
-    assert scheduler.data == before
+    assert {key: value for key, value in scheduler.data.items() if key != "schedule_proposal"} == before
+    assert scheduler.data["schedule_proposal"]["hours"] == 5
 
 
 @pytest.mark.parametrize('source', ['custom', 'suspended'])

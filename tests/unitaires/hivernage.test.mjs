@@ -1,0 +1,11 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {winterBackendLive,renderWinterCard,winterTimeline} from '../../src/hivernage/presentation.js';
+const now=Date.parse('2026-11-14T08:00:00Z');
+const state=()=>({backend_available:true,winter_status:{backend_version:'4.3.0',generated_at:new Date(now).toISOString(),master:true,mode:'hivernage_actif',source:'custom',reason:'Plages personnalisées conservées',calculated_hours:9,applied_hours:12,different:true,configuration:{mode:'hivernage_actif',base_hours:4,equipment:{pac:{status:'hiverne'}}},runtime:{pump_state:'off',frost:{requested:true,status:'requested'},flow_verified:false}}});
+test('T05 displays recommendation and applied duration separately',()=>{const html=renderWinterCard({control:state(),now});assert.match(html,/Recommandation : 9 h \/ programme appliqué : 12 h/);assert.match(html,/personnalisées/);});
+test('T07 requested circulation never becomes verified flow',()=>{const html=renderWinterCard({control:state(),now});assert.match(html,/arrêtée/);assert.match(html,/non vérifié/);assert.doesNotMatch(html,/protégé/);});
+test('T09 stale backend and satellites never claim local execution',()=>{const c=state();assert.equal(winterBackendLive(c,now),true);assert.equal(winterBackendLive(c,now+91000),false);assert.match(renderWinterCard({control:c,now:now+91000}),/Backend indisponible/);c.winter_status.master=false;assert.match(renderWinterCard({control:c,now}),/Satellite · aucune exécution locale/);});
+test('T10 wintered PAC requires manual return',()=>{assert.match(renderWinterCard({control:state(),now}),/remise en service manuelle nécessaire/);});
+test('T15 25-hour day timeline uses elapsed intervals',()=>{const day={start:'2026-10-25T00:00:00+02:00',end:'2026-10-26T00:00:00+01:00',elapsed_hours:25};const html=winterTimeline(day,[{start:day.start,end:day.end,state:'on'}],Date.parse(day.start)+3600000);assert.match(html,/width:100%/);assert.match(html,/left:4%/);assert.match(html,/25 h réelles/);});
+test('rendering escapes equipment names and server diagnostics',()=>{const c=state();c.winter_status.reason='<img onerror=evil>';const html=renderWinterCard({control:c,now,devices:[{key:'probe',name:'<script>'}]});assert.doesNotMatch(html,/<img onerror|<script>/);assert.match(html,/&lt;script&gt;/);});

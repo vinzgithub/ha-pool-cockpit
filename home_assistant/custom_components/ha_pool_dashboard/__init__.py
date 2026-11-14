@@ -59,6 +59,7 @@ async def async_setup(hass: HomeAssistant, _config: dict[str, Any]) -> bool:
 
     hass.services.async_register(DOMAIN, "save_config", handle_save, schema=vol.Schema({vol.Required("config"): dict}))
     hass.services.async_register(DOMAIN, "boost", handle_boost, schema=vol.Schema({vol.Required("hours"): vol.Coerce(int)}))
+    websocket_api.async_register_command(hass, ws_configure_wintering)
     websocket_api.async_register_command(hass, ws_get_state)
     websocket_api.async_register_command(hass, ws_save_state)
     websocket_api.async_register_command(hass, ws_control)
@@ -184,5 +185,17 @@ async def ws_save_device_catalog(hass: HomeAssistant, connection: websocket_api.
         result = await hass.data[f"{DOMAIN}_device_catalog"].save(msg["scope"], msg["catalog"], msg["expected_revision"])
     except (ValueError, TypeError, KeyError, OSError) as error:
         connection.send_error(msg["id"], "catalog_conflict" if str(error) == "catalog_conflict" else "invalid_catalog", "Catalogue not saved; reload and review")
+        return
+    connection.send_result(msg["id"], result)
+
+
+@websocket_api.websocket_command({vol.Required("type"): "ha_pool_dashboard/configure_wintering", vol.Required("payload"): dict})
+@websocket_api.require_admin
+@websocket_api.async_response
+async def ws_configure_wintering(hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict[str, Any]) -> None:
+    try:
+        result = await hass.data[DOMAIN].async_configure_wintering(msg["payload"], connection.user.id)
+    except (ValueError, TypeError, KeyError) as error:
+        connection.send_error(msg["id"], "wintering_configuration_rejected", str(error))
         return
     connection.send_result(msg["id"], result)

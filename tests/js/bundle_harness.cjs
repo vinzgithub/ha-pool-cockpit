@@ -113,7 +113,12 @@ function loadBundle(bundlePath = process.env.HA_POOL_BUNDLE || path.resolve(__di
   vm.createContext(sandbox);
   const source = fs.readFileSync(bundlePath, 'utf8');
   const expose = `\n;globalThis.__HA_POOL_TEST_EXPORTS__={VERSION,THEMES,resolveTheme,smartConfidence,confidenceLabel,rc28PhAssessment,health,rc24TreatmentModel,rc24SanitizeTreatmentProfile,RC24_DEFAULT_TREATMENT,RC24_PRODUCTS,rc24MergeTreatmentHistories,rc27SanitizeControl,calculerScoreEauMeteoRc284:typeof calculerScoreEauMeteoRc284==="function"?calculerScoreEauMeteoRc284:undefined,creerHtmlRecommandationEauMeteoRc284:typeof creerHtmlRecommandationEauMeteoRc284==="function"?creerHtmlRecommandationEauMeteoRc284:undefined,FONCTIONNALITES_EXPERIMENTALES:typeof FONCTIONNALITES_EXPERIMENTALES!=="undefined"?FONCTIONNALITES_EXPERIMENTALES:undefined,PoolDashboardCard};`;
-  vm.runInContext(source + expose, sandbox, { filename: bundlePath });
+  // Unified V4 resources scope the engine inside a registration guard.
+  // Expose test helpers inside that scope without changing shipped sources.
+  const marker='if(!customElements.get("pool-dashboard-v4-test-card"))customElements.define("pool-dashboard-v4-test-card",PoolDashboardCard);';
+  const executable=source.includes('if (!customElements.get("pool-dashboard-v4-test-card")) {')
+    ? source.replace(marker,expose+'\n'+marker) : source+expose;
+  vm.runInContext(executable, sandbox, { filename: bundlePath });
   return { ...sandbox.__HA_POOL_TEST_EXPORTS__, sandbox, customElements };
 }
 
