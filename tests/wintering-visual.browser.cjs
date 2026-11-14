@@ -59,7 +59,10 @@ const {tmpdir}=require('node:os');
   for(const width of [390,1440]){
    await page.setViewportSize({width,height:1050});
    await core().locator('.winter-config').evaluate(el=>{el.open=true;});
-   await core().locator('[data-winter-card]').screenshot({path:join(out,`after-settings-open-${width}.png`)});
+   // Capture the whole page: the live card can be replaced during polling,
+   // which makes element screenshots fail with a detached DOM node in CI.
+   // This also keeps the existing navigation visible for UX comparison.
+   await page.screenshot({path:join(out,`after-settings-open-${width}.png`),animations:'disabled'});
    assert.equal(await core().locator('[data-winter-form]').evaluate(el=>el.scrollWidth>el.clientWidth+1),false);checks++;
   }
   for(const theme of ['sky','night','ocean']){
