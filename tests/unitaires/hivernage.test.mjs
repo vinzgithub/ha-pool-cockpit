@@ -33,7 +33,7 @@ test('demo never borrows real backend diagnostics, status, or enabled configurat
  for(const view of ['overview','planning','equipment','settings']){
   const html=renderWinterCard({control:c,now,demo:true,view,settings:true});
   assert.match(html,/Données simulées/);assert.match(html,/Antigel non simulé/);
-  assert.doesNotMatch(html,/Backend indisponible|CRITIQUE|<form|Hiverné/);
+  assert.doesNotMatch(html,/Backend indisponible|CRITIQUE|<form/);
  }
  assert.equal(JSON.stringify(c),original);
 });
@@ -43,4 +43,23 @@ test('settings stay collapsed and require live master to enable existing form',(
  assert.match(html,/<details class="winter-config"><summary>/);assert.match(html,/Vérifier et confirmer/);
  c.winter_status.master=false;
  assert.match(renderWinterCard({control:c,now,view:'settings',settings:true}),/<fieldset disabled>/);
+});
+
+test('demo previews wintering in planning, equipment and settings without physical controls',()=>{
+ const c=state();c.winter_status.runtime.alerts=['CRITIQUE : panne réelle'];
+ const planning=renderWinterCard({control:c,now,demo:true,view:'planning'});
+ assert.match(planning,/04:30 à 08:30/);
+ assert.match(planning,/Programme prévu/);
+ assert.equal((planning.match(/class="winter-timeline/g)||[]).length,2);
+ assert.match(planning,/Frises entièrement fictives/);
+ const equipment=renderWinterCard({control:c,now,demo:true,view:'equipment'});
+ assert.match(equipment,/Blue Connect \(fictif\)/);
+ assert.match(equipment,/Flipr \(fictif\)/);
+ assert.match(equipment,/Hiverné · fictif/);
+ const settings=renderWinterCard({control:c,now,demo:true,view:'settings',settings:true});
+ assert.match(settings,/aperçu non modifiable/);
+ assert.doesNotMatch(settings,/<form|data-winter-field|CRITIQUE/);
+ const overview=renderWinterCard({control:c,now,demo:true,view:'overview'});
+ assert.match(overview,/4 h prévues/);
+ assert.doesNotMatch(overview,/panne réelle/);
 });
