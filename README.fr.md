@@ -2,9 +2,9 @@
 
 # 🌊 Pool Cockpit
 
-### Votre piscine, enfin simple à comprendre. Directement dans Home Assistant.
+### Votre piscine, un seul cockpit. Au printemps, en été, en automne et en hiver.
 
-**Qualité de l'eau · Filtration · Pompe à chaleur · Météo · Planning · Hivernage actif**
+**Mesures · Filtration · Traitement · PAC · Météo · Conseils · Planning · Hivernage**
 
 [**🇬🇧 English**](README.md) · [**Français**](README.fr.md)
 
@@ -14,7 +14,7 @@
 
 <sub>La planche graphique originale de Pool Cockpit, conservée pour l'identité visuelle du projet. Les vraies captures d'écran de la V4.3.0 figurent plus bas, dans la galerie.</sub>
 
-**[Démarrer facilement](#installer-en-trois-étapes)** · **[Découvrir l'hivernage](#lhivernage-expliqué-simplement)** · **[Voir les écrans](#découvrez-linterface)** · **[English](README.md)**
+**[Fonctionnalités](#toutes-les-fonctionnalités-expliquées-simplement)** · **[Quatre saisons](#une-piscine-quatre-saisons)** · **[Captures](#découvrez-linterface)** · **[Installation](#installer-en-trois-étapes)**
 
 </div>
 
@@ -22,9 +22,9 @@
 
 ## Une piscine connectée, sans multiplier les applications
 
-Température de l'eau dans une application, filtration dans une autre, pompe à chaleur ailleurs… **Pool Cockpit rassemble dans un seul tableau de bord les informations déjà disponibles dans Home Assistant**.
+Température de l’eau dans une application, filtration dans une autre, pompe à chaleur ailleurs… **Pool Cockpit réunit dans Home Assistant les informations et les outils utiles pour suivre votre piscine toute l’année.**
 
-Vous retrouvez les mesures de l'eau, des conseils de filtration, l'état de vos équipements et vos programmations. Tout est conçu pour être lisible, que vous soyez sur un ordinateur, une tablette ou un téléphone.
+Au printemps, vous remettez votre bassin en route. En été, vous suivez la qualité de l’eau et la filtration. En automne, vous adaptez les durées. En hiver, vous gérez l’hivernage si vous choisissez ce mode. **Le tout sur ordinateur, tablette ou téléphone.**
 
 > **Vous découvrez Home Assistant ?** C'est le logiciel qui réunit vos appareils connectés. Pool Cockpit ajoute une interface claire pour suivre votre piscine. Les équipements doivent déjà être reliés à Home Assistant par les intégrations adaptées.
 
@@ -41,35 +41,111 @@ Vous retrouvez les mesures de l'eau, des conseils de filtration, l'état de vos 
 
 Les informations disponibles dépendent des appareils et des entités configurés chez vous.
 
-## ✨ Les nouveautés de la V4.3.0
+## Une piscine, quatre saisons
 
-### Un vrai mode hivernage, sans perdre vos habitudes
+Pool Cockpit n’est **pas une application réservée à l’hivernage**. Son fonctionnement quotidien reste au cœur du projet :
 
-L'hiver arrive ? Vous souhaitez réduire la filtration et ranger certains équipements sans perdre votre programmation habituelle ? La V4.3.0 ajoute trois modes clairement identifiés :
+| Saison | Comment Pool Cockpit vous accompagne |
+| :--- | :--- |
+| 🌱 **Printemps** | Retrouvez les nouvelles mesures des sondes après remise en service, contrôlez la pompe et la PAC, puis réajustez votre planning. |
+| ☀️ **Été** | Surveillez température, pH et Redox, consultez les conseils de filtration, notez les traitements et gardez un œil sur la météo et la fréquentation déclarée. |
+| 🍂 **Automne** | Comparez les durées recommandées à vos horaires, accompagnez le refroidissement de l’eau et préparez les équipements à leur arrêt saisonnier. |
+| ❄️ **Hiver** | Choisissez, si nécessaire, un hivernage actif, indiquez les appareils hivernés et surveillez le risque de gel avec une sonde locale adaptée. |
 
-- **Normal** : votre fonctionnement habituel.
-- **Hivernage actif** : vous confirmez un programme de filtration adapté à l'hiver et le statut de chaque équipement.
-- **Maintenance** : vous signalez une intervention sur le circuit, afin d'éviter des commandes incompatibles avec sa sécurité.
+La **saison est un repère**, pas un ordre. Le calcul de filtration tient aussi compte de la température de l’eau, du contexte disponible et de vos paramètres. Le logiciel respecte les choix manuels et les dispositifs de sécurité.
 
-**Exemple :** vous pouvez choisir une filtration de **4 h de 2 h à 6 h**. Cette durée n'est qu'une proposition : elle n'assure pas à elle seule une protection contre le gel. Votre ancienne programmation est conservée pour le retour en mode Normal.
+## Toutes les fonctionnalités, expliquées simplement
 
-### Une protection antigel qui vous dit ce qu'elle sait… et ce qu'elle ne sait pas
+### 🧪 Mesures de l’eau : connaître l’état de son bassin
 
-Avec **une sonde de température locale correctement configurée**, Pool Cockpit peut demander la mise en marche de la filtration lorsqu'il fait froid, même en dehors des horaires prévus.
+**À quoi ça sert ?** Réunir vos mesures plutôt que de passer d’une application à l’autre.
 
-Ses seuils initiaux proposés sont de **3 °C pour demander la marche** et **5 °C pour quitter l'alerte**, avec des temporisations pour éviter les démarrages et arrêts incessants.
+Pool Cockpit peut présenter la **température de l’eau**, le **pH**, le **Redox (ORP)** et, si votre équipement les fournit, d’autres valeurs comme la conductivité, la salinité ou le chlore libre. Il peut afficher plusieurs analyseurs, la date de la dernière analyse, la fraîcheur des données et certaines informations de connexion ou de batterie.
 
-Mais le plus important, c'est la transparence : l'écran distingue **la demande de marche**, **l'état de la pompe observé par Home Assistant** et **la preuve du débit d'eau**, cette dernière nécessitant un capteur de débit réel. En cas de capteur absent ou de panne, il vous avertit.
+**Équipements compatibles :** les familles **Blue Connect / Blueriiot / Zodiac compatibles** et **Flipr** peuvent être détectées lorsque leurs entités existent déjà dans Home Assistant. Selon le matériel, une analyse manuelle peut aussi être disponible. Aucune sonde n’est imposée pour utiliser le mode Démonstration.
 
-Les sécurités hydrauliques restent prioritaires. La commande antigel ne doit jamais contourner un verrou de marche à sec ou une interdiction de circulation.
+*Exemple :* après avoir remis une sonde à l’eau au printemps, vérifiez l’arrivée d’une **nouvelle mesure** avant de vous fier au chiffre affiché.
 
-**⚠️ À savoir :** Pool Cockpit est une aide logicielle, **pas un coffret hors gel certifié et autonome**. Si Home Assistant, l'électricité, la pompe ou la circulation d'eau sont indisponibles, le logiciel ne peut pas empêcher le gel. **L'antigel est désactivé par défaut** après migration et doit être activé seulement après validation de votre installation. Une protection matérielle indépendante ou un hivernage passif peut être nécessaire, particulièrement lors d'absences prolongées.
+### 🔄 Filtration : comprendre les besoins et les performances
 
-### Chaque équipement conserve son propre statut
+**À quoi ça sert ?** Savoir combien de temps filtrer et comprendre ce qui est effectivement programmé.
 
-Pompe à chaleur, Blue Connect, Flipr… Vous pouvez signaler séparément qu'un équipement est **hiverné**, puis le remettre en service manuellement quand la saison reprend.
+- Une **durée conseillée** selon les informations disponibles : saison, température de l’eau, paramètres du bassin et contexte pertinent.
+- La distinction entre **durée recommandée**, **durée programmée** et **fonctionnement réellement observé**, quand celui-ci peut être remonté par Home Assistant.
+- Un bilan de la journée avec, selon la configuration, durée de filtration, **volume filtré estimé** et nombre estimé de renouvellements du bassin.
+- Un **repli prudent** quand une sonde est absente ou que sa mesure est trop ancienne.
 
-Une sonde hivernée n'alimente plus les mesures courantes ; lorsqu'elle est réactivée, Pool Cockpit attend une **nouvelle mesure** avant de lui faire confiance. Les commandes de PAC restent **désactivées par défaut**.
+*Exemple :* en période chaude, un besoin de filtration plus élevé peut être proposé ; lorsque l’eau refroidit, la recommandation peut diminuer. Une estimation de volume n’est pas une mesure réelle du débit en l’absence de débitmètre.
+
+### 📅 Planning : automatiser, personnaliser ou reprendre la main
+
+**À quoi ça sert ?** Organiser la filtration sans perdre vos choix.
+
+- **Programme adaptatif** : les plages proposées suivent les règles et les données connues.
+- **Horaires personnalisés** : choisissez vous-même jours et créneaux ; un recalcul ne doit pas écraser vos modifications.
+- **Suspension du mode adaptatif** : conservez les plages actuelles jusqu’à votre décision de reprendre.
+- **Prolongation ponctuelle** : ajoutez du temps sans réécrire la programmation permanente.
+- **Forçage manuel** de la pompe, lorsque l’équipement et les sécurités sont correctement configurés, avec reprise explicite du programme.
+- **Profils saisonniers** (printemps, été, automne, hiver), utiles comme références mais jamais comme durées universelles.
+
+*Exemple :* après une journée de baignade intense, vous pouvez ajuster la filtration sans perdre le programme habituel.
+
+### 🧴 Traitement de l’eau et dosages : des repères pour l’entretien
+
+**À quoi ça sert ?** Comprendre les informations utiles avant d’ajouter un produit, puis garder une trace.
+
+L’espace **Traitement & dosage** utilise le profil renseigné de votre piscine : volume, désinfectant, caractéristiques de filtration, état visuel de l’eau, fréquentation déclarée et mesures disponibles. Il peut proposer des **repères de dosage** liés au chlore ou au brome, au pH, aux produits complémentaires et, selon les données, au TAC ou à la dureté. Le **journal des traitements** conserve les opérations saisies.
+
+Les produits complémentaires peuvent être gérés à la demande ou selon un protocole fabricant choisi explicitement. **Pool Cockpit ne dose ni n’injecte automatiquement de produits chimiques.** Vérifiez toujours les notices, les analyses réelles et les conditions du bassin.
+
+### 🌡️ Pompe à chaleur : suivi Polytropic et autres modèles
+
+**À quoi ça sert ?** Voir les informations de votre PAC dans le même cockpit que la filtration.
+
+Le module PAC a été **développé à partir d’une installation de référence équipée d’une pompe à chaleur Polytropic**, reliée à Home Assistant. Il s’appuie sur des **entités Home Assistant à associer** : état de fonctionnement, consigne, modes disponibles, températures d’entrée et de sortie, état de communication et défauts, lorsqu’ils sont exposés.
+
+**Autres marques :** le suivi est **potentiellement utilisable** avec une autre PAC si une intégration Home Assistant fournit des entités équivalentes. Cette compatibilité doit être vérifiée **modèle par modèle** : il ne s’agit **ni d’une découverte universelle ni d’une certification de toutes les PAC**.
+
+**Sécurité :** les commandes d’écriture vers la PAC restent **verrouillées dans la version publique V4.3.0**. Le suivi de son état ne signifie pas que Pool Cockpit peut changer sa consigne ou la démarrer.
+
+### 🌦️ Météo, vigilances et conseils
+
+**À quoi ça sert ?** Voir les informations qui peuvent modifier la surveillance ou les recommandations.
+
+Pool Cockpit exploite les **entités météo disponibles dans Home Assistant** et peut afficher les **vigilances Météo-France**. Selon les mesures et déclarations disponibles, les conseils peuvent prendre en compte la chaleur, la fréquentation ou l’état de l’eau. Une vigilance ou une température extérieure distante **ne remplace pas une mesure locale** pour la sécurité antigel.
+
+### 📈 Historique, suivi et Assistant Expert
+
+**À quoi ça sert ?** Comprendre ce qui s’est passé et pourquoi un conseil apparaît.
+
+Consultez les tendances et événements disponibles, retrouvez votre **journal de traitement** et les informations d’activité prises en charge. L’**Assistant Expert Piscine** explique des conclusions déjà calculées sur la filtration, la météo, le traitement ou la PAC. Une reformulation par IA peut être proposée **uniquement si elle est configurée** ; elle **n’invente pas les règles et ne commande aucun équipement**.
+
+### 🎨 Interface, thèmes, langues et démonstration
+
+Le tableau de bord regroupe six rubriques : **Vue d’ensemble, Conseils, Mesures, Équipements, Planning et Historique**. Il s’adapte au mobile, propose plusieurs thèmes dont **Océan**, et différentes langues.
+
+- **Mode Réel** : les informations viennent des entités configurées dans votre Home Assistant.
+- **Mode Démonstration** : des valeurs fictives permettent d’explorer le cockpit **sans toucher aux équipements physiques**.
+- **Multi-instance** : une configuration maître/satellite est possible pour les utilisateurs avancés ; **elle n’est pas nécessaire** pour une piscine domestique.
+
+### ❄️ Hivernage actif : la nouveauté V4.3.0
+
+En hiver, vous pouvez choisir un mode d’**hivernage actif**, déclarer séparément la PAC et les sondes hivernées, conserver votre programmation normale et configurer une surveillance antigel **avec une vraie sonde locale**. Le statut **Maintenance** permet de signaler une intervention sur le circuit.
+
+**L’antigel est désactivé par défaut après migration.** Cette fonction logicielle ne garantit pas le hors-gel si l’alimentation électrique, Home Assistant, la pompe ou la circulation d’eau tombent en panne. [Voir le guide hivernage et ses précautions](release/v4.3.0/README.md).
+
+
+## ✨ Ce qui change spécifiquement en V4.3.0
+
+**Toutes les fonctionnalités des saisons chaudes sont conservées.** La V4.3.0 ajoute principalement :
+
+- Les modes **Normal**, **Hivernage actif** et **Maintenance**, avec confirmation et conservation du programme précédent.
+- La surveillance antigel **à partir d’une sonde locale**, avec seuils ajustables, délais et priorités de sécurité.
+- Des **statuts d’équipements plus clairs** : disponibilité, commande demandée, fonctionnement observé et débit vérifié uniquement si un débitmètre existe.
+- Des cartes compactes dans **Vue d’ensemble** et **Équipements**, et des frises plus lisibles dans **Planning**.
+- Un **installateur simplifié**, avec sauvegarde et retour arrière pour les installations reconnues.
+
+**Important :** l’antigel n’est pas une protection matérielle autonome. [Précautions et fonctionnement détaillé](release/v4.3.0/README.md).
 
 ## Découvrez l'interface
 
@@ -127,15 +203,13 @@ L'installateur reconnaît une **installation neuve** ou une **V4.2.1 officielle*
 
 **Vous utilisez une autre version ou Home Assistant OS ?** Lisez d'abord le [guide d'installation et de restauration](docs/user/INSTALLATION.md). Ne forcez pas une mise à jour non reconnue.
 
-## L'hivernage expliqué simplement
+## Trois exemples concrets
 
-**Un jour doux de novembre :** vous validez une programmation réduite, puis signalez que la PAC et les sondes ont été hivernées. La programmation normale est conservée.
+**🌱 Au printemps :** après la remise en service, vous vérifiez les nouvelles mesures, l’état de la pompe et la programmation.
 
-**Une nuit froide :** si la sonde locale relève une température suffisamment basse, Pool Cockpit peut demander une filtration supplémentaire en dehors du planning, **à condition que les sécurités hydrauliques l'autorisent**. L'interface distingue ce qui est demandé de ce qui fonctionne réellement.
+**☀️ En été :** après plusieurs journées chaudes et fréquentées, vous consultez la durée recommandée, ajustez si nécessaire le planning et consignez le traitement effectué.
 
-**Un problème survient :** mesure trop ancienne, pompe non confirmée, absence de débit… Le tableau de bord vous alerte et ne prétend pas que le bassin est protégé.
-
-Les réglages précis, délais, sécurités et limites sont détaillés dans le [guide complet d'hivernage V4.3.0](release/v4.3.0/README.md).
+**❄️ En hiver :** si vous choisissez l’hivernage actif, vous validez une programmation réduite et contrôlez les alertes. La protection antigel dépend de la sonde locale et de sécurités physiques toujours opérationnelles.
 
 ## Questions fréquentes
 
@@ -169,14 +243,16 @@ Arrêtez Home Assistant. L'installateur indique le chemin de la sauvegarde et pr
 
 ## Pour aller plus loin
 
-**[Les releases GitHub](https://github.com/vinzgithub/ha-pool-cockpit/releases)** · **[Le guide hivernage V4.3.0](release/v4.3.0/README.md)** · **[Installation et retour arrière](docs/user/INSTALLATION.md)** · **[Tests et limites](release/v4.3.0/TEST_REPORT.md)** · **[Documentation en anglais](README.md)**
+**[Guide détaillé des fonctionnalités](docs/user/DASHBOARD.md)** · **[Releases GitHub](https://github.com/vinzgithub/ha-pool-cockpit/releases)** · **[Guide hivernage V4.3.0](release/v4.3.0/README.md)** · **[Installation et retour arrière](docs/user/INSTALLATION.md)** · **[Tests et limites](release/v4.3.0/TEST_REPORT.md)** · **[Documentation en anglais](README.md)**
 
 **Confidentialité et sécurité :** ne publiez pas vos identifiants, tokens ou données privées Home Assistant. Pool Cockpit ne remplace ni les sécurités électriques et hydrauliques, ni la surveillance humaine, ni l'entretien de la piscine. Toute commande réelle doit être validée sur votre installation.
+
+**Auteur et copyright : © 2026 Vincent Fournet.**
 
 **Licence :** [PolyForm Noncommercial 1.0.0](LICENSE). L'utilisation commerciale reste soumise aux termes de la licence.
 
 ---
 
 <div align="center">
-<sub>🌊 Pool Cockpit V4.3.0 · Home Assistant · Votre piscine, votre cockpit.</sub>
+<sub>🌊 Pool Cockpit V4.3.0 · Home Assistant · Votre piscine, votre cockpit. · © 2026 Vincent Fournet</sub>
 </div>
