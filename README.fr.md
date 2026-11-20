@@ -247,10 +247,12 @@ Arrêtez Home Assistant. L'installateur indique le chemin de la sauvegarde et pr
 
 **Confidentialité et sécurité :** ne publiez pas vos identifiants, tokens ou données privées Home Assistant. Pool Cockpit ne remplace ni les sécurités électriques et hydrauliques, ni la surveillance humaine, ni l'entretien de la piscine. Toute commande réelle doit être validée sur votre installation.
 
+**Auteur et copyright : © 2026 Vincent Fournet.**
+
 **Licence :** [PolyForm Noncommercial 1.0.0](LICENSE). L'utilisation commerciale reste soumise aux termes de la licence.
 
 ---
 
 <div align="center">
-<sub>🌊 Pool Cockpit V4.3.0 · Home Assistant · Votre piscine, votre cockpit.</sub>
+<sub>🌊 Pool Cockpit V4.3.0 · Home Assistant · Votre piscine, votre cockpit. · © 2026 Vincent Fournet</sub>
 </div>
