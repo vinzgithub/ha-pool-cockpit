@@ -64,11 +64,12 @@ class InstallV421Tests(unittest.TestCase):
         self.assertEqual(p.returncode, 0, p.stderr)
         self.assertIn("V4.2.1", p.stdout)
         self.assertEqual(sorted(x.name for x in self.config.iterdir()), ["configuration.yaml"])
-        s = subprocess.run(["sh", str(ROOT / "install.sh"), "--upgrade"],
+        # The historical V4.2.1 installer remains fresh-only.
+        s = subprocess.run(["python3", str(ROOT / "install_v421.py"),
+                            "--config", str(self.config), "--upgrade"],
                            capture_output=True, text=True)
         self.assertEqual(s.returncode, 2)
-        self.assertIn("release/v4.2.1/README.md", s.stderr)
-        self.assertNotIn("unrecognized arguments", s.stderr)
+        self.assertIn("unrecognized arguments", s.stderr)
 
 if __name__ == "__main__":
     unittest.main()
