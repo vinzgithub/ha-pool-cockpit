@@ -1,115 +1,183 @@
 <div align="center">
 
-# 🌊 Pool Cockpit V4.2.1
+# 🌊 Pool Cockpit
 
-### Your pool. One elegant cockpit.
+### A clearer view of your pool. All in Home Assistant.
 
-**Monitoring · Advice · Measurements · Equipment · Planning · History**
+**Water quality · Filtration · Heat pump · Weather · Planning · Active wintering**
 
-**English** · [**Français**](README.fr.md)
+[**English**](README.md) · [**🇫🇷 Français**](README.fr.md)
 
-![Version](https://img.shields.io/badge/version-4.2.1-126caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-0d355d)
+![Release](https://img.shields.io/badge/release-v4.3.0-136caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-0d355d)
 
-![Pool Cockpit promotional illustration](docs/images/v4.2.0/pool-cockpit-v4.2-hero.webp)
+![Pool Cockpit V4.3.0 — Ocean theme overview](release/v4.3.0/visuals/after-overview-1440.webp)
 
-<sub>Pool Cockpit promotional illustration; the reference screenshots below were captured on V4.2.0; V4.2.1 corrects weather-alert presentation.</sub>
+<sub>A real browser screenshot of the V4.3.0 interface, using simulated test devices. Not a photograph or a live pool reading.</sub>
+
+**[Get started](#get-started-in-three-steps)** · **[Discover wintering](#wintering-made-understandable)** · **[Explore the interface](#take-a-look)** · **[Français](README.fr.md)**
 
 </div>
 
-## What is Pool Cockpit?
+---
 
-**Pool Cockpit is a dashboard for monitoring and managing your swimming pool in Home Assistant.** Home Assistant is a home-automation platform that brings information from your connected devices together.
+## Your pool deserves one simple dashboard
 
-Instead of switching between multiple apps to check water temperature, pH, filtration or your heat pump, you get **a clear view of your pool in one place**, accessible through Home Assistant on a computer, tablet or phone.
+Pool equipment often lives in different apps: one for water quality, one for a heat pump, another for home automation. **Pool Cockpit brings the information already available in Home Assistant into a single, easy-to-read screen.**
 
-Pool Cockpit brings the information together in **six sections**:
+You can check your water measurements, understand filtration recommendations, see whether equipment is running, and review your schedule without jumping between interfaces.
 
-- **Overview:** see the pool's current status at a glance.
-- **Advice:** review guidance based on the information available.
-- **Measurements:** track water temperature, pH, ORP (redox) and other readings provided by your sensors.
-- **Equipment:** follow filtration, heat pump and lighting status, depending on your setup.
-- **Planning:** access available schedules.
-- **History:** see how readings and events have changed over time.
+> **New to Home Assistant?** Think of Home Assistant as the hub that talks to your connected devices. Pool Cockpit is the friendly dashboard that helps you understand their information. It does not replace their integrations.
 
-The features and controls available depend on your actual devices and how they are configured in Home Assistant.
+### What can I see?
 
-### Two ways to use it
+| Section | What it tells you |
+| --- | --- |
+| 🏠 **Overview** | Is everything okay with my pool? |
+| 💡 **Advice** | What should I pay attention to today? |
+| 🧪 **Measurements** | What are my water temperature, pH and ORP readings, when available? |
+| ⚙️ **Equipment** | What are my pump, heat pump and connected probes doing? |
+| 📅 **Planning** | When is filtration scheduled, and how does that compare with the recommendation? |
+| 🕘 **History** | What changed, and when? |
 
-**🏊 Real Pool mode — monitor your own pool**
+What you see depends on the devices and entities configured in your Home Assistant installation.
 
-To see real measurements, **Home Assistant must already be installed, and your sensors and equipment must be connected and configured there** through the integrations suited to your devices. Pool Cockpit does not directly discover every sensor: it uses information already available in Home Assistant, whose entities you then map in the dashboard.
+## ✨ What's new in V4.3.0?
 
-For compatible devices, examples of separate integrations by **Adrien40** include [Blue Connect Local](https://github.com/Adrien40/ha-blue-connect-local) for Blue Connect probes and [Flipr Local](https://github.com/Adrien40/ha-flipr-local) for Flipr probes. **These integrations are not bundled with Pool Cockpit** and are only needed if you own the relevant hardware. Other Home Assistant integrations may work with your setup.
+### Winter mode, without losing your usual settings
 
-**🎮 Demonstration mode — explore without hardware**
+When swimming season ends, you may want a shorter filtration schedule and to put some devices away for winter. V4.3.0 introduces three explicit modes:
 
-No connected pool? You can explore Pool Cockpit with **simulated measurements** and discover its interface. **No physical sensors, pool equipment or extra device integrations are needed.** Home Assistant and Pool Cockpit are still required to display the dashboard. Demo data and controls never operate real devices.
+- **Normal:** your regular pool schedule and equipment settings.
+- **Active wintering:** a separately confirmed winter filtration schedule, with equipment wintering states.
+- **Maintenance:** an explicit state to prevent unintended circulation during maintenance.
 
-### What's new in V4.2.1?
+For example, you can confirm **4 hours from 02:00 to 06:00** for wintering. That's a *suggestion*, not a universal frost-protection guarantee. Your previous program is kept so it can be restored when you return to Normal.
 
-This corrective release improves **Météo-France weather-warning banners** on mobile and across the dashboard. The “View advice” action now reveals the weather details; the Real/Demo mode bar and explicit simulated-data notice remain visible on mobile. V4.2.1 preserves the **single JavaScript resource** (`pool-cockpit.js`), the `custom:pool-cockpit-card` element and the existing backend, settings and automation logic.
+### Frost monitoring that explains what is happening
 
-**Known limitation:** while on Planning or Settings, live weather changes may remain pending until you change tabs. This predates V4.2.1 and is tracked in [issue #12](https://github.com/vinzgithub/ha-pool-cockpit/issues/12).
+With a suitable **local temperature sensor**, Pool Cockpit can ask the filtration pump to run when temperatures approach freezing, even outside normal filtration hours. By default, the proposed thresholds are **3 °C to start and 5 °C to release**, with delays to avoid rapid on/off cycling.
 
-[**Pool Cockpit V4.2.1 release**](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.1) · [**Installation and upgrade guide**](#install-pool-cockpit-v421-directly)
+It also explains whether:
+- frost protection has **requested** circulation;
+- Home Assistant has **observed** the pump running;
+- real **water flow is verified** — only when you have a configured flow sensor.
 
-## Interface gallery (V4.2.0 reference captures)
+Hydraulic safety locks always take priority. An unavailable sensor triggers a warning; it cannot magically verify that the equipment is safe.
 
-The screenshots below come from the **actual V4.2.0 frontend running in a browser in Demonstration mode**. Values are simulated, and appearance may vary depending on theme, sensors and setup.
+**Important:** this is a software monitoring and control aid, **not a certified autonomous frost-protection system**. It cannot protect the pool if Home Assistant, electricity, the pump or the hydraulic circuit fails. Frost monitoring is **off by default** and must only be enabled after checking the real installation and safety devices. For prolonged absences, independent physical freeze protection or appropriate passive wintering may be necessary.
 
-![Pool Cockpit V4.2.0 overview](docs/images/v4.2.0/overview.png)
+### Put each device into winter storage separately
 
-| Advice | Measurements |
-|:--:|:--:|
-| ![Advice V4.2.0](docs/images/v4.2.0/advice.png) | ![Measurements V4.2.0](docs/images/v4.2.0/measurements.png) |
+The heat pump, Blue Connect and Flipr can be marked as winterized individually. Pool Cockpit stops relying on winterized probes for fresh water readings. **Each device must be reactivated explicitly**; reactivating a probe also requires a new measurement before its data is trusted.
 
-| Equipment | Scheduling |
-|:--:|:--:|
-| ![Equipment V4.2.0](docs/images/v4.2.0/equipment.png) | ![Scheduling V4.2.0](docs/images/v4.2.0/planning.png) |
+Heat-pump commands remain **disabled by default**.
 
-![History V4.2.0](docs/images/v4.2.0/history.png)
+## Take a look
 
-## Features
+These are genuine V4.3.0 browser captures from the isolated test setup using **simulated devices**.
 
-- **Six sections:** Overview, Advice, Measurements, Equipment, Planning and History.
-- **Water measurements:** temperature, pH, ORP and other readings when supplied by Home Assistant.
-- **Device association:** configure compatible monitoring devices and available entities.
-- **Equipment:** view filtration, heat pump and lighting status; enable real controls only after validating your mappings and safeguards.
-- **Schedules and history:** explore available plans, measurements and trends.
-- **Visual interface:** Ocean theme, four theme choices, nine language options and responsive layouts.
-- **Real / Demo isolation:** fictional data and controls do not affect real equipment or replace real device settings.
+| Overview — calm, at-a-glance status | Planning — understand scheduled vs. observed filtration |
+| :---: | :---: |
+| ![V4.3.0 Overview](release/v4.3.0/visuals/after-overview-1440.webp) | ![V4.3.0 Planning](release/v4.3.0/visuals/after-planning-1440.webp) |
 
-Some older V3 strings and hardware-specific integrations may still need adjustment on individual installations.
+| Equipment — each device has its own status | Mobile — the same cockpit on smaller screens |
+| :---: | :---: |
+| ![V4.3.0 Equipment](release/v4.3.0/visuals/after-equipment-1440.webp) | ![V4.3.0 Mobile overview](release/v4.3.0/visuals/after-overview-390.webp) |
 
-## Install Pool Cockpit V4.2.1 directly
+The Ocean theme is shown here. Other themes and language options are available. See the [V4.3.0 design review](release/v4.3.0/UX_REVIEW.md) for more screenshots.
 
-A fresh installation uses **one JavaScript resource**, `pool-cockpit.js`, with the public `custom:pool-cockpit-card`. The installer also copies the Home Assistant backend and required graphics.
+## 🏊 Real pool or 🎮 Demonstration?
 
-**Requirements:** Home Assistant Core / Docker with access to the real `configuration.yaml` directory, Python 3 and Git. This is not a HACS installation. **Back up Home Assistant before making changes.**
+| | Real pool | Demonstration |
+| --- | --- | --- |
+| **Need physical pool hardware?** | Yes, to display real readings | No |
+| **Need Home Assistant?** | Yes | Yes |
+| **Where does the data come from?** | Your configured HA entities | Fictional sample values |
+| **Can demo controls operate equipment?** | Not applicable | **Never** |
+
+**Real mode** uses information from compatible Home Assistant integrations. For example, the independent [Blue Connect Local](https://github.com/Adrien40/ha-blue-connect-local) and [Flipr Local](https://github.com/Adrien40/ha-flipr-local) integrations may supply data for their respective devices. They are **not included in Pool Cockpit**, and you do not need them unless you own the hardware.
+
+**Demonstration mode** is a safe way to discover the dashboard before connecting any equipment. It does not pretend to provide real frost protection.
+
+## Get started in three steps
+
+Pool Cockpit V4.3.0 supports **Home Assistant Core / Docker** installations where you can access the directory containing `configuration.yaml`. You need Python 3, Git and a full Home Assistant backup. It is **not installed through HACS**.
+
+**1. Get the project**
 
 ```bash
 git clone https://github.com/vinzgithub/ha-pool-cockpit.git
 cd ha-pool-cockpit
-python3 install_v421.py --config /path/to/homeassistant/config --dry-run
-python3 install_v421.py --config /path/to/homeassistant/config --yes
 ```
 
-Replace the sample path with the actual Home Assistant configuration directory accessible **from the machine running Python**. `--dry-run` checks without writing; `--yes` authorizes installation, creates a configuration backup, copies required components and registers the Lovelace resource. Validate Home Assistant configuration before restarting it manually.
+**2. Check the installation — without changing anything**
 
-**Already installed?** The fresh installer refuses existing Pool Cockpit installations and customized Lovelace configuration to prevent accidental overwrites. Existing V4.2.0 users must [follow the manual V4.2.1 update/rollback procedure](release/v4.2.1/README.md); do not use the fresh installer with an existing installation. For V4.1.0, follow the historical [V4.2.0 upgrade guide](release/v4.2.0/README.md) first.
+```bash
+sh install.sh --config /path/to/homeassistant/config --dry-run
+```
 
-📖 [V4.2.1 release assets](https://github.com/vinzgithub/ha-pool-cockpit/releases/tag/v4.2.1) · [Safe manual upgrade and rollback](release/v4.2.1/README.md)
+**3. Back up Home Assistant, stop it, and install**
 
-## Backups, limitations and security
+```bash
+sh install.sh --config /path/to/homeassistant/config --yes
+```
 
-- **Backups:** installer snapshots are saved in `.pool_cockpit_backups/`; keep a separate full Home Assistant backup. Restoring YAML alone is **not** a complete uninstall.
-- **V3:** no automatic migration from V3. The historical V3 release remains available through the [`v3.0.2` Git tag](https://github.com/vinzgithub/ha-pool-cockpit/tree/v3.0.2).
-- **Other installations:** Home Assistant OS/Supervised without writable access to the configuration directory is not covered by this automated installer.
-- **Privacy:** do not publish Home Assistant credentials, device IDs, tokens or sensitive telemetry.
-- **Safety:** Pool Cockpit is not a substitute for physical interlocks, safety devices or pool maintenance. Verify every real equipment command before use.
+Then **restart Home Assistant manually** and refresh your browser. Look for the **Piscine / Pool Cockpit** dashboard.
 
-**License:** [PolyForm Noncommercial 1.0.0](LICENSE). Commercial use is governed by the license terms.
+The installer recognizes either a **fresh installation** or an **official V4.2.1 installation**. It makes a dated backup before changing existing files, preserves your settings, and refuses unfamiliar or modified installations instead of overwriting them. It does **not** stop or restart Home Assistant itself.
+
+**Already running another version, or using Home Assistant OS?** Read the [installation, compatibility and rollback guide](docs/user/INSTALLATION.md) before doing anything.
+
+## Wintering made understandable
+
+**Example — a mild November day:** you confirm a reduced filtration schedule and separately mark your heat pump and probes as winterized. Your normal schedule is preserved.
+
+**Example — a cold night:** if your configured *local* sensor reports a sufficiently low temperature, the software can request additional pump circulation **outside the normal program**, provided the hydraulic safety checks allow it. The dashboard shows that request and what HA has actually observed.
+
+**Example — a problem:** if the temperature becomes stale, the pump cannot start, or flow is absent, the dashboard reports that protection is not confirmed. It does not claim everything is safe.
+
+For the exact thresholds, delays, confirmation steps, priorities and limitations, consult the [V4.3.0 wintering guide](release/v4.3.0/README.md).
+
+## Frequently asked questions
+
+<details>
+<summary><strong>Will Pool Cockpit replace my existing Home Assistant setup?</strong></summary>
+
+No. On a recognized V4.2.1 upgrade, it preserves your dashboard configuration and Pool Cockpit data. A versioned backup is created first. Because V4.3.0 also updates the Python integration and storage schema, use the installer and follow the documented stop/restart procedure.
+
+</details>
+
+<details>
+<summary><strong>Do I need a Blue Connect, Flipr, or a heat pump?</strong></summary>
+
+No. Those devices are optional. Use the entities your own compatible Home Assistant integrations provide. You can also explore without hardware in Demonstration mode.
+
+</details>
+
+<details>
+<summary><strong>Does activating winter mode guarantee my pool will not freeze?</strong></summary>
+
+No. A shorter daily filtration period alone does not guarantee frost protection. The optional software frost feature also depends on a real local sensor, working Home Assistant, power, pump and safe water circulation. A suitably installed physical protection system and manufacturer instructions remain important.
+
+</details>
+
+<details>
+<summary><strong>How do I undo a V4.3.0 upgrade?</strong></summary>
+
+Stop Home Assistant first. The installer records a dated backup path and provides a `--rollback` option. **Restore the JavaScript, Python backend and storage together**, not only one part. See the [rollback instructions](docs/user/INSTALLATION.md).
+
+</details>
+
+## Further reading
+
+**[GitHub Releases](https://github.com/vinzgithub/ha-pool-cockpit/releases)** · **[V4.3.0 technical guide](release/v4.3.0/README.md)** · **[Installation and rollback](docs/user/INSTALLATION.md)** · **[Tests and limitations](release/v4.3.0/TEST_REPORT.md)** · **[French documentation](README.fr.md)**
+
+**Privacy and safety:** keep Home Assistant credentials and private device identifiers out of issues and screenshots. Pool Cockpit is not a substitute for professional pool maintenance, electrical protection or physical hydraulic interlocks. Real equipment commands must be checked against your installation.
+
+**License:** [PolyForm Noncommercial 1.0.0](LICENSE). Commercial use is subject to its terms.
 
 ---
 
-<div align="center"><sub>Pool Cockpit V4.2.1 · Home Assistant · Your pool. One elegant cockpit.</sub></div>
+<div align="center">
+<sub>🌊 Pool Cockpit V4.3.0 · Home Assistant · A simpler way to understand your pool.</sub>
+</div>
