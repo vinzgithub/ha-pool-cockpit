@@ -1,0 +1,52 @@
+name: V4.3.0 Active Wintering
+on:
+  pull_request:
+  push:
+    branches: [feat/v4.3.0-active-wintering]
+permissions:
+  contents: read
+jobs:
+  test:
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm ci
+      - run: python -m pip install pytest
+      - run: python -m pytest -q
+      - run: npm test
+      - run: npm run test:smoke
+      - name: Verify reproducible distribution
+        run: |
+          python tools/build_wintering_v430.py --output "$RUNNER_TEMP/pool-cockpit-v430.js"
+          cmp "$RUNNER_TEMP/pool-cockpit-v430.js" release/v4.3.0/pool-cockpit.js
+          node --check release/v4.3.0/pool-cockpit.js
+          sha256sum --check SHA256SUMS
+      - name: Install browser dependencies (test only)
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - run: node tests/wintering-v430.browser.cjs
+      - run: node tests/wintering-visual.browser.cjs
+      - name: Weather regression on V4.3 distribution
+        env:
+          HA_POOL_BROWSER_BUNDLE: release/v4.3.0/pool-cockpit.js
+        run: node tests/weather-v421.browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pool-v430-visual-checks
+          path: |
+            ${{ runner.temp }}/pool-wintering-v430/*.png
+            ${{ runner.temp }}/pool-wintering-ux/*.png
+            ${{ runner.temp }}/pool-weather-v421/*.png
+          if-no-files-found: ignore

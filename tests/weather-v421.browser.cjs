@@ -14,7 +14,7 @@ const {PNG}=require("pngjs");
  const server=createServer(async(req,res)=>{
   const path=new URL(req.url,"http://localhost").pathname;
   if(path==="/"){res.setHeader("Content-Type","text/html; charset=utf-8");res.end('<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>body{margin:0;background:#f5f9fc;font-family:Arial,sans-serif}</style></head><body><main id="app"></main><script src="/pool-cockpit.js"></script></body></html>');return;}
-  const p=path==="/pool-cockpit.js"?join(root,"release/v4.2.1/pool-cockpit.js"):path.startsWith("/local/ha-pool-dashboard/assets/")?join(root,"release/v4-rc8-2/assets",path.split("/").pop()):path==="/local/ha-pool-dashboard/hero-ocean.svg"?join(root,"release/v4-rc8-2/hero-ocean.svg"):null;
+  const p=path==="/pool-cockpit.js"?join(root,process.env.HA_POOL_BROWSER_BUNDLE||"release/v4.2.1/pool-cockpit.js"):path.startsWith("/local/ha-pool-dashboard/assets/")?join(root,"release/v4-rc8-2/assets",path.split("/").pop()):path==="/local/ha-pool-dashboard/hero-ocean.svg"?join(root,"release/v4-rc8-2/hero-ocean.svg"):null;
   if(!p){res.writeHead(404);res.end();return;}
   try{res.setHeader("Content-Type",extname(p)===".js"?"application/javascript; charset=utf-8":"image/png");res.end(await readFile(p));}catch{res.writeHead(404);res.end();}
  });

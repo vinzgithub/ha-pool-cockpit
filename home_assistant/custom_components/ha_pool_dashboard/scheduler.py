@@ -15,6 +15,9 @@ from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.storage import Store
 from homeassistant.util import dt as dt_util
 
+from .wintering import normalize_wintering, parse_time
+from .wintering_runtime import WinteringRuntime
+
 from .const import DEFAULT_DATA, DEFAULT_WEEKDAYS, DOMAIN, STORAGE_KEY, STORAGE_VERSION, UPDATE_EVENT
 
 SEASONAL_DEFAULTS = {
@@ -63,7 +66,7 @@ def _iso(value: Any) -> datetime | None:
     return dt_util.as_local(parsed) if parsed else None
 
 
-class PoolScheduler:
+class PoolScheduler(WinteringRuntime):
     def __init__(self, hass: HomeAssistant) -> None:
         self.hass = hass
         self.store = Store(hass, STORAGE_VERSION, STORAGE_KEY)
@@ -74,7 +77,13 @@ class PoolScheduler:
 
     async def async_load(self) -> None:
         stored = await self.store.async_load() or {}
+        if stored and stored.get("schema_version", 1) < 2:
+            backup = Store(self.hass, STORAGE_VERSION, STORAGE_KEY + ".pre_v430")
+            if not await backup.async_load():
+                await backup.async_save(stored)
         self.data = self._normalize(_deep_merge(DEFAULT_DATA, stored))
+        # Never draw continuous observations across a stopped backend.
+        self.data.setdefault("winter_runtime", {})["observed_at"] = None
         self._remove_interval = async_track_time_interval(
             self.hass, self.async_tick, timedelta(seconds=30)
         )
@@ -91,6 +100,8 @@ class PoolScheduler:
             self._remove_state_listener = None
 
     def _normalize(self, data: dict[str, Any]) -> dict[str, Any]:
+        if data.get("schema_version", 1) > 2:
+            raise ValueError("Schéma plus récent : ne pas rétrograder le stockage sans sauvegarde.")
         for target in ("pump", "light", "pac"):
             block = data.setdefault(target, {})
             allowed_modes = ("off", "manual", "program", "automatic") if target == "pump" else ("off", "manual", "program")
@@ -185,6 +196,9 @@ class PoolScheduler:
         data["measurement_sources"] = {str(key): bool(value) for key, value in dict(data.get("measurement_sources") or {}).items()}
         data["history"] = list(data.get("history") or [])[:100]
         data["overrides"] = dict(data.get("overrides") or {})
+        data["schema_version"] = 2
+        data["wintering"] = normalize_wintering(data.get("wintering"))
+        data.setdefault("winter_runtime", {})
         return data
 
     def _is_master(self) -> bool:
@@ -256,6 +270,9 @@ class PoolScheduler:
         """
 
         now = now or dt_util.now()
+        winter_water = self._winter_water(now)
+        if winter_water is not None:
+            return winter_water
         ids = list(dict.fromkeys(str(entity_id) for entity_id in self.data.get("watch", {}).get("temperature_entities") or [] if entity_id))
         if not ids:
             return None, "none"
@@ -319,6 +336,36 @@ class PoolScheduler:
         return heat, cold, severity
 
     def _refresh_adaptive_schedule(self, now: datetime) -> bool:
+        # Compute a proposal even in custom/suspended, without touching their
+        # permanent periods or recommendation/extension compatibility fields.
+        source = self.data.get("seasonal_profiles", {}).get("source")
+        if source != "adaptive":
+            original = self.data
+            self.data = deepcopy(original)
+            self.data["seasonal_profiles"]["source"] = "adaptive"
+            try:
+                self._calculate_adaptive_schedule(now)
+                proposal = {"hours": self.data["pump"]["recommended_hours"],
+                            "periods": deepcopy(self.data["pump"]["periods"]),
+                            "context": self.data.get("watch", {}).get("adaptive_context"),
+                            "inputs": {k: deepcopy(v) for k, v in self.data.get("watch", {}).items() if k.startswith("adaptive_")}}
+            finally:
+                self.data = original
+            self.data["schedule_proposal"] = proposal
+            return False
+        changed = self._calculate_adaptive_schedule(now)
+        self.data["schedule_proposal"] = {"hours": self.data["pump"]["recommended_hours"],
+            "periods": deepcopy(self.data["pump"]["periods"]),
+            "context": self.data.get("watch", {}).get("adaptive_context"),
+                            "inputs": {k: deepcopy(v) for k, v in self.data.get("watch", {}).items() if k.startswith("adaptive_")}}
+        if changed:
+            self._record("programme", "recalcul", f"Durée calculée : {self.data['pump']['recommended_hours']:g} h")
+        return changed
+
+    def _calculate_adaptive_schedule(self, now: datetime) -> bool:
+        winter = self._winter_schedule(now)
+        if winter is not None:
+            return winter
         seasonal = self.data.get("seasonal_profiles", {})
         # FIX14.2: custom = user priority, suspended = frozen schedule,
         # adaptive = only state allowed to recalculate periods automatically.
@@ -363,6 +410,7 @@ class PoolScheduler:
             sanitizer_min = float(watch.get("sanitizer_min"))
             sanitizer_low = (
                 self._frontend_context_is_fresh(now)
+                and ("sensor_sources" not in watch or measurement_is_fresh(parse_time(watch.get("sanitizer_measured_at")), now))
                 and math.isfinite(sanitizer_level) and math.isfinite(sanitizer_min)
                 and 0 <= sanitizer_level < sanitizer_min
             )
@@ -476,6 +524,21 @@ class PoolScheduler:
         )
 
     async def async_save_config(self, payload: dict[str, Any]) -> dict[str, Any]:
+        payload = deepcopy(payload)
+        # Read-only fields must not be replayed by an old browser snapshot.
+        for key in ("wintering", "winter_runtime", "winter_status", "schema_version", "pre_winter_schedule",
+                    "schedule_proposal", "overrides", "boost_until", "history", "last_notifications"):
+            payload.pop(key, None)
+        pump = payload.get("pump") or {}
+        # The UI recommendation is explanatory only, never an executable input.
+        pump.pop("recommended_hours", None)
+        old_source = self.data.get("seasonal_profiles", {}).get("source")
+        source = (payload.get("seasonal_profiles") or {}).get("source", old_source)
+        if source == "adaptive":
+            pump.pop("periods", None)
+            pump.pop("weekdays", None)
+        elif any(k in pump and pump[k] != self.data["pump"].get(k) for k in ("periods", "weekdays")):
+            payload.setdefault("seasonal_profiles", {}).update(source="custom", last_adaptive_signature="", suspended_at="")
         self.data = self._normalize(_deep_merge(self.data, payload))
         now = dt_util.now()
         self._refresh_adaptive_schedule(now)
@@ -508,6 +571,9 @@ class PoolScheduler:
         return next_boundary(self._target_periods(target), block["weekdays"], now)
 
     def _desired_state(self, target: str, now: datetime) -> str | None:
+        priority = self._winter_priority(target, now)
+        if priority is not None:
+            return priority
         block = self.data[target]
         override = self.data.get("overrides", {}).get(target) or {}
         if override.get("persistent") and override.get("state") in ("on", "off"):
@@ -545,6 +611,11 @@ class PoolScheduler:
         return desired
 
     async def _set_entity(self, target: str, state: str, reason: str) -> bool:
+        # Last boundary guard: also protects manual, boost and external paths.
+        if target == "pump" and state == "on" and self._hydraulic_block(dt_util.now()):
+            return False
+        if target == "pac" and self._equipment("pac")["status"] != "en_service":
+            return False
         block = self.data[target]
         if target == "pac" and not block.get("write_enabled", False):
             return False
@@ -560,9 +631,23 @@ class PoolScheduler:
         if domain not in allowed_domains:
             return False
         self._last_requested[entity_id] = state
-        await self.hass.services.async_call(
-            domain, "turn_on" if state == "on" else "turn_off", {"entity_id": entity_id}, blocking=False
-        )
+        if target == "pump":
+            runtime = self.data.setdefault("winter_runtime", {})
+            previous = runtime.get("command") or {}
+            if previous.get("state") != state or previous.get("confirmed_at"):
+                runtime["command"] = {"state": state, "requested_at": dt_util.now().isoformat()}
+        try:
+            await self.hass.services.async_call(
+                domain, "turn_on" if state == "on" else "turn_off", {"entity_id": entity_id}, blocking=False
+            )
+            if target == "pump":
+                self.data["winter_runtime"]["command"].pop("error", None)
+        except Exception:
+            self._last_requested.pop(entity_id, None)
+            if target == "pump":
+                self.data["winter_runtime"]["command"]["error"] = True
+            self._record(target, "erreur", "Échec de l’appel de commande Home Assistant")
+            return False
         self._record(target, state, reason)
         return True
 
@@ -579,11 +664,14 @@ class PoolScheduler:
 
     async def async_evaluate(self, reason: str) -> None:
         now = dt_util.now()
+        self._update_winter_runtime(now)
         if self._is_master():
             for target in ("pump", "light", "pac"):
                 desired = self._desired_state(target, now)
                 if desired:
                     await self._set_entity(target, desired, reason)
+        self._update_winter_runtime(now)
+        await self._notify_winter_alerts()
         await self.store.async_save(self.data)
         self.hass.bus.async_fire(UPDATE_EVENT, self.public_state(include_history=False))
 
@@ -618,6 +706,10 @@ class PoolScheduler:
 
         if state not in ("on", "off"):
             return self.public_state()
+        existing_override = self.data.get("overrides", {}).get("pump") or {}
+        if target == "pump" and state == "on" and existing_override.get("state") == "off" and (existing_override.get("safety") or existing_override.get("source") == "external"):
+            self._record("pump", "refus", "Lever explicitement l’arrêt de sécurité/externe avant de démarrer")
+            return self.public_state()
 
         is_override = block.get("mode") in ("program", "automatic")
         if target == "pump":
@@ -642,7 +734,9 @@ class PoolScheduler:
         if target == "light" and state == "on":
             minutes = max(0, min(1440, int(block.get("auto_off_minutes") or 0)))
             self.data["light_auto_off_at"] = (now + timedelta(minutes=minutes)).isoformat() if minutes else None
-        changed = await self._set_entity(target, state, reason)
+        self._update_winter_runtime(now)
+        effective = self._winter_priority(target, now) or state
+        changed = await self._set_entity(target, effective, reason)
         if not changed:
             self._record(target, state, reason)
         await self.store.async_save(self.data)
@@ -653,7 +747,9 @@ class PoolScheduler:
             return self.public_state()
         hours = max(0, min(4, int(hours)))
         self.data["boost_until"] = (dt_util.now() + timedelta(hours=hours)).isoformat() if hours else None
-        self.data.get("overrides", {}).pop("pump", None)
+        override = self.data.get("overrides", {}).get("pump") or {}
+        if not (override.get("safety") or override.get("source") == "external"):
+            self.data.get("overrides", {}).pop("pump", None)
         self._record("pump", "on" if hours else "auto", f"boost {hours} h" if hours else "boost annulé")
         await self.store.async_save(self.data)
         await self.async_evaluate("boost")
@@ -713,7 +809,11 @@ class PoolScheduler:
         watch = self.data.get("watch") or {}
         messages: list[tuple[str, str]] = []
         ph_values: list[float] = []
+        sources = self._water_sources(dt_util.now())
+        allowed_ph = {row.get("ph") for row in sources if row["status"] == "fresh"} if sources is not None else None
         for entity_id in watch.get("ph_entities", []):
+            if allowed_ph is not None and entity_id not in allowed_ph:
+                continue
             state = self.hass.states.get(entity_id)
             try:
                 value = float(state.state)
@@ -729,7 +829,7 @@ class PoolScheduler:
             sanitizer_min = float(watch.get("sanitizer_min"))
         except (TypeError, ValueError):
             sanitizer = sanitizer_min = None
-        if sanitizer is not None and sanitizer_min is not None and sanitizer < sanitizer_min:
+        if self._winter_config()["mode"] == "normal" and sanitizer is not None and sanitizer_min is not None and sanitizer < sanitizer_min:
             messages.append(("sanitizer", f"{watch.get('sanitizer_label', 'Désinfectant')} insuffisant : {sanitizer:.1f} mg/L"))
         next_measure_at = _iso(watch.get("next_measure_at"))
         if next_measure_at and dt_util.now() >= next_measure_at:
@@ -788,4 +888,5 @@ class PoolScheduler:
                 block["approved_extension_minutes"] = extension.get("minutes", 0) if approved else 0
         if not include_history:
             result.pop("history", None)
+        result["winter_status"] = self._winter_public(now)
         return result
