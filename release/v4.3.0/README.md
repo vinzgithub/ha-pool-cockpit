@@ -1,6 +1,6 @@
-# v4.3.0 — Hivernage actif (candidate à la recette)
+# v4.3.0 — Hivernage actif et protection antigel supervisée
 
-Cette version est construite sur le correctif v4.2.2, PR #16. Elle ajoute les modes persistants `normal`, `hivernage_actif` et `maintenance`, les statuts séparés des équipements et une surveillance antigel locale indépendante du quota journalier. Aucun équipement réel n'a été commandé pendant le développement. Aucune fusion ou publication de version stable n'est autorisée implicitement par cette livraison.
+Cette version est construite sur le socle V4.2.2. Elle ajoute les modes persistants `normal`, `hivernage_actif` et `maintenance`, les statuts séparés des équipements et une surveillance antigel locale indépendante du quota journalier. Elle a été validée sur une installation Home Assistant de recette isolée avec des équipements simulés, **sans commander d'équipement physique**.
 
 ## Utilisation
 
@@ -38,22 +38,39 @@ Un arrêt de sécurité/externe n'est jamais supprimé par un boost ou un calcul
 
 Les changements de mode/statut/paramètre, confirmations (identifiant HA), commandes, confirmations de marche, transitions antigel et alertes sont journalisés dans le journal existant, limité à 100 entrées. Les observations sont conservées sur 48 h, au plus 2 000 segments ; aucune continuité n'est inventée après un redémarrage ou une lacune de plus de 90 s. La révision empêche une confirmation écrasant une modification plus récente d'un autre client. La configuration hivernage est réservée à l'administrateur du maître. Un satellite n'exécute pas la protection locale.
 
-## Migration et retour arrière
+## Installation et retour arrière simplifiés
 
-Effectuer d'abord la recette sur une **instance isolée**, avec des entités simulées et sans identifiants donnant accès à des équipements réels. Ne pas installer automatiquement sur le Pi de production.
+**L'installation ou la mise à jour V4.3.0 utilise désormais `install.sh`, sans recopier les fichiers manuellement.** Elle prend en charge une installation neuve et une migration reconnue depuis la V4.2.1 officielle sur Home Assistant Core / Docker.
 
-1. Sauvegarder la configuration HA complète, la ressource JS utilisée, le dossier `custom_components/ha_pool_dashboard` et `.storage/ha_pool_dashboard.rc27` avant remplacement.
-2. Copier le dossier complet `home_assistant/custom_components/ha_pool_dashboard` de cette branche dans le `custom_components` de l'instance de recette. Les deux nouveaux modules Python doivent être présents.
-3. Remplacer la ressource frontend par `release/v4.3.0/pool-cockpit.js` ; conserver les assets existants. Charger **une seule ressource** `pool-cockpit.js` (par exemple avec `?v=4.3.0`), pas les bundles historiques simultanément.
-4. Redémarrer HA, recharger complètement le navigateur. Vérifier le backend v4.3.0, les entités, les modes existants et l'absence de changement non confirmé.
-5. Le stockage interne passe au schéma 2 ; avant cette migration, une copie HA Store est créée sous `.storage/ha_pool_dashboard.rc27.pre_v430` si elle n'existe pas. Les modes initiaux restent normaux, l'antigel désactivé et les plages conservées.
-6. Pour revenir en v4.2.2, arrêter l'instance isolée, restaurer ensemble le dossier Python, le JS et le stockage d'avant migration, puis redémarrer. Ne pas faire lire directement le schéma 2 à un ancien backend. La copie automatique ne remplace pas la sauvegarde complète préalable. Vérifier physiquement les équipements avant tout retour sur une installation réelle.
+```bash
+git clone https://github.com/vinzgithub/ha-pool-cockpit.git
+cd ha-pool-cockpit
+sh install.sh --config /chemin/vers/config --dry-run
+# Sauvegarde complète, puis arrêt de Home Assistant avant installation :
+sh install.sh --config /chemin/vers/config --yes
+# Redémarrer Home Assistant manuellement, puis actualiser le navigateur.
+```
 
-Le manifest de l'intégration conserve son numéro historique 3.0.2 comme les distributions V4 précédentes ; la version de cette distribution et du contrat backend est 4.3.0.
+Le mode `--dry-run` ne modifie rien. Le mode `--yes` crée une sauvegarde datée du fichier YAML, du tableau de bord, du JavaScript, du backend et du stockage Pool Cockpit avant toute migration reconnue. Le logiciel de recette et les essais GitHub ne remplacent pas une vérification de la configuration et des équipements réels.
 
-## Vérification
+**Retour arrière :** arrêter Home Assistant et réutiliser le chemin `BACKUP:` renvoyé par le programme :
 
-Voir [TEST_REPORT.md](TEST_REPORT.md) pour les commandes, résultats et limites. Aucun test sur Home Assistant réel, le Pi Vendée, une pompe physique ou un épisode de gel réel n'est revendiqué. La recette utilisateur reste nécessaire avant fusion et installation de production.
+```bash
+sh install.sh --config /chemin/vers/config --rollback \
+  /chemin/vers/config/.pool_cockpit_backups/v4.3.0-DATE --yes
+```
+
+Le stockage passe au schéma 2 lors du redémarrage avec V4.3.0. L'installateur préserve les données existantes et rétablit **ensemble** les composants Python, JS et le stockage lors d'un retour arrière. Il ne gère ni l'arrêt ni le redémarrage de Home Assistant.
+
+Le manifest de l'intégration conserve son numéro technique historique `3.0.2`, comme les distributions précédentes ; la version de distribution et du backend hivernage est **4.3.0**.
+
+Pour une explication détaillée : [guide d'installation et de restauration](../../docs/user/INSTALLATION.md).
+
+## Vérifications et portée
+
+La V4.3.0 a passé les tests GitHub Actions, les essais d'hivernage et la recette visuelle sur un Raspberry Pi exécutant **une instance Home Assistant isolée avec des appareils simulés**. Voir le [rapport de tests](TEST_REPORT.md).
+
+**Aucune protection physique d'une piscine contre le gel n'a été démontrée** : valider les sondes locales, la pompe, les verrouillages hydrauliques et le débit réel avant activation. L'antigel reste désactivé par défaut et la météo distante ne suffit pas pour l'activer.
 
 ## Révision ergonomique
 
