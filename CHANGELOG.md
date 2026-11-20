@@ -1,3 +1,14 @@
+## V4.2.2 — Correctifs du moteur adaptatif de filtration (candidate)
+
+- Reprise du patch backend fourni sur le tag v4.2.1 : le calcul repart des données sources, sans réinjecter `pump.recommended_hours`. Le refroidissement permet une baisse et la majoration de fréquentation ne s'accumule plus.
+- Sans température exploitable, repli sur le maximum des durées du profil de base, du profil effectif et du plancher hydraulique. Le profil été par défaut conserve ainsi 13 h, même avec un plancher hydraulique de 2 h.
+- Les températures périmées (>24 h), explicitement restaurées ou sans horodatage fiable sont écartées. Les valeurs non finies sont rejetées et les capteurs dupliqués ne sont comptés qu'une fois.
+- La température extérieure et les vigilances HA doivent également être récentes. Les vigilances de repli et le désinfectant provenant du dashboard ne pilotent plus le moteur avec un contexte vieux de plus de 15 min.
+- Diagnostic `watch.adaptive_water_status` : `fresh`, `stale` (fraîcheur non démontrée), `unavailable`, `none`.
+- Tests du planificateur simulé : perte/retour des sondes, été, données invalides, custom/suspended, prolongations, forçages persistants, reprise explicite, boost et isolation satellite/PAC.
+- Interface, bundle JavaScript et schéma de stockage inchangés. Aucun mode Hivernage actif dans cette version.
+- Limites de fraîcheur et procédure de recette/retour arrière : [dossier v4.2.2](release/v4.2.2/README.md). Candidate soumise à validation, sans publication de tag.
+
 ## V4.2.1 — Correctifs météo et affichage mobile (26 octobre 2026)
 
 - Visibilité du bandeau unique des vigilances Météo-France dans l'interface V4, notamment sur mobile.

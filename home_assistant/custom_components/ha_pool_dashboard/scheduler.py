@@ -15,6 +15,9 @@ from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.storage import Store
 from homeassistant.util import dt as dt_util
 
+from .wintering import normalize_wintering, parse_time
+from .wintering_runtime import WinteringRuntime
+
 from .const import DEFAULT_DATA, DEFAULT_WEEKDAYS, DOMAIN, STORAGE_KEY, STORAGE_VERSION, UPDATE_EVENT
 
 SEASONAL_DEFAULTS = {
@@ -40,8 +43,9 @@ SEASONAL_DEFAULTS = {
     },
 }
 from .schedule_utils import (
-    adaptive_periods, astronomical_profile, effective_periods, next_boundary,
-    profile_start_minutes, reconcile_extension, schedule_is_active, scheduled_minutes,
+    adaptive_periods, adaptive_target_hours, astronomical_profile, effective_periods,
+    hydraulic_floor_hours, measurement_is_fresh, next_boundary, profile_start_minutes,
+    reconcile_extension, schedule_is_active, scheduled_minutes,
 )
 
 
@@ -62,7 +66,7 @@ def _iso(value: Any) -> datetime | None:
     return dt_util.as_local(parsed) if parsed else None
 
 
-class PoolScheduler:
+class PoolScheduler(WinteringRuntime):
     def __init__(self, hass: HomeAssistant) -> None:
         self.hass = hass
         self.store = Store(hass, STORAGE_VERSION, STORAGE_KEY)
@@ -73,7 +77,13 @@ class PoolScheduler:
 
     async def async_load(self) -> None:
         stored = await self.store.async_load() or {}
+        if stored and stored.get("schema_version", 1) < 2:
+            backup = Store(self.hass, STORAGE_VERSION, STORAGE_KEY + ".pre_v430")
+            if not await backup.async_load():
+                await backup.async_save(stored)
         self.data = self._normalize(_deep_merge(DEFAULT_DATA, stored))
+        # Never draw continuous observations across a stopped backend.
+        self.data.setdefault("winter_runtime", {})["observed_at"] = None
         self._remove_interval = async_track_time_interval(
             self.hass, self.async_tick, timedelta(seconds=30)
         )
@@ -90,6 +100,8 @@ class PoolScheduler:
             self._remove_state_listener = None
 
     def _normalize(self, data: dict[str, Any]) -> dict[str, Any]:
+        if data.get("schema_version", 1) > 2:
+            raise ValueError("Schéma plus récent : ne pas rétrograder le stockage sans sauvegarde.")
         for target in ("pump", "light", "pac"):
             block = data.setdefault(target, {})
             allowed_modes = ("off", "manual", "program", "automatic") if target == "pump" else ("off", "manual", "program")
@@ -184,6 +196,9 @@ class PoolScheduler:
         data["measurement_sources"] = {str(key): bool(value) for key, value in dict(data.get("measurement_sources") or {}).items()}
         data["history"] = list(data.get("history") or [])[:100]
         data["overrides"] = dict(data.get("overrides") or {})
+        data["schema_version"] = 2
+        data["wintering"] = normalize_wintering(data.get("wintering"))
+        data.setdefault("winter_runtime", {})
         return data
 
     def _is_master(self) -> bool:
@@ -199,7 +214,7 @@ class PoolScheduler:
         if isinstance(value, bool):
             return 1 if value else 0
         if isinstance(value, (int, float)):
-            return max(0, min(3, int(value)))
+            return max(0, min(3, int(value))) if math.isfinite(value) else 0
         text = cls._normalized_text(value)
         if "rouge" in text or "red" in text:
             return 3
@@ -219,40 +234,93 @@ class PoolScheduler:
             value = float(state.state)
         except (TypeError, ValueError):
             return None
+        if not math.isfinite(value):
+            return None
         if temperature:
             unit = str(state.attributes.get("unit_of_measurement") or "").lower()
             if "°f" in unit or unit == "f":
                 value = (value - 32) * 5 / 9
-        return value
+        return value if math.isfinite(value) else None
 
-    def _water_temperature(self) -> float | None:
-        ids = list(self.data.get("watch", {}).get("temperature_entities") or [])
-        values = [self._state_number(str(entity_id), temperature=True) for entity_id in ids]
-        usable = [value for value in values if value is not None and -5 <= value <= 60]
-        return sum(usable) / len(usable) if usable else None
+    @staticmethod
+    def _state_is_fresh(state: Any, now: datetime) -> bool:
+        if not state or str(state.state).lower() in ("unknown", "unavailable", "none"):
+            return False
+        if state.attributes.get("restored"):
+            return False
+        reported_at = getattr(state, "last_reported", None)
+        if reported_at is None:
+            reported_at = getattr(state, "last_updated", None)
+        return measurement_is_fresh(reported_at, now)
 
-    def _air_temperature(self) -> float | None:
+    def _frontend_context_is_fresh(self, now: datetime) -> bool:
+        try:
+            updated = _iso(self.data.get("watch", {}).get("context_updated_at"))
+        except (TypeError, ValueError, OverflowError):
+            return False
+        return measurement_is_fresh(updated, now, max_age_hours=0.25)
+
+    def _water_temperature(self, now: datetime | None = None) -> tuple[float | None, str]:
+        """Moyenne des températures d'eau exploitables et état de la mesure.
+
+        États : ``fresh`` (au moins une mesure récente), ``stale`` (des valeurs
+        existent mais leur fraîcheur n'est pas démontrée), ``unavailable`` (capteurs
+        configurés sans valeur lisible), ``none`` (aucun capteur configuré).
+        Une valeur périmée n'est jamais utilisée pour dimensionner la filtration.
+        """
+
+        now = now or dt_util.now()
+        winter_water = self._winter_water(now)
+        if winter_water is not None:
+            return winter_water
+        ids = list(dict.fromkeys(str(entity_id) for entity_id in self.data.get("watch", {}).get("temperature_entities") or [] if entity_id))
+        if not ids:
+            return None, "none"
+        usable: list[float] = []
+        stale = False
+        for entity_id in ids:
+            value = self._state_number(entity_id, temperature=True)
+            if value is None or not -5 <= value <= 60:
+                continue
+            state = self.hass.states.get(entity_id)
+            if not self._state_is_fresh(state, now):
+                stale = True
+                continue
+            usable.append(value)
+        if usable:
+            return sum(usable) / len(usable), "fresh"
+        return None, "stale" if stale else "unavailable"
+
+    def _air_temperature(self, now: datetime) -> float | None:
         watch = self.data.get("watch", {})
-        explicit = self._state_number(str(watch.get("air_temperature_entity") or ""), temperature=True)
-        if explicit is not None:
+        explicit_id = str(watch.get("air_temperature_entity") or "")
+        explicit = self._state_number(explicit_id, temperature=True)
+        if explicit is not None and self._state_is_fresh(self.hass.states.get(explicit_id), now):
             return explicit
         entity_id = str(watch.get("weather_entity") or "")
         state = self.hass.states.get(entity_id) if entity_id else None
-        if not state:
+        if not self._state_is_fresh(state, now):
             return None
         try:
             value = float(state.attributes.get("temperature"))
         except (TypeError, ValueError):
             return None
+        if not math.isfinite(value):
+            return None
         unit = str(state.attributes.get("temperature_unit") or "°C").lower()
-        return (value - 32) * 5 / 9 if "°f" in unit or unit == "f" else value
+        value = (value - 32) * 5 / 9 if "°f" in unit or unit == "f" else value
+        return value if math.isfinite(value) else None
 
-    def _thermal_alerts(self) -> tuple[bool, bool, int]:
+    def _thermal_alerts(self, now: datetime) -> tuple[bool, bool, int]:
         watch = self.data.get("watch", {})
         entity_id = str(watch.get("weather_alert_entity") or "")
         state = self.hass.states.get(entity_id) if entity_id else None
         if not state:
+            if not self._frontend_context_is_fresh(now):
+                return False, False, 0
             return bool(watch.get("weather_heat_alert")), bool(watch.get("weather_cold_alert")), 0
+        if not self._state_is_fresh(state, now):
+            return False, False, 0
         heat = False
         cold = False
         severity = self._severity(state.state)
@@ -267,17 +335,37 @@ class PoolScheduler:
                 cold = cold or item_severity >= 2
         return heat, cold, severity
 
-    def _fresh_frontend_recommended_hours(self, now: datetime) -> float | None:
-        updated = _iso(self.data.get("watch", {}).get("context_updated_at"))
-        if not updated or abs((now - updated).total_seconds()) > 15 * 60:
-            return None
-        try:
-            value = float(self.data.get("pump", {}).get("recommended_hours") or 0)
-        except (TypeError, ValueError):
-            return None
-        return max(0.0, min(24.0, value)) if value > 0 else None
-
     def _refresh_adaptive_schedule(self, now: datetime) -> bool:
+        # Compute a proposal even in custom/suspended, without touching their
+        # permanent periods or recommendation/extension compatibility fields.
+        source = self.data.get("seasonal_profiles", {}).get("source")
+        if source != "adaptive":
+            original = self.data
+            self.data = deepcopy(original)
+            self.data["seasonal_profiles"]["source"] = "adaptive"
+            try:
+                self._calculate_adaptive_schedule(now)
+                proposal = {"hours": self.data["pump"]["recommended_hours"],
+                            "periods": deepcopy(self.data["pump"]["periods"]),
+                            "context": self.data.get("watch", {}).get("adaptive_context"),
+                            "inputs": {k: deepcopy(v) for k, v in self.data.get("watch", {}).items() if k.startswith("adaptive_")}}
+            finally:
+                self.data = original
+            self.data["schedule_proposal"] = proposal
+            return False
+        changed = self._calculate_adaptive_schedule(now)
+        self.data["schedule_proposal"] = {"hours": self.data["pump"]["recommended_hours"],
+            "periods": deepcopy(self.data["pump"]["periods"]),
+            "context": self.data.get("watch", {}).get("adaptive_context"),
+                            "inputs": {k: deepcopy(v) for k, v in self.data.get("watch", {}).items() if k.startswith("adaptive_")}}
+        if changed:
+            self._record("programme", "recalcul", f"Durée calculée : {self.data['pump']['recommended_hours']:g} h")
+        return changed
+
+    def _calculate_adaptive_schedule(self, now: datetime) -> bool:
+        winter = self._winter_schedule(now)
+        if winter is not None:
+            return winter
         seasonal = self.data.get("seasonal_profiles", {})
         # FIX14.2: custom = user priority, suspended = frozen schedule,
         # adaptive = only state allowed to recalculate periods automatically.
@@ -294,9 +382,9 @@ class PoolScheduler:
             seasonal["suspended_at"] = ""
             return True
 
-        water = self._water_temperature()
-        air = self._air_temperature()
-        heat_alert, cold_alert, alert_severity = self._thermal_alerts()
+        water, water_status = self._water_temperature(now)
+        air = self._air_temperature(now)
+        heat_alert, cold_alert, alert_severity = self._thermal_alerts(now)
         effective = base
         context = "season"
         if heat_alert or (air is not None and air >= 30) or (water is not None and water >= 28):
@@ -310,60 +398,47 @@ class PoolScheduler:
         base_profile = dict(profiles.get(base) or SEASONAL_DEFAULTS[base])
         effective_profile = dict(profiles.get(effective) or SEASONAL_DEFAULTS[effective])
         reference_hours = scheduled_minutes(list(base_profile.get("periods") or [])) / 60
-        candidates: list[float] = []
-        if water is not None:
-            candidates.append(max(1.0, math.ceil(water / 2)))
+        if water is None:
+            reference_hours = max(reference_hours, scheduled_minutes(list(effective_profile.get("periods") or [])) / 60)
         watch = self.data.get("watch", {})
-        try:
-            volume = float(watch.get("pool_volume_m3") or 0)
-            flow = float(watch.get("pump_flow_m3h") or 0)
-        except (TypeError, ValueError):
-            volume = flow = 0
-        # Plancher hydraulique : un renouvellement théorique du bassin.
-        hydraulic_hours = max(1.0, math.ceil(volume / flow)) if volume > 0 and flow > 0 else None
-        if hydraulic_hours is not None:
-            candidates.append(hydraulic_hours)
-        fresh_recommended = self._fresh_frontend_recommended_hours(now)
-        if fresh_recommended is not None:
-            candidates.append(fresh_recommended)
-        target_hours = max(candidates) if candidates else reference_hours
+        hydraulic_hours = hydraulic_floor_hours(watch.get("pool_volume_m3"), watch.get("pump_flow_m3h"))
 
         water_condition = str(watch.get("water_condition") or "")
         recent_load = str(watch.get("recent_load") or "")
         try:
             sanitizer_level = float(watch.get("sanitizer_level"))
             sanitizer_min = float(watch.get("sanitizer_min"))
-            sanitizer_low = sanitizer_level < sanitizer_min
+            sanitizer_low = (
+                self._frontend_context_is_fresh(now)
+                and ("sensor_sources" not in watch or measurement_is_fresh(parse_time(watch.get("sanitizer_measured_at")), now))
+                and math.isfinite(sanitizer_level) and math.isfinite(sanitizer_min)
+                and 0 <= sanitizer_level < sanitizer_min
+            )
         except (TypeError, ValueError):
             sanitizer_low = False
 
-        if water_condition in ("green", "cloudy") or recent_load == "polluted":
-            target_hours = 24.0
-            context = "water_problem"
-        elif heat_alert and water is not None and water >= 28:
-            target_hours = 24.0
-            context = "heat_alert"
-        elif sanitizer_low and water is not None and water >= 28:
-            target_hours = 24.0
-            context = "sanitizer_hot"
-        elif cold_alert and base == "winter":
-            target_hours = 24.0
-            context = "frost"
-        elif recent_load == "busy":
-            target_hours = min(24.0, target_hours + 2.0)
-            context = "busy"
-        elif water is not None and water > 30:
-            target_hours = min(24.0, target_hours + 4.0)
-            context = "very_hot_water"
-        elif water is not None and water > 28:
-            target_hours = min(24.0, target_hours + max(1.0, math.ceil((water - 28) * 2)))
-            context = "hot_water"
-
-        target_hours = max(0.0, min(24.0, target_hours))
+        # La durée est recalculée de zéro à partir des données sources.
+        # `pump.recommended_hours` est une sortie de ce calcul : elle n'est
+        # jamais relue comme entrée, sinon une majoration serait rejouée à
+        # chaque cycle et une ancienne durée bloquerait la baisse.
+        target_hours, rule_context = adaptive_target_hours(
+            water=water,
+            hydraulic_hours=hydraulic_hours,
+            reference_hours=reference_hours,
+            base_profile=base,
+            heat_alert=heat_alert,
+            cold_alert=cold_alert,
+            water_condition=water_condition,
+            recent_load=recent_load,
+            sanitizer_low=sanitizer_low,
+        )
+        if rule_context:
+            context = rule_context
         start_reference = profile_start_minutes(list(effective_profile.get("periods") or []))
         periods = adaptive_periods(target_hours, start_reference)
         weekdays = [day for day in base_profile.get("weekdays", DEFAULT_WEEKDAYS) if day in DEFAULT_WEEKDAYS]
         signature = f"{base}|{effective}|{target_hours:.3f}|{weekdays}|{periods}|{round(water,1) if water is not None else '-'}|{round(air,1) if air is not None else '-'}|{hydraulic_hours if hydraulic_hours is not None else '-'}|{int(heat_alert)}|{int(cold_alert)}|{water_condition}|{recent_load}"
+        signature += f"|{water_status}|{context}|{alert_severity}"
         changed = (
             self.data.get("pump", {}).get("periods") != periods
             or self.data.get("pump", {}).get("weekdays") != weekdays
@@ -378,6 +453,7 @@ class PoolScheduler:
         watch["adaptive_effective_profile"] = effective
         watch["adaptive_context"] = context
         watch["adaptive_water_temperature_c"] = water
+        watch["adaptive_water_status"] = water_status
         watch["adaptive_air_temperature_c"] = air
         watch["adaptive_hydraulic_hours"] = hydraulic_hours
         watch["adaptive_heat_alert"] = heat_alert
@@ -448,6 +524,21 @@ class PoolScheduler:
         )
 
     async def async_save_config(self, payload: dict[str, Any]) -> dict[str, Any]:
+        payload = deepcopy(payload)
+        # Read-only fields must not be replayed by an old browser snapshot.
+        for key in ("wintering", "winter_runtime", "winter_status", "schema_version", "pre_winter_schedule",
+                    "schedule_proposal", "overrides", "boost_until", "history", "last_notifications"):
+            payload.pop(key, None)
+        pump = payload.get("pump") or {}
+        # The UI recommendation is explanatory only, never an executable input.
+        pump.pop("recommended_hours", None)
+        old_source = self.data.get("seasonal_profiles", {}).get("source")
+        source = (payload.get("seasonal_profiles") or {}).get("source", old_source)
+        if source == "adaptive":
+            pump.pop("periods", None)
+            pump.pop("weekdays", None)
+        elif any(k in pump and pump[k] != self.data["pump"].get(k) for k in ("periods", "weekdays")):
+            payload.setdefault("seasonal_profiles", {}).update(source="custom", last_adaptive_signature="", suspended_at="")
         self.data = self._normalize(_deep_merge(self.data, payload))
         now = dt_util.now()
         self._refresh_adaptive_schedule(now)
@@ -480,6 +571,9 @@ class PoolScheduler:
         return next_boundary(self._target_periods(target), block["weekdays"], now)
 
     def _desired_state(self, target: str, now: datetime) -> str | None:
+        priority = self._winter_priority(target, now)
+        if priority is not None:
+            return priority
         block = self.data[target]
         override = self.data.get("overrides", {}).get(target) or {}
         if override.get("persistent") and override.get("state") in ("on", "off"):
@@ -517,6 +611,11 @@ class PoolScheduler:
         return desired
 
     async def _set_entity(self, target: str, state: str, reason: str) -> bool:
+        # Last boundary guard: also protects manual, boost and external paths.
+        if target == "pump" and state == "on" and self._hydraulic_block(dt_util.now()):
+            return False
+        if target == "pac" and self._equipment("pac")["status"] != "en_service":
+            return False
         block = self.data[target]
         if target == "pac" and not block.get("write_enabled", False):
             return False
@@ -532,9 +631,23 @@ class PoolScheduler:
         if domain not in allowed_domains:
             return False
         self._last_requested[entity_id] = state
-        await self.hass.services.async_call(
-            domain, "turn_on" if state == "on" else "turn_off", {"entity_id": entity_id}, blocking=False
-        )
+        if target == "pump":
+            runtime = self.data.setdefault("winter_runtime", {})
+            previous = runtime.get("command") or {}
+            if previous.get("state") != state or previous.get("confirmed_at"):
+                runtime["command"] = {"state": state, "requested_at": dt_util.now().isoformat()}
+        try:
+            await self.hass.services.async_call(
+                domain, "turn_on" if state == "on" else "turn_off", {"entity_id": entity_id}, blocking=False
+            )
+            if target == "pump":
+                self.data["winter_runtime"]["command"].pop("error", None)
+        except Exception:
+            self._last_requested.pop(entity_id, None)
+            if target == "pump":
+                self.data["winter_runtime"]["command"]["error"] = True
+            self._record(target, "erreur", "Échec de l’appel de commande Home Assistant")
+            return False
         self._record(target, state, reason)
         return True
 
@@ -551,11 +664,14 @@ class PoolScheduler:
 
     async def async_evaluate(self, reason: str) -> None:
         now = dt_util.now()
+        self._update_winter_runtime(now)
         if self._is_master():
             for target in ("pump", "light", "pac"):
                 desired = self._desired_state(target, now)
                 if desired:
                     await self._set_entity(target, desired, reason)
+        self._update_winter_runtime(now)
+        await self._notify_winter_alerts()
         await self.store.async_save(self.data)
         self.hass.bus.async_fire(UPDATE_EVENT, self.public_state(include_history=False))
 
@@ -590,6 +706,10 @@ class PoolScheduler:
 
         if state not in ("on", "off"):
             return self.public_state()
+        existing_override = self.data.get("overrides", {}).get("pump") or {}
+        if target == "pump" and state == "on" and existing_override.get("state") == "off" and (existing_override.get("safety") or existing_override.get("source") == "external"):
+            self._record("pump", "refus", "Lever explicitement l’arrêt de sécurité/externe avant de démarrer")
+            return self.public_state()
 
         is_override = block.get("mode") in ("program", "automatic")
         if target == "pump":
@@ -614,7 +734,9 @@ class PoolScheduler:
         if target == "light" and state == "on":
             minutes = max(0, min(1440, int(block.get("auto_off_minutes") or 0)))
             self.data["light_auto_off_at"] = (now + timedelta(minutes=minutes)).isoformat() if minutes else None
-        changed = await self._set_entity(target, state, reason)
+        self._update_winter_runtime(now)
+        effective = self._winter_priority(target, now) or state
+        changed = await self._set_entity(target, effective, reason)
         if not changed:
             self._record(target, state, reason)
         await self.store.async_save(self.data)
@@ -625,7 +747,9 @@ class PoolScheduler:
             return self.public_state()
         hours = max(0, min(4, int(hours)))
         self.data["boost_until"] = (dt_util.now() + timedelta(hours=hours)).isoformat() if hours else None
-        self.data.get("overrides", {}).pop("pump", None)
+        override = self.data.get("overrides", {}).get("pump") or {}
+        if not (override.get("safety") or override.get("source") == "external"):
+            self.data.get("overrides", {}).pop("pump", None)
         self._record("pump", "on" if hours else "auto", f"boost {hours} h" if hours else "boost annulé")
         await self.store.async_save(self.data)
         await self.async_evaluate("boost")
@@ -685,7 +809,11 @@ class PoolScheduler:
         watch = self.data.get("watch") or {}
         messages: list[tuple[str, str]] = []
         ph_values: list[float] = []
+        sources = self._water_sources(dt_util.now())
+        allowed_ph = {row.get("ph") for row in sources if row["status"] == "fresh"} if sources is not None else None
         for entity_id in watch.get("ph_entities", []):
+            if allowed_ph is not None and entity_id not in allowed_ph:
+                continue
             state = self.hass.states.get(entity_id)
             try:
                 value = float(state.state)
@@ -701,7 +829,7 @@ class PoolScheduler:
             sanitizer_min = float(watch.get("sanitizer_min"))
         except (TypeError, ValueError):
             sanitizer = sanitizer_min = None
-        if sanitizer is not None and sanitizer_min is not None and sanitizer < sanitizer_min:
+        if self._winter_config()["mode"] == "normal" and sanitizer is not None and sanitizer_min is not None and sanitizer < sanitizer_min:
             messages.append(("sanitizer", f"{watch.get('sanitizer_label', 'Désinfectant')} insuffisant : {sanitizer:.1f} mg/L"))
         next_measure_at = _iso(watch.get("next_measure_at"))
         if next_measure_at and dt_util.now() >= next_measure_at:
@@ -760,4 +888,5 @@ class PoolScheduler:
                 block["approved_extension_minutes"] = extension.get("minutes", 0) if approved else 0
         if not include_history:
             result.pop("history", None)
+        result["winter_status"] = self._winter_public(now)
         return result
