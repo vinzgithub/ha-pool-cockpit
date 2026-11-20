@@ -2,9 +2,9 @@
 
 # 🌊 Pool Cockpit
 
-### A clearer view of your pool. All in Home Assistant.
+### Your pool, one cockpit. Spring, summer, autumn and winter.
 
-**Water quality · Filtration · Heat pump · Weather · Planning · Active wintering**
+**Water readings · Smart filtration · Treatment · Heat pumps · Weather · Advice · Planning**
 
 [**English**](README.md) · [**🇫🇷 Français**](README.fr.md)
 
@@ -14,7 +14,7 @@
 
 <sub>The original Pool Cockpit promotional artwork, preserved as part of the project's visual identity. Actual V4.3.0 screenshots appear in the gallery below.</sub>
 
-**[Get started](#get-started-in-three-steps)** · **[Discover wintering](#wintering-made-understandable)** · **[Explore the interface](#take-a-look)** · **[Français](README.fr.md)**
+**[All features](#all-features-explained-simply)** · **[Four seasons](#one-pool-four-seasons)** · **[Screenshots](#take-a-look)** · **[Get started](#get-started-in-three-steps)**
 
 </div>
 
@@ -22,9 +22,9 @@
 
 ## Your pool deserves one simple dashboard
 
-Pool equipment often lives in different apps: one for water quality, one for a heat pump, another for home automation. **Pool Cockpit brings the information already available in Home Assistant into a single, easy-to-read screen.**
+Pool equipment often lives in different apps: one for water quality, one for filtration and one for the heat pump. **Pool Cockpit brings monitoring, guidance and scheduling together in Home Assistant, throughout the year.**
 
-You can check your water measurements, understand filtration recommendations, see whether equipment is running, and review your schedule without jumping between interfaces.
+**In spring**, get the pool ready. **In summer**, keep an eye on water and filtration. **In autumn**, adapt the schedule as the water cools. **In winter**, monitor active wintering if you choose to use it.
 
 > **New to Home Assistant?** Think of Home Assistant as the hub that talks to your connected devices. Pool Cockpit is the friendly dashboard that helps you understand their information. It does not replace their integrations.
 
@@ -41,36 +41,98 @@ You can check your water measurements, understand filtration recommendations, se
 
 What you see depends on the devices and entities configured in your Home Assistant installation.
 
-## ✨ What's new in V4.3.0?
+## One pool, four seasons
 
-### Winter mode, without losing your usual settings
+Pool Cockpit is **not a winter-only application**. Its everyday features remain at the heart of the project.
 
-When swimming season ends, you may want a shorter filtration schedule and to put some devices away for winter. V4.3.0 introduces three explicit modes:
+| Season | What you can do |
+| :--- | :--- |
+| 🌱 **Spring** | Check new readings after restarting your sensors, inspect pump and heat-pump status and adjust filtration periods. |
+| ☀️ **Summer** | Monitor temperature, pH and ORP, review filtration guidance, log treatments and consider weather and reported bathing activity. |
+| 🍂 **Autumn** | Compare the recommendation with your schedule, adjust as water cools and prepare equipment for seasonal shutdown. |
+| ❄️ **Winter** | If appropriate, select active wintering, mark devices winterized and monitor cold-weather risks with a suitable local sensor. |
 
-- **Normal:** your regular pool schedule and equipment settings.
-- **Active wintering:** a separately confirmed winter filtration schedule, with equipment wintering states.
-- **Maintenance:** an explicit state to prevent unintended circulation during maintenance.
+A **seasonal profile is a reference, not an automatic universal duration**. Water temperature, usable data and the configured operating context also matter. User choices and safety interlocks remain important.
 
-For example, you can confirm **4 hours from 02:00 to 06:00** for wintering. That's a *suggestion*, not a universal frost-protection guarantee. Your previous program is kept so it can be restored when you return to Normal.
+## All features explained simply
 
-### Frost monitoring that explains what is happening
+### 🧪 Water readings — know what's happening in the pool
 
-With a suitable **local temperature sensor**, Pool Cockpit can ask the filtration pump to run when temperatures approach freezing, even outside normal filtration hours. By default, the proposed thresholds are **3 °C to start and 5 °C to release**, with delays to avoid rapid on/off cycling.
+Pool Cockpit can display **water temperature, pH and ORP/redox**, plus available information such as conductivity, salinity or free chlorine. With supported Home Assistant entities, it also shows multiple analyzers, last readings, data freshness, trends and available connection or battery details.
 
-It also explains whether:
-- frost protection has **requested** circulation;
-- Home Assistant has **observed** the pump running;
-- real **water flow is verified** — only when you have a configured flow sensor.
+**Analyzer families:** Blue Connect, Blueriiot, compatible Zodiac devices and Flipr can be discovered when they are already configured in Home Assistant. A manual analysis action may be offered if supported.
 
-Hydraulic safety locks always take priority. An unavailable sensor triggers a warning; it cannot magically verify that the equipment is safe.
+*Example:* after restarting your probe in spring, check that a genuinely new reading has arrived.
 
-**Important:** this is a software monitoring and control aid, **not a certified autonomous frost-protection system**. It cannot protect the pool if Home Assistant, electricity, the pump or the hydraulic circuit fails. Frost monitoring is **off by default** and must only be enabled after checking the real installation and safety devices. For prolonged absences, independent physical freeze protection or appropriate passive wintering may be necessary.
+### 🔄 Filtration — understand recommendations and performance
 
-### Put each device into winter storage separately
+Compare **recommended**, **scheduled** and, when observable, **actually running** filtration times. Depending on your settings, the dashboard also offers estimates of **filtered volume** and **pool-water turnover**, based on configured pool volume and nominal flow — these are not physical flow measurements without a flow sensor.
 
-The heat pump, Blue Connect and Flipr can be marked as winterized individually. Pool Cockpit stops relying on winterized probes for fresh water readings. **Each device must be reactivated explicitly**; reactivating a probe also requires a new measurement before its data is trusted.
+Recommendations consider suitable available inputs such as water temperature, season and operating context. When temperature readings are missing or stale, the engine uses a cautious fallback rather than treating an old reading as current.
 
-Heat-pump commands remain **disabled by default**.
+*Example:* hot summer water may lead to longer recommended filtration; as the water cools, the recommendation may decrease.
+
+### 📅 Planning — adapt automatically or stay in control
+
+- **Adaptive scheduling:** proposes appropriate periods using configured rules.
+- **Custom schedule:** edit days and hours; later calculations do not silently overwrite your choices.
+- **Suspended adaptive mode:** retain existing periods until you explicitly resume.
+- **One-off extension:** add filtration time without rewriting the permanent schedule.
+- **Manual pump override:** available with correctly mapped equipment and safety controls, with an explicit return to scheduled operation.
+- **Seasonal reference profiles:** spring, summer, autumn and winter, alongside water-temperature and context-based advice.
+
+*Example:* after a particularly busy swimming day, temporarily extend filtration while keeping your regular weekly plan.
+
+### 🧴 Water treatment and dosage — practical maintenance guidance
+
+The **Treatment & Dosage** workspace uses your configured pool profile: volume, disinfectant type, available measurements, visual water condition, reported bathing activity and other settings. It can provide indicative dosage information for chlorine or bromine, pH products and supplementary products, with TAC/hardness inputs when applicable.
+
+Keep a **treatment journal** to record what you have done. Supplementary product schedules may be on-demand or based on an explicitly selected manufacturer protocol.
+
+**No chemical product is dispensed automatically.** Always validate quantities against real water tests, product instructions and your pool conditions.
+
+### 🌡️ Heat pumps — Polytropic reference, other models possible
+
+The heat-pump display was developed around a **reference installation using a Polytropic heat pump connected to Home Assistant**. It uses **mapped Home Assistant entities** to show information such as operating state, temperature setpoint, available modes, inlet/outlet temperatures, communication and fault data.
+
+**Other brands may also be usable** if a Home Assistant integration provides equivalent entities. Compatibility is assessed **model by model**; Pool Cockpit does not automatically discover or certify every heat pump.
+
+**Safety:** heat-pump write commands remain **locked in the public V4.3.0 release**. Being able to monitor the unit does not imply you can start it or change its setpoint.
+
+### 🌦️ Weather, warnings and everyday advice
+
+Where compatible Home Assistant entities exist, Pool Cockpit can show **weather information and Météo-France alerts**. Context-aware advice can use available measurements, temperature, reported usage or water condition. Remote weather is never a substitute for local frost-safety measurement.
+
+### 📈 History and the Pool Expert Assistant
+
+Review available trends, activity information and the **treatment journal**. The **Pool Expert Assistant** explains conclusions already computed by the application's rules for filtration, treatment, weather or the heat pump. Optional AI reformulation, if configured, **does not determine dosages or control devices**.
+
+### 🎨 Interface, themes, languages and demo mode
+
+The dashboard includes **Overview, Advice, Measurements, Equipment, Planning and History**, with responsive layouts, multiple languages and themes including Ocean.
+
+- **Real mode:** displays information from your configured Home Assistant entities.
+- **Demonstration mode:** explore using fictional values, with no impact on physical devices.
+- **Master/satellite coordination:** optional advanced configuration; unnecessary for a standard single-pool setup.
+
+### ❄️ Active wintering — the V4.3.0 addition
+
+Switch between **Normal, Active Wintering and Maintenance**, retain your previous schedule and mark devices winterized independently. Optional frost monitoring may **request circulation** when a suitable local sensor signals cold conditions, subject to hydraulic safety interlocks.
+
+Frost monitoring is **disabled by default following migration**. It cannot replace autonomous physical freeze protection when power, Home Assistant, pumps or water flow fail. [Read the wintering and safety guide](release/v4.3.0/README.md).
+
+
+## ✨ What's specifically new in V4.3.0?
+
+**All spring, summer and autumn functionality remains available.** This release mainly adds:
+
+- Explicit **Normal, Active Wintering and Maintenance** modes, with confirmation and schedule preservation.
+- Configurable **local frost monitoring**, adjustable thresholds and safety priorities.
+- Clearer distinction between device availability, requested operation, observed operation and flow verification (only with a flow sensor).
+- More compact **Overview / Equipment** status cards and clearer **Planning** timelines.
+- A safer, simpler installer for fresh installations and recognized V4.2.1 upgrades.
+
+**Important:** software frost monitoring is not an independent hardware freeze-protection system. [Read the full safety limitations](release/v4.3.0/README.md).
 
 ## Take a look
 
@@ -128,15 +190,13 @@ The installer recognizes either a **fresh installation** or an **official V4.2.1
 
 **Already running another version, or using Home Assistant OS?** Read the [installation, compatibility and rollback guide](docs/user/INSTALLATION.md) before doing anything.
 
-## Wintering made understandable
+## Three real-life examples
 
-**Example — a mild November day:** you confirm a reduced filtration schedule and separately mark your heat pump and probes as winterized. Your normal schedule is preserved.
+**🌱 Spring:** after reopening your pool, check fresh measurements, pump availability and your new filtration timetable.
 
-**Example — a cold night:** if your configured *local* sensor reports a sufficiently low temperature, the software can request additional pump circulation **outside the normal program**, provided the hydraulic safety checks allow it. The dashboard shows that request and what HA has actually observed.
+**☀️ Summer:** after several hot, busy days, review the suggested filtration duration, adjust your schedule if needed and record the treatment used.
 
-**Example — a problem:** if the temperature becomes stale, the pump cannot start, or flow is absent, the dashboard reports that protection is not confirmed. It does not claim everything is safe.
-
-For the exact thresholds, delays, confirmation steps, priorities and limitations, consult the [V4.3.0 wintering guide](release/v4.3.0/README.md).
+**❄️ Winter:** if active wintering is appropriate, confirm a seasonal timetable and monitor warnings. Frost monitoring depends on a reliable local sensor and functioning physical safeguards.
 
 ## Frequently asked questions
 
@@ -170,7 +230,7 @@ Stop Home Assistant first. The installer records a dated backup path and provide
 
 ## Further reading
 
-**[GitHub Releases](https://github.com/vinzgithub/ha-pool-cockpit/releases)** · **[V4.3.0 technical guide](release/v4.3.0/README.md)** · **[Installation and rollback](docs/user/INSTALLATION.md)** · **[Tests and limitations](release/v4.3.0/TEST_REPORT.md)** · **[French documentation](README.fr.md)**
+**[Full feature guide](docs/user/DASHBOARD.md)** · **[GitHub Releases](https://github.com/vinzgithub/ha-pool-cockpit/releases)** · **[V4.3.0 wintering guide](release/v4.3.0/README.md)** · **[Installation and rollback](docs/user/INSTALLATION.md)** · **[Tests and limitations](release/v4.3.0/TEST_REPORT.md)** · **[French documentation](README.fr.md)**
 
 **Privacy and safety:** keep Home Assistant credentials and private device identifiers out of issues and screenshots. Pool Cockpit is not a substitute for professional pool maintenance, electrical protection or physical hydraulic interlocks. Real equipment commands must be checked against your installation.
 
