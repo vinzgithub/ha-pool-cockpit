@@ -10,9 +10,9 @@
 
 ![Release](https://img.shields.io/badge/release-v4.3.0-136caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-0d355d)
 
-![Pool Cockpit V4.3.0 — Ocean theme overview](release/v4.3.0/visuals/after-overview-1440.webp)
+![Pool Cockpit promotional artwork — Ocean theme](docs/images/v4.2.0/pool-cockpit-v4.2-hero.webp)
 
-<sub>A real browser screenshot of the V4.3.0 interface, using simulated test devices. Not a photograph or a live pool reading.</sub>
+<sub>The original Pool Cockpit promotional artwork, preserved as part of the project's visual identity. Actual V4.3.0 screenshots appear in the gallery below.</sub>
 
 **[Get started](#get-started-in-three-steps)** · **[Discover wintering](#wintering-made-understandable)** · **[Explore the interface](#take-a-look)** · **[Français](README.fr.md)**
 
