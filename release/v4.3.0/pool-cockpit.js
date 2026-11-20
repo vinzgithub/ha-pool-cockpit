@@ -15754,6 +15754,13 @@ function rendreCockpitV4({
 .pool-cockpit-v4 .winter-metrics span{font-size:.85rem;color:var(--v4-muted)}
 .pool-cockpit-v4 .winter-metrics strong{font-size:1.2rem;overflow-wrap:anywhere;margin-top:4px}
 .pool-cockpit-v4 .winter-equipment p{font-size:.85rem;margin-bottom:0;color:var(--v4-muted)}
+/* Compact, theme-native equipment status strip: availability != running or writable. */
+.pool-cockpit-v4 .winter-equipment{grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:10px;margin-top:12px}
+.pool-cockpit-v4 .winter-equipment .winter-equipment-item.rc8-device-row{display:flex;flex-direction:column;justify-content:center;gap:4px;min-height:68px;margin:0;padding:10px 14px;background:var(--v4-card-background);border:1px solid var(--v4-border);border-radius:14px}
+.pool-cockpit-v4 .winter-equipment .winter-equipment-item header{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:2px 10px;margin:0}
+.pool-cockpit-v4 .winter-equipment .winter-equipment-item header b{font-size:.9rem;line-height:1.3}
+.pool-cockpit-v4 .winter-equipment .winter-equipment-item header span{font-size:.8rem;line-height:1.3;color:var(--v4-muted)}
+.pool-cockpit-v4 .winter-equipment .winter-equipment-item p{font-size:.78rem;line-height:1.4;margin:0;color:var(--v4-muted)}
 .pool-cockpit-v4 .winter-alert.rc8-message{background:#fff1db;color:#583404;border-left:4px solid #bc741f;padding:12px 14px;opacity:1;overflow-wrap:anywhere}
 .pool-cockpit-v4:is([data-v4-theme="ocean"],[data-v4-theme="night"]) .winter-alert.rc8-message{background:rgba(86,48,12,.92);color:#fff0d6;border-color:#ffc260}
 .pool-cockpit-v4 .winter-card .winter-muted,.pool-cockpit-v4 .winter-warning,.pool-cockpit-v4 .winter-legend{font-size:.85rem;color:var(--v4-muted)}
@@ -30077,7 +30084,8 @@ function renderWinterCard({control={},devices=[],now=Date.now(),settings=false,e
   const summary=`<div class="winter-summary"><span><b>Filtration</b> · ${demo?'Fictive · 4 h prévues':e(pump)}${live?' · '+e(s.applied_hours)+' h programmées':''}</span><span><b>Antigel</b> · ${e(frostLabel)}</span></div>`;
   const demoNote=demo?'<p class="rc8-message winter-demo" role="status">Données simulées : programme, frises et équipements fictifs. Aucun état du backend réel ni commande physique. La protection antigel n’est pas simulée.</p>':'';
   const diagnostic=demo?'<p class="winter-muted">Exemple fictif : ni la pompe ni le débit ne sont mesurés.</p>':live?`<p class="winter-muted">Pompe observée : ${e(pump.toLowerCase())} · Débit : ${r.flow_verified?'vérifié par le capteur':'non vérifié'}. Un ordre ne prouve pas la circulation.</p>`:'';
-  const equipmentHtml=view==='equipment'?`<div class="winter-equipment">${statuses.map(([key,name])=>`<article class="rc8-device-row"><header><b>${e(name)}</b><span>${demo?e(l(c.equipment?.[key]?.status||'en_service'))+' · fictif':e(l(c.equipment?.[key]?.status||'en_service'))}</span></header>${!demo&&c.equipment?.[key]?.status==='hiverne'?'<p>Remise en service manuelle nécessaire.</p>':''}</article>`).join('')}</div>${diagnostic}`:'';
+  const pacControlLabel=demo?'':!live?'Commande PAC non confirmée':control.pac?.write_enabled===true?'Commande PAC autorisée dans Pool Cockpit':'Commande PAC désactivée dans Pool Cockpit';
+  const equipmentHtml=view==='equipment'?`<div class="winter-equipment">${statuses.map(([key,name])=>`<article class="rc8-device-row winter-equipment-item" data-winter-equipment="${e(key)}"><header><b>${e(name)}</b><span>${demo?e(l(c.equipment?.[key]?.status||'en_service'))+' · fictif':e(l(c.equipment?.[key]?.status||'en_service'))}</span></header>${!demo&&c.equipment?.[key]?.status==='hiverne'?'<p>Remise en service manuelle nécessaire.</p>':''}${key==='pac'&&!demo?`<p class="winter-pac-lock" data-winter-pac-lock>${e(pacControlLabel)}</p>`:''}</article>`).join('')}</div>${diagnostic}`:'';
   const planning=view==='planning'?`
     <div class="winter-metrics">${metric('Base hivernale',String(c.base_hours??4)+' h/j')}${metric('Durée recommandée',live||demo?s.calculated_hours+' h':'Non confirmée')}${metric('Programme appliqué',demo?'4 h · exemple':live?s.applied_hours+' h':'Non confirmé')}${metric('Origine',l(s.origin))}</div>
     ${s.different?`<p class="rc8-message">Recommandation : ${e(s.calculated_hours)} h / programme appliqué : ${e(s.applied_hours)} h — ${e(s.reason)}. Aucun remplacement silencieux.</p>`:''}

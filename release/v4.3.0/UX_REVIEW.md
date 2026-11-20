@@ -36,3 +36,15 @@ Autres vues après révision : [Équipements ordinateur](visuals/after-equipment
 Les tests de présentation vérifient la répartition par onglet, l'exclusion des états réels en Démonstration, les alertes hors sections repliées, la configuration réservée au maître disponible et l'échappement HTML. Le test navigateur `tests/wintering-visual.browser.cjs` vérifie le responsive, les trois thèmes, la visibilité des alertes sur les sept onglets et le passage Réel/Démonstration. Les captures sont également produites par la CI.
 
 Les tests Python, JavaScript, navigateur/backend et météo existants sont conservés. Les méthodes de filtrage, calcul, sauvegarde, commandes physiques et confirmation sont inchangées ; les modifications dans `host.js` concernent le rendu et un libellé de démonstration uniquement. Aucun déploiement ni fusion. La validation visuelle finale par Vincent reste requise.
+
+## Ajustement complémentaire après recette fonctionnelle (19 novembre 2026)
+
+La recette sur Home Assistant isolé a confirmé les transitions hivernage/antigel et la réactivation indépendante des équipements. Une retouche d'affichage a ensuite été demandée pour la vue Équipements :
+
+- les quatre statuts sont présentés en cartes compactes, sur une ligne lorsque la largeur le permet, avec retour à la ligne sur petits écrans ;
+- « En service » reste un **statut de disponibilité**, distinct de l'état réel « en marche / arrêté » ;
+- la PAC porte une mention explicite « Commande PAC désactivée dans Pool Cockpit » tant que le backend indique `write_enabled: false` ;
+- en cas de backend non confirmé, la mention devient « Commande PAC non confirmée », sans faux sentiment de sécurité ;
+- la démonstration ne réutilise pas l'état de commande réel.
+
+Retouche purement visuelle : aucune modification des garde-fous, horaires, algorithmes d'antigel ou commandes PAC. Les fichiers source, feuille de style, tests unitaires et bundle de distribution restent synchronisés.

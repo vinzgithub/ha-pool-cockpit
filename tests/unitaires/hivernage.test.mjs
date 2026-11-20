@@ -7,6 +7,18 @@ test('T05 displays recommendation and applied duration separately',()=>{const ht
 test('T07 requested circulation never becomes verified flow',()=>{const html=renderWinterCard({control:state(),now});assert.match(html,/arrêtée/);assert.match(html,/non vérifié/);assert.doesNotMatch(html,/protégé/);});
 test('T09 stale backend and satellites never claim local execution',()=>{const c=state();assert.equal(winterBackendLive(c,now),true);assert.equal(winterBackendLive(c,now+91000),false);assert.match(renderWinterCard({control:c,now:now+91000}),/Backend indisponible/);c.winter_status.master=false;assert.match(renderWinterCard({control:c,now}),/Satellite · aucune exécution locale/);});
 test('T10 wintered PAC requires manual return',()=>{assert.match(renderWinterCard({control:state(),now,view:'equipment'}),/Remise en service manuelle nécessaire/);});
+test('equipment status uses compact cards and distinguishes PAC availability from command permission',()=>{
+ const c=state();c.pac={write_enabled:false};c.winter_status.configuration.equipment.pac={status:'en_service'};
+ const html=renderWinterCard({control:c,now,view:'equipment'});
+ assert.match(html,/class="rc8-device-row winter-equipment-item"/);
+ assert.match(html,/data-winter-equipment="pac"/);
+ assert.match(html,/Pompe à chaleur<\/b><span>En service/);
+ assert.match(html,/Commande PAC désactivée dans Pool Cockpit/);
+ c.pac.write_enabled=true;
+ assert.match(renderWinterCard({control:c,now,view:'equipment'}),/Commande PAC autorisée dans Pool Cockpit/);
+ assert.match(renderWinterCard({control:c,now:now+91000,view:'equipment'}),/Commande PAC non confirmée/);
+ assert.doesNotMatch(renderWinterCard({control:c,now,demo:true,view:'equipment'}),/Commande PAC autorisée dans Pool Cockpit/);
+});
 test('T15 25-hour day timeline uses elapsed intervals',()=>{const day={start:'2026-10-25T00:00:00+02:00',end:'2026-10-26T00:00:00+01:00',elapsed_hours:25};const html=winterTimeline(day,[{start:day.start,end:day.end,state:'on'}],Date.parse(day.start)+3600000);assert.match(html,/width:100%/);assert.match(html,/left:4%/);assert.match(html,/25 h réelles/);});
 test('rendering escapes equipment names and server diagnostics',()=>{const c=state();c.winter_status.reason='<img onerror=evil>';const html=renderWinterCard({control:c,now,view:'equipment',devices:[{key:'probe',name:'<script>'}]});assert.doesNotMatch(html,/<img onerror|<script>/);assert.match(html,/&lt;script&gt;/);});
 test('overview is compact, planning owns schedules, equipment owns statuses',()=>{
