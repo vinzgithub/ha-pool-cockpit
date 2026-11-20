@@ -234,10 +234,12 @@ Stop Home Assistant first. The installer records a dated backup path and provide
 
 **Privacy and safety:** keep Home Assistant credentials and private device identifiers out of issues and screenshots. Pool Cockpit is not a substitute for professional pool maintenance, electrical protection or physical hydraulic interlocks. Real equipment commands must be checked against your installation.
 
+**Author and copyright: © 2026 Vincent Fournet.**
+
 **License:** [PolyForm Noncommercial 1.0.0](LICENSE). Commercial use is subject to its terms.
 
 ---
 
 <div align="center">
-<sub>🌊 Pool Cockpit V4.3.0 · Home Assistant · A simpler way to understand your pool.</sub>
+<sub>🌊 Pool Cockpit V4.3.0 · Home Assistant · A simpler way to understand your pool. · © 2026 Vincent Fournet</sub>
 </div>
