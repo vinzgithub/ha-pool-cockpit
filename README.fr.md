@@ -10,9 +10,9 @@
 
 ![Version](https://img.shields.io/badge/version-4.3.0-136caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![Licence](https://img.shields.io/badge/licence-PolyForm%20Noncommercial-0d355d)
 
-![Pool Cockpit V4.3.0 — Vue d'ensemble, thème Océan](release/v4.3.0/visuals/after-overview-1440.webp)
+![Grande illustration graphique Pool Cockpit — thème Océan](docs/images/v4.2.0/pool-cockpit-v4.2-hero.webp)
 
-<sub>Vraie capture d'écran de la V4.3.0 dans un navigateur, avec des équipements simulés en recette. Ce ne sont pas des données provenant d'une piscine réelle.</sub>
+<sub>La planche graphique originale de Pool Cockpit, conservée pour l'identité visuelle du projet. Les vraies captures d'écran de la V4.3.0 figurent plus bas, dans la galerie.</sub>
 
 **[Démarrer facilement](#installer-en-trois-étapes)** · **[Découvrir l'hivernage](#lhivernage-expliqué-simplement)** · **[Voir les écrans](#découvrez-linterface)** · **[English](README.md)**
 
