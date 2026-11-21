@@ -4,6 +4,7 @@ a53d4c593450b3e08f8db61bec562cfdd9268e40d964f85bb747f9e4626c7908  ./.github/work
 b088630f680cd825924ea54f1cf4bb316223334266dc6777f971f3907e1012a2  ./.github/workflows/publish-v4.1.0.yml
 673abe44ba1085bf98d4f58826b728fedb8a6bd53e72477624c02709c64bbeb0  ./.github/workflows/publish-v4.2.0.yml
 bc0588ffb0e81899803392f3d83aa203ffc633b2bcb93a1dd44423a510fc9aec  ./.github/workflows/publish-v4.3.0.yml
+cad9746dd407ea66da56d42bc2c695dc219ae07770ed9e9c6d4ad267e02cfd48  ./.github/workflows/publish-v4.3.1.yml
 17c3c7b3aa68ca0a680d583a16f73ee78701e361e0feabc9ce41445f5e84ab6a  ./.github/workflows/tests.yml
 fcd507cfa06e9b4239f7d672a887a2717861d2d5d1451a94788514dcb2d43513  ./.github/workflows/v42-install-manifest.yml
 b98d383d9eb6d0838cc202f456bb067a0ec035a1251139cf2688530532efa1c5  ./.github/workflows/weather-v421-manifest.yml
@@ -43,9 +44,10 @@ f58fb1e027050a14ea86d89750daa45b8a711c5966ffd2b1ad6ba52444a825ec  ./docs/images/
 37d49534bb189111ec314c6436b8e7e8f1e1269fe70f6c7d9cde76428ce62e49  ./docs/releases/V4.2.0.md
 cf2e1c38f18c6df2d8ba59bbd99685050e95391cba6ca27b6030465a69620228  ./docs/releases/V4.2.1.md
 6bf91c13267374fcfdd63142ca57809f609174201c62687ac5f8452bb9eeb591  ./docs/releases/V4.3.0.md
+b5fb6195089ff44c4ceff679de366dde81c4da5fe0ce7a8e4857ac8c21ef1256  ./docs/releases/V4.3.1.md
 a52df9410a28ce41689f6eac78cca54870bb521e015962fb3ed76be2b0634452  ./docs/user/CONFIGURATION.md
 e1b8badff148e91f736bbdf4bb36e56d5e23c20bbaaabec4c590bbdcc637b23e  ./docs/user/DASHBOARD.md
-3d4d37210cf6cda20d9febca054f438efdfa31602eefab8ffcd3ee1e771c10bc  ./docs/user/INSTALLATION.md
+4a7ce71a6c5e7afe81f1962497b94ad558132af737843886c59f8e8a016c9f28  ./docs/user/INSTALLATION.md
 82461868834ae60e5b08b168697f04a0cc024a3ca1cbf984c469207dfc83902e  ./frontend/dist/assets/pool-dashboard-background-beta25-2.png
 4797242154265f46afea892ba74e887d7c70888d295648769edf976b01bce199  ./frontend/dist/assets/pool-dashboard-background-beta25-2.webp
 cfc12f801afea2260c703268a53cd86d573ec598707e61620958c212075e92f6  ./frontend/dist/hero-ocean.svg
@@ -84,7 +86,7 @@ aedb3c231c130cad9496974034189205761881a24ec4a07a6e31eb8b2d08cf10  ./install_v4.p
 cc91590c67c2410d2e45613c7f24b70c7327afa87408e4418868314ccbd06eae  ./install_v42.py
 c53b790a4e4f3099718fe31da2a572fbc572b23b510d25bf9e17083365aadb71  ./install_v421.py
 6899f919a8641a13ceb13ed8130fc35490f27c53c8009e0e9347579955a9a55d  ./install_v430.py
-2d3902cdfc4b83d779877eea6c09c219745cb02e89c6ce3d6a6f404fd18f5650  ./install.sh
+29f2f3553edb9497281353a336a1002c43096ed90accf6865578267d4898331b  ./install.sh
 ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8  ./LICENSE
 a70b91b7d441289996b48ddd23af3bd8c9abddb050d956062af4054409c62fd1  ./NOTICE
 0b619f1121d9788994ca0d60c75e9d57d2220209c24cec956260c307cd58da35  ./outils/construire-bundle.mjs
@@ -93,8 +95,8 @@ a70b91b7d441289996b48ddd23af3bd8c9abddb050d956062af4054409c62fd1  ./NOTICE
 00ae8741ddd14deb90a8a7ff0e13913b1e76b22d4fd8b16b9eda0fa206054425  ./package-lock.json
 c620dbf641cd302a41615700e675ee7a2d8ed9702aed49816768a75c42ee7e68  ./package.json
 b2755e49108237ffd3e29a4073da7100a18a0a3f0fea36a1e7c5c6adb37e40da  ./pyproject.toml
-82e5b132d9942091d2fcd93e5320e803d3f93f43afbc934fe515a6b30988c44e  ./README.fr.md
-4da5ab0bf3e39f53315b260fb2705d1f1e1a31bbbe5a5dd2cedc52ae134f7b88  ./README.md
+c0bcc5ac70acaa094f9914ec33cb22346f5e842da19868c6e35fe920d55a003e  ./README.fr.md
+dcb40ffd9ebdff766402c5372e65de07e1677c50a497dcb85111cb2576bc1ef2  ./README.md
 bb88e6cde58d5c0f16e0ca7c7bf9656963e10f4b5b787e1141a43e3837876d5b  ./release/v4-rc8-2/assets/pool-cockpit-v4-logo.png
 82461868834ae60e5b08b168697f04a0cc024a3ca1cbf984c469207dfc83902e  ./release/v4-rc8-2/assets/pool-dashboard-background-beta25-2.png
 4797242154265f46afea892ba74e887d7c70888d295648769edf976b01bce199  ./release/v4-rc8-2/assets/pool-dashboard-background-beta25-2.webp

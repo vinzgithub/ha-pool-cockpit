@@ -8,7 +8,7 @@
 
 [**🇬🇧 English**](README.md) · [**Français**](README.fr.md)
 
-![Version](https://img.shields.io/badge/version-4.3.0-136caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![Licence](https://img.shields.io/badge/licence-PolyForm%20Noncommercial-0d355d)
+![Version](https://img.shields.io/badge/version-4.3.1-136caa) ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Core%20%2F%20Docker-41BDF5) ![Licence](https://img.shields.io/badge/licence-PolyForm%20Noncommercial-0d355d)
 
 ![Grande illustration graphique Pool Cockpit — thème Océan](docs/images/v4.2.0/pool-cockpit-v4.2-hero.webp)
 
@@ -176,12 +176,12 @@ Le **thème Océan** est présenté ici ; d'autres thèmes et langues sont dispo
 
 ## Installer en trois étapes
 
-La V4.3.0 prend en charge les installations **Home Assistant Core / Docker** disposant d'un accès au dossier contenant le fichier `configuration.yaml`. Il faut Python 3, Git et une **sauvegarde complète de Home Assistant**. L'installation ne passe **pas par HACS**.
+La distribution **V4.3.1** reprend les fonctionnalités V4.3.0 et corrige l'installateur pour les ressources Lovelace enregistrées par l'interface Home Assistant. Elle prend en charge les installations **Home Assistant Core / Docker** disposant d'un accès au dossier contenant le fichier `configuration.yaml`. Il faut Python 3, Git et une **sauvegarde complète de Home Assistant**. L'installation ne passe **pas par HACS**.
 
 **1. Récupérer Pool Cockpit**
 
 ```bash
-git clone https://github.com/vinzgithub/ha-pool-cockpit.git
+git clone --branch v4.3.1 --depth 1 https://github.com/vinzgithub/ha-pool-cockpit.git
 cd ha-pool-cockpit
 ```
 
@@ -199,7 +199,7 @@ sh install.sh --config /chemin/vers/homeassistant/config --yes
 
 **Redémarrez ensuite Home Assistant manuellement**, puis actualisez le navigateur. Le tableau de bord **Piscine / Pool Cockpit** apparaît dans Home Assistant.
 
-L'installateur reconnaît une **installation neuve** ou une **V4.2.1 officielle**. Il sauvegarde les fichiers et les paramètres avant une mise à jour. S'il ne reconnaît pas votre installation, il **refuse d'écraser les fichiers**. Il ne redémarre ni n'arrête automatiquement Home Assistant.
+L'installateur corrigé V4.3.1 reconnaît une **installation neuve** ou une **V4.2.1 officielle**, y compris avec la ressource Lovelace enregistrée dans l'interface Home Assistant. Il sauvegarde les fichiers et les paramètres avant une mise à jour. S'il ne reconnaît pas votre installation, il **refuse d'écraser les fichiers**. Il ne redémarre ni n'arrête automatiquement Home Assistant.
 
 **Vous utilisez une autre version ou Home Assistant OS ?** Lisez d'abord le [guide d'installation et de restauration](docs/user/INSTALLATION.md). Ne forcez pas une mise à jour non reconnue.
 
@@ -243,7 +243,7 @@ Arrêtez Home Assistant. L'installateur indique le chemin de la sauvegarde et pr
 
 ## Pour aller plus loin
 
-**[Guide détaillé des fonctionnalités](docs/user/DASHBOARD.md)** · **[Releases GitHub](https://github.com/vinzgithub/ha-pool-cockpit/releases)** · **[Guide hivernage V4.3.0](release/v4.3.0/README.md)** · **[Installation et retour arrière](docs/user/INSTALLATION.md)** · **[Tests et limites](release/v4.3.0/TEST_REPORT.md)** · **[Documentation en anglais](README.md)**
+**[Correctif d'installation V4.3.1](docs/releases/V4.3.1.md)** · **[Guide détaillé des fonctionnalités](docs/user/DASHBOARD.md)** · **[Releases GitHub](https://github.com/vinzgithub/ha-pool-cockpit/releases)** · **[Guide hivernage V4.3.0](release/v4.3.0/README.md)** · **[Installation et retour arrière](docs/user/INSTALLATION.md)** · **[Tests et limites](release/v4.3.0/TEST_REPORT.md)** · **[Documentation en anglais](README.md)**
 
 **Confidentialité et sécurité :** ne publiez pas vos identifiants, tokens ou données privées Home Assistant. Pool Cockpit ne remplace ni les sécurités électriques et hydrauliques, ni la surveillance humaine, ni l'entretien de la piscine. Toute commande réelle doit être validée sur votre installation.
 

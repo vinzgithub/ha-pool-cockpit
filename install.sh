@@ -1,7 +1,8 @@
 #!/bin/sh
 # SPDX-FileCopyrightText: 2026 Vincent Fournet
 # SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Pool Cockpit V4.3.0: guarded fresh install, official V4.2.1 upgrade and rollback.
+# Pool Cockpit V4.3.1: installer maintenance release for the V4.3.0 application.
+# Supports guarded fresh installation, official V4.2.1 upgrade and rollback.
 set -eu
 BASE_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 has_config=0
