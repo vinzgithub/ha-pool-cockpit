@@ -1,5 +1,6 @@
 """Offline tests for the guarded V4.3.0 installer."""
 import importlib.util
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -83,3 +84,75 @@ def test_incomplete_install_and_symlink_refusal(tmp_path):
     (c / "www").symlink_to(tmp_path, target_is_directory=True)
     with pytest.raises(RuntimeError, match="symbolique"):
         installer.preflight(c)
+
+
+def test_storage_resource_upgrade_retains_dashboard_and_all_other_resources(tmp_path):
+    """Matches an established HA dashboard using YAML card + UI-managed resource."""
+    import install_v421
+    c = make_config(tmp_path)
+    install_v421.install(c)
+    p = installer.paths(c)
+    original = p["yaml"].read_text()
+    original = original.replace(
+        "  resource_mode: yaml\n  resources:\n    - url: /local/ha-pool-dashboard/pool-cockpit.js?v=4.2.1\n      type: module\n", ""
+    )
+    p["yaml"].write_text(original)
+    dashboard = p["dashboard"].read_text().replace(
+        "custom:pool-cockpit-card", "custom:pool-dashboard-card"
+    )
+    p["dashboard"].write_text(dashboard)
+    resources = c / ".storage/lovelace_resources"
+    resources.parent.mkdir(exist_ok=True)
+    payload = {
+        "version": 1, "minor_version": 1, "key": "lovelace_resources",
+        "data": {"items": [
+            {"id": "unrelated", "url": "/local/something-else.js", "type": "module"},
+            {"id": "pool", "url": "/local/ha-pool-dashboard/pool-cockpit.js?v=4.2.1",
+             "type": "module"}
+        ]}
+    }
+    before_resources = json.dumps(payload, indent=2) + "\n"
+    resources.write_text(before_resources)
+    before_yaml = p["yaml"].read_text()
+    before_js = p["js"].read_bytes()
+    kind, yaml = installer.preflight(c)
+    assert kind == "upgrade_storage"
+    assert yaml == before_yaml
+    backup = installer.install(c, kind, yaml)
+    assert p["yaml"].read_text() == before_yaml
+    assert p["dashboard"].read_text() == dashboard
+    assert p["js"].read_bytes() == installer.NEW.read_bytes()
+    updated = json.loads(resources.read_text())
+    assert updated["data"]["items"][0] == payload["data"]["items"][0]
+    assert updated["data"]["items"][1]["url"].endswith("?v=4.3.0")
+    assert (backup / "lovelace_resources").read_text() == before_resources
+    assert installer.preflight(c)[0] == "already"
+    installer.restore(c, backup, require_upgrade=True)
+    assert p["yaml"].read_text() == before_yaml
+    assert p["dashboard"].read_text() == dashboard
+    assert p["js"].read_bytes() == before_js
+    assert resources.read_text() == before_resources
+
+
+def test_storage_resource_upgrade_rejects_ambiguous_resources(tmp_path):
+    import install_v421
+    c = make_config(tmp_path)
+    install_v421.install(c)
+    p = installer.paths(c)
+    original = p["yaml"].read_text()
+    original = original.replace(
+        "  resource_mode: yaml\n  resources:\n    - url: /local/ha-pool-dashboard/pool-cockpit.js?v=4.2.1\n      type: module\n", ""
+    )
+    p["yaml"].write_text(original)
+    p["dashboard"].write_text(p["dashboard"].read_text().replace(
+        "custom:pool-cockpit-card", "custom:pool-dashboard-card"
+    ))
+    r = c / ".storage/lovelace_resources"
+    r.parent.mkdir(exist_ok=True)
+    r.write_text(json.dumps({"data": {"items": [
+        {"url": "/local/ha-pool-dashboard/pool-cockpit.js?v=4.2.1", "type": "module"},
+        {"url": "/local/ha-pool-dashboard/pool-cockpit.js?v=4.2.1", "type": "module"},
+    ]}}))
+    with pytest.raises(RuntimeError, match="Plusieurs ressources"):
+        installer.preflight(c)
+    assert p["js"].read_bytes() == installer.OLD.read_bytes()
