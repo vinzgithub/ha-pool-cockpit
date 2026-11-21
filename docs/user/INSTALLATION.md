@@ -1,10 +1,12 @@
-# Pool Cockpit V4.3.0 — Installation et mise à jour
+# Pool Cockpit V4.3.1 — Installation et mise à jour
+
+**V4.3.1 est un correctif de distribution et d'installation : le moteur et le JavaScript restent V4.3.0.** La V4.3.0 originale ne reconnaissait pas certaines configurations Lovelace existantes (ressource enregistrée par l'interface et carte `custom:pool-dashboard-card`). Ce cas est désormais pris en charge avec sauvegarde du fichier `.storage/lovelace_resources` et restauration possible.
 
 Une seule commande d'entrée : `./install.sh`. Le script détecte l'installation neuve ou une V4.2.1 officielle et ne commande jamais de matériel.
 
 ## Deux commandes
 
-Depuis le dépôt V4.3.0 et avec accès au dossier Home Assistant contenant `configuration.yaml` :
+Depuis le dépôt **tagué V4.3.1** et avec accès au dossier Home Assistant contenant `configuration.yaml` :
 
 ```bash
 ./install.sh --config /chemin/config --dry-run
@@ -15,7 +17,9 @@ Depuis le dépôt V4.3.0 et avec accès au dossier Home Assistant contenant `con
 
 Dans un environnement où `/config` est monté, `--config /config` est facultatif. La confirmation `--yes` est obligatoire. `--dry-run` ne modifie aucun fichier. **Arrêter Home Assistant avant la mise à jour**, afin d'éviter toute modification simultanée du stockage. Aucun redémarrage ou arrêt n'est automatisé.
 
-Le script sauvegarde les éléments existants sous `.pool_cockpit_backups/v4.3.0-.../` : configuration, tableau de bord, backend, JavaScript et stockage Pool Cockpit. Il préserve les paramètres et les assets lors de la mise à jour. L'intégration réalise la migration de stockage lors du prochain démarrage. Les versions personnalisées ou inconnues sont refusées. Le JavaScript officiel est vérifié par SHA-256.
+Le script préserve les tableaux de bord déclarés en YAML et les autres ressources Lovelace, sans les recréer. En mode ressources stockées, Home Assistant doit être arrêté avant toute écriture dans `.storage/lovelace_resources`.
+
+Le script sauvegarde les éléments existants sous `.pool_cockpit_backups/v4.3.0-.../` : configuration, tableau de bord, backend, JavaScript, stockage Pool Cockpit et, si nécessaire, fichier des ressources Lovelace. Il préserve les paramètres et les assets lors de la mise à jour. L'intégration réalise la migration de stockage lors du prochain démarrage. Les versions personnalisées ou inconnues sont refusées. Le JavaScript officiel est vérifié par SHA-256.
 
 ## Retour arrière
 
