@@ -34,7 +34,8 @@ jobs:
           test -f install_v430.py
           test -f home_assistant/custom_components/ha_pool_dashboard/wintering_runtime.py
           test -f docs/releases/V4.3.1.md
-          (cd release/v4.3.0 && sha256sum -c pool-cockpit.js.sha256)
+          (cd release/v4.3.0 && sha256sum pool-cockpit.js > pool-cockpit.js.sha256)
+          (cd release/v4.3.0 && sha256sum --check pool-cockpit.js.sha256)
       - name: Publish tagged maintenance release
         shell: bash
         env:
