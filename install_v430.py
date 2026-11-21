@@ -37,7 +37,7 @@ views:
     icon: mdi:pool
     type: panel
     cards:
-      - type: custom:pool-cockpit-card
+      - type: custom:pool-dashboard-card
         visual_theme: ocean
         language: fr
         title: Ma Piscine
@@ -59,7 +59,8 @@ def paths(config):
             "web": web, "js": web / "pool-cockpit.js",
             "backend": config / "custom_components/ha_pool_dashboard",
             "store": config / ".storage/ha_pool_dashboard.rc27",
-            "premigration": config / ".storage/ha_pool_dashboard.rc27.pre_v430"}
+            "premigration": config / ".storage/ha_pool_dashboard.rc27.pre_v430",
+            "resources_store": config / ".storage/lovelace_resources"}
 
 
 def check_symlinks(config):
@@ -86,6 +87,48 @@ def verify_sources():
             raise RuntimeError(f"Empreinte SHA256 invalide : {file}")
 
 
+def storage_resource(config):
+    """Find one managed Lovelace JS resource; reject ambiguous/custom entries."""
+    file = config / ".storage/lovelace_resources"
+    if not file.is_file():
+        return None
+    try:
+        payload = json.loads(file.read_text(encoding="utf-8"))
+        entries = payload["data"]["items"]
+    except (ValueError, KeyError, TypeError) as exc:
+        raise RuntimeError("Ressources Lovelace stockées illisibles : aucune modification.") from exc
+    if not isinstance(entries, list):
+        raise RuntimeError("Format des ressources Lovelace inconnu.")
+    found = [x for x in entries if isinstance(x, dict) and isinstance(x.get("url"), str)
+             and x["url"].startswith("/local/ha-pool-dashboard/pool-cockpit.js")]
+    if not found:
+        return None
+    if len(found) != 1:
+        raise RuntimeError("Plusieurs ressources Pool Cockpit stockées : aucune modification.")
+    item = found[0]
+    url = item["url"]
+    if item.get("type") != "module" or not re.fullmatch(
+        r"/local/ha-pool-dashboard/pool-cockpit\.js\?v="
+        r"(?:4\.2\.1|4\.3\.0)(?:-[A-Za-z0-9_.-]+)?", url
+    ):
+        raise RuntimeError("Ressource Pool Cockpit inconnue ou personnalisée.")
+    return url
+
+
+def update_storage_resource(config):
+    """Update only the single verified URL; preserve every other storage byte."""
+    existing = storage_resource(config)
+    if existing is None or not existing.startswith(
+        "/local/ha-pool-dashboard/pool-cockpit.js?v=4.2.1"
+    ):
+        raise RuntimeError("Ressource Lovelace modifiée depuis la vérification.")
+    file = config / ".storage/lovelace_resources"
+    current = file.read_text(encoding="utf-8")
+    if current.count(existing) != 1:
+        raise RuntimeError("Occurrences ambiguës dans le stockage Lovelace.")
+    write_yaml(file, current.replace(existing, RESOURCE, 1))
+
+
 def preflight(config):
     verify_sources()
     p = paths(config)
@@ -98,27 +141,43 @@ def preflight(config):
         if not all((p["js"].is_file(), p["backend"].is_dir(), p["dashboard"].is_file(),
                     (p["backend"] / "manifest.json").is_file())):
             raise RuntimeError("Installation existante incomplète : aucune modification.")
-        if "custom:pool-cockpit-card" not in p["dashboard"].read_text(encoding="utf-8"):
-            raise RuntimeError("Tableau de bord personnalisé ou inconnu.")
+        dashboard = p["dashboard"].read_text(encoding="utf-8")
+        if not any(card in dashboard for card in (
+            "custom:pool-dashboard-card", "custom:pool-cockpit-card"
+        )):
+            raise RuntimeError("Tableau de bord Pool Cockpit inconnu.")
         matches = list(RESOURCE_RE.finditer(current))
-        if len(matches) != 1 or current.count("/local/ha-pool-dashboard/pool-cockpit.js") != 1:
-            raise RuntimeError("Ressource Lovelace non unique ou inconnue.")
-        m = matches[0]
-        if m.group("version").startswith("4.3.0"):
+        stored = storage_resource(config)
+        if matches and stored is not None:
+            raise RuntimeError("Ressource Pool Cockpit déclarée deux fois (YAML et stockage).")
+        if len(matches) > 1 or current.count("/local/ha-pool-dashboard/pool-cockpit.js") > 1:
+            raise RuntimeError("Ressource Lovelace non unique.")
+        if matches:
+            if "resource_mode: yaml" not in current:
+                raise RuntimeError("Ressource YAML sans resource_mode: yaml : vérification manuelle.")
+            resource_version = matches[0].group("version")
+            source = "yaml"
+        elif stored is not None:
+            resource_version = stored.rsplit("?v=", 1)[-1]
+            source = "storage"
+        else:
+            raise RuntimeError("Ressource Pool Cockpit V4.2.1 introuvable.")
+        if resource_version.startswith("4.3.0"):
             if hash_file(p["js"]) == hash_file(NEW) and (
                 (p["backend"] / "wintering.py").is_file()
                 and (p["backend"] / "wintering_runtime.py").is_file()
             ):
                 return "already", current
             raise RuntimeError("Version 4.3.0 personnalisée ou incomplète.")
-        if "resource_mode: yaml" not in current or not re.search(
-            r"(?m)^ha_pool_dashboard:\s*$", current
-        ):
-            raise RuntimeError("Configuration Lovelace ou intégration non reconnue.")
+        if not re.search(r"(?m)^ha_pool_dashboard:\s*$", current):
+            raise RuntimeError("Intégration ha_pool_dashboard non reconnue.")
         if hash_file(p["js"]) != hash_file(OLD):
             raise RuntimeError("Bundle V4.2.1 différent de la version officielle.")
-        replacement = m.group("indent") + "- url: " + RESOURCE
-        return "upgrade", current[:m.start()] + replacement + current[m.end():]
+        if source == "storage":
+            return "upgrade_storage", current
+        match = matches[0]
+        replacement = match.group("indent") + "- url: " + RESOURCE
+        return "upgrade", current[:match.start()] + replacement + current[match.end():]
     if re.search(r"(?m)^\s*(lovelace|ha_pool_dashboard):", current):
         raise RuntimeError("Configuration existante non vierge : installation refusée.")
     if (config / ".ha_pool_dashboard_install.json").exists():
@@ -167,17 +226,20 @@ def backup_files(config, kind):
     backup = config / ".pool_cockpit_backups" / ("v4.3.0-" + tag)
     backup.mkdir(parents=True, exist_ok=False)
     shutil.copy2(p["yaml"], backup / "configuration.yaml")
-    if kind == "upgrade":
+    if kind in ("upgrade", "upgrade_storage"):
         shutil.copy2(p["js"], backup / "pool-cockpit.js")
         shutil.copy2(p["dashboard"], backup / "pool-dashboard.yaml")
         shutil.copytree(p["backend"], backup / "ha_pool_dashboard")
         for key in ("store", "premigration"):
             if p[key].is_file():
                 shutil.copy2(p[key], backup / p[key].name)
+        if kind == "upgrade_storage":
+            shutil.copy2(p["resources_store"], backup / "lovelace_resources")
     (backup / "metadata.json").write_text(json.dumps({
         "kind": kind, "version": VERSION,
         "store": p["store"].exists(),
         "premigration": p["premigration"].exists(),
+        "lovelace_resources": kind == "upgrade_storage",
     }), encoding="utf-8")
     return backup
 
@@ -189,24 +251,26 @@ def restore(config, backup, *, require_upgrade=False):
     backup = backup.resolve()
     meta = json.loads((backup / "metadata.json").read_text(encoding="utf-8"))
     kind = meta.get("kind")
-    if meta.get("version") != VERSION or kind not in ("fresh", "upgrade"):
+    if meta.get("version") != VERSION or kind not in ("fresh", "upgrade", "upgrade_storage"):
         raise RuntimeError("Sauvegarde incompatible.")
-    if require_upgrade and kind != "upgrade":
+    if require_upgrade and kind not in ("upgrade", "upgrade_storage"):
         raise RuntimeError("Restauration automatique réservée aux migrations.")
     p = paths(config)
     if not (backup / "configuration.yaml").is_file():
         raise RuntimeError("Configuration sauvegardée absente.")
-    if kind == "upgrade":
+    if kind in ("upgrade", "upgrade_storage"):
         for name in ("pool-cockpit.js", "pool-dashboard.yaml", "ha_pool_dashboard/manifest.json"):
             if not (backup / name).is_file():
                 raise RuntimeError("Sauvegarde incomplète : " + name)
         for key in ("store", "premigration"):
             if meta.get(key) and not (backup / p[key].name).is_file():
                 raise RuntimeError("Sauvegarde du stockage incomplète : " + key)
+        if kind == "upgrade_storage" and not (backup / "lovelace_resources").is_file():
+            raise RuntimeError("Sauvegarde de la ressource Lovelace absente.")
     # Home Assistant must be stopped to avoid live-storage races.
     if p["backend"].exists():
         shutil.rmtree(p["backend"])
-    if kind == "upgrade":
+    if kind in ("upgrade", "upgrade_storage"):
         shutil.copytree(backup / "ha_pool_dashboard", p["backend"])
         shutil.copy2(backup / "pool-cockpit.js", p["js"])
         shutil.copy2(backup / "pool-dashboard.yaml", p["dashboard"])
@@ -216,6 +280,8 @@ def restore(config, backup, *, require_upgrade=False):
                 shutil.copy2(backup / p[key].name, p[key])
             else:
                 p[key].unlink(missing_ok=True)
+        if kind == "upgrade_storage":
+            write_yaml(p["resources_store"], (backup / "lovelace_resources").read_text(encoding="utf-8"))
     else:
         if p["web"].exists():
             shutil.rmtree(p["web"])
@@ -233,7 +299,7 @@ def install(config, kind, yaml):
             raise RuntimeError("Installation interrompue détectée.")
         p["backend"].parent.mkdir(parents=True, exist_ok=True)
         shutil.copytree(BACKEND, stage)
-        if kind == "upgrade":
+        if kind in ("upgrade", "upgrade_storage"):
             p["backend"].rename(old_backend)
         stage.rename(p["backend"])
         p["web"].mkdir(parents=True, exist_ok=True)
@@ -245,7 +311,10 @@ def install(config, kind, yaml):
             shutil.copy2(HERO, p["web"] / HERO.name)
             shutil.copy2(CAMERA, p["web"] / "assets" / CAMERA.name)
             p["dashboard"].write_text(DASHBOARD, encoding="utf-8")
-        write_yaml(p["yaml"], yaml)
+        if kind == "upgrade_storage":
+            update_storage_resource(config)
+        else:
+            write_yaml(p["yaml"], yaml)
         if hash_file(p["js"]) != hash_file(NEW):
             raise RuntimeError("Erreur de vérification du bundle copié.")
     except Exception:
