@@ -76,7 +76,7 @@ export function renderWinterCard({control={},devices=[],now=Date.now(),settings=
   // Even views without a winter panel retain safety diagnostics outside details.
   if(!['overview','planning','equipment','settings','history'].includes(view))return alertHtml?`<section class="winter-card rc8-observation winter-alerts-only" data-winter-card aria-label="Alertes hivernage">${alertHtml}</section>`:'';
   const kinds={start:'Demande antigel',end:'Fin de demande',pump_observed:'Marche pompe observée',alert:'Alerte de sécurité',recovery:'Retour à la normale'};
-  const eventRows=(!demo&&live?(s.events||[]):[]).slice(0,15).map(row=>{
+  const eventRows=(!demo&&live?(s.events||[]):[]).slice(0,30).map(row=>{
     const time=Date.parse(row.date);
     const when=Number.isFinite(time)?new Date(time).toLocaleString('fr-FR',{timeZone:s.timezone?.includes('/')?s.timezone:undefined}):'Date inconnue';
     return `<li class="winter-event"><time datetime="${e(row.date)}">${e(when)}</time><b>${e(kinds[row.kind]||'Événement')}</b><span>${e(row.detail||'')}</span></li>`;
