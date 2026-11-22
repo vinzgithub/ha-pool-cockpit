@@ -306,3 +306,67 @@ def test_flow_sensor_failure_after_timeout_is_not_verified(engine):
     runtime = engine.scheduler.public_state()['winter_status']['runtime']
     assert runtime['pump_state'] == 'on' and runtime['flow_verified'] is False
     assert any('débit non vérifié' in a for a in runtime['alerts'])
+
+
+def test_frost_events_are_persistent_bounded_and_deduplicated(engine):
+    winter(engine)
+    frost(engine, entry_delay_seconds=0, exit_delay_seconds=30,
+          minimum_run_seconds=60)
+    events = engine.scheduler.data['winter_events']
+    assert sum(row['kind'] == 'start' for row in events) == 1
+    assert any(row['kind'] == 'pump_observed' for row in events)
+    assert engine.scheduler.public_state()['winter_status']['events']
+
+    initial_count = len(events)
+    tick(engine, 30, 2)
+    assert len(engine.scheduler.data['winter_events']) == initial_count
+    assert sum(row['kind'] == 'start' for row in engine.scheduler.data['winter_events']) == 1
+
+    tick(engine, 60, 6)
+    tick(engine, 30, 6)
+    assert sum(row['kind'] == 'end' for row in engine.scheduler.data['winter_events']) == 1
+    assert any(row['kind'] == 'start' for row in engine.scheduler.data['winter_events'])
+
+    saved = deepcopy(engine.scheduler.data)
+    normalized = engine.scheduler._normalize(saved)
+    assert normalized['winter_events'] == saved['winter_events']
+    assert len(engine.scheduler.public_state()['winter_status']['events']) <= 30
+
+    engine.scheduler.data['winter_events'] = [
+        {'date': '2026-11-14T08:00:00+01:00', 'kind': 'alert', 'detail': str(i)}
+        for i in range(200)
+    ]
+    engine.scheduler._winter_event('recovery', 'Réglé', engine.clock['now'])
+    assert len(engine.scheduler.data['winter_events']) == 200
+    assert engine.scheduler.data['winter_events'][0]['kind'] == 'recovery'
+
+
+def test_frost_start_end_notifications_are_deduplicated(engine):
+    winter(engine)
+    frost(engine, entry_delay_seconds=0, exit_delay_seconds=30,
+          minimum_run_seconds=60)
+    calls = [call for call in engine.hass.commands if call[0] == 'persistent_notification']
+    starts = [call for call in calls if 'circulation demandée' in call[2]['title']]
+    assert len(starts) == 1
+    tick(engine, 30, 2)
+    calls = [call for call in engine.hass.commands if call[0] == 'persistent_notification']
+    assert len([call for call in calls if 'circulation demandée' in call[2]['title']]) == 1
+
+    tick(engine, 60, 6)
+    tick(engine, 30, 6)
+    calls = [call for call in engine.hass.commands if call[0] == 'persistent_notification']
+    assert len([call for call in calls if 'fin de demande' in call[2]['title']]) == 1
+    tick(engine, 30, 7)
+    calls = [call for call in engine.hass.commands if call[0] == 'persistent_notification']
+    assert len([call for call in calls if 'fin de demande' in call[2]['title']]) == 1
+
+
+def test_frost_alert_and_recovery_are_separate_history_events(engine):
+    winter(engine)
+    frost(engine, entry_delay_seconds=0)
+    engine.hass.states.items['sensor.local_sample'].state = (NOW - timedelta(hours=1)).isoformat()
+    tick(engine, 30)
+    assert any(row['kind'] == 'alert' and 'Capteur antigel' in row['detail']
+               for row in engine.scheduler.data['winter_events'])
+    tick(engine, 30, 2)
+    assert any(row['kind'] == 'recovery' for row in engine.scheduler.data['winter_events'])
