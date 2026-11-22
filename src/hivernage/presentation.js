@@ -74,10 +74,17 @@ export function renderWinterCard({control={},devices=[],now=Date.now(),settings=
   const alerts=[...(error&&!demo?[error]:[]),...(!live&&!demo?['Backend indisponible · protection non confirmée. Les dernières données ne prouvent pas que la pompe fonctionne.']:[]),...(r.alerts||[])];
   const alertHtml=alerts.map(a=>`<p role="alert" class="winter-alert rc8-message">${e(a)}</p>`).join('');
   // Even views without a winter panel retain safety diagnostics outside details.
-  if(!['overview','planning','equipment','settings'].includes(view))return alertHtml?`<section class="winter-card rc8-observation winter-alerts-only" data-winter-card aria-label="Alertes hivernage">${alertHtml}</section>`:'';
+  if(!['overview','planning','equipment','settings','history'].includes(view))return alertHtml?`<section class="winter-card rc8-observation winter-alerts-only" data-winter-card aria-label="Alertes hivernage">${alertHtml}</section>`:'';
+  const kinds={start:'Demande antigel',end:'Fin de demande',pump_observed:'Marche pompe observée',alert:'Alerte de sécurité',recovery:'Retour à la normale'};
+  const eventRows=(!demo&&live?(s.events||[]):[]).slice(0,30).map(row=>{
+    const time=Date.parse(row.date);
+    const when=Number.isFinite(time)?new Date(time).toLocaleString('fr-FR',{timeZone:s.timezone?.includes('/')?s.timezone:undefined}):'Date inconnue';
+    return `<li class="winter-event"><time datetime="${e(row.date)}">${e(when)}</time><b>${e(kinds[row.kind]||'Événement')}</b><span>${e(row.detail||'')}</span></li>`;
+  }).join('');
+  const eventsHtml=['planning','history'].includes(view)?`<details class="winter-events"><summary>Historique antigel ${demo?'(démonstration)':('('+eventRows.length+' derniers événements affichés)')}</summary>${demo?'<p class="winter-muted">Aucun événement réel dans la démonstration.</p>':eventRows?`<ol>${eventRows}</ol>`:'<p class="winter-muted">Aucun événement antigel enregistré pour le moment.</p>'}<p class="winter-muted">Les demandes antigel, observations de pompe et alertes sont distinctes. La marche observée ne prouve pas le débit.</p></details>`:'';
   const pump=demo?'Fictif · arrêtée':live?(r.pump_state==='on'?'En marche':r.pump_state==='off'?'Arrêtée':'Indisponible'):'Non confirmée';
   const frostLabel=demo?'Antigel non simulé':!live?'Protection non confirmée':!s.master?'Satellite · aucune exécution locale':l(f.status);
-  const title=demo?'Hivernage actif · Démonstration':view==='overview'?l(c.mode||'normal'):view==='equipment'?'Équipements du bassin':view==='settings'?'Hivernage · paramètres':'Filtration et antigel';
+  const title=demo?'Hivernage actif · Démonstration':view==='overview'?l(c.mode||'normal'):view==='equipment'?'Équipements du bassin':view==='settings'?'Hivernage · paramètres':view==='history'?'Historique antigel':'Filtration et antigel';
   const metric=(label,value)=>`<div class="rc8-device-row"><span>${e(label)}</span><strong>${e(value)}</strong></div>`;
   const demoSettings=view==='settings'&&demo?
     '<details class="winter-config"><summary>Paramètres d’hivernage · aperçu non modifiable</summary>'+
@@ -100,7 +107,7 @@ export function renderWinterCard({control={},devices=[],now=Date.now(),settings=
     <details class="winter-explanation"><summary>Pourquoi ce calcul ?</summary><p>Dernier recalcul : ${e(s.generated_at||'inconnu')} · Source : ${e(s.source)} · ${e(s.reason)}.</p><p>La validation concerne les prolongations proposées ; les plages régulières s’exécutent sans nouvelle validation. Une édition manuelle passe en personnalisé.</p><ul>${(s.sensors||[]).map(row=>`<li>${e(row.name||row.key)} : ${e(l(row.status))} · ${e(row.value??'—')} °C · échantillon ${e(row.sample_at||'non daté')}</li>`).join('')}</ul><p>Durée et majorations calculées une fois côté backend ; l’antigel est arbitré séparément.</p><p>Commande pompe : ${e(r.command?.state||'aucune')} · demandée ${e(r.command?.requested_at||'—')} · confirmée ${e(r.command?.confirmed_at||'non confirmée')}.</p></details>`:'';
   return `<section class="winter-card rc8-observation ${view==='overview'?'is-compact':''}" data-winter-card data-winter-view="${e(view)}" aria-label="Hivernage actif">
     <header class="winter-header"><h2>${e(title)}</h2>${view!=='overview'?`<span class="winter-badge">${e(frostLabel)}</span>`:''}</header>
-    ${view==='overview'?summary:''}${demoNote}${alertHtml}${planning}${equipmentHtml}${form}${demoSettings}
+    ${view==='overview'?summary:''}${demoNote}${alertHtml}${planning}${eventsHtml}${equipmentHtml}${form}${demoSettings}
     ${!demo&&['planning','settings'].includes(view)?`<p class="winter-warning">${e(s.warning||'Home Assistant doit être disponible. Une protection hors-gel matérielle indépendante peut être nécessaire.')} Une plage à 02:00 ne garantit pas le hors-gel.</p>`:''}
   </section>`;
 }

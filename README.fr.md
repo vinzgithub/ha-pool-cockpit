@@ -132,7 +132,7 @@ Le tableau de bord regroupe six rubriques : **Vue d’ensemble, Conseils, Mesure
 
 En hiver, vous pouvez choisir un mode d’**hivernage actif**, déclarer séparément la PAC et les sondes hivernées, conserver votre programmation normale et configurer une surveillance antigel **avec une vraie sonde locale**. Le statut **Maintenance** permet de signaler une intervention sur le circuit.
 
-**L’antigel est désactivé par défaut après migration.** Cette fonction logicielle ne garantit pas le hors-gel si l’alimentation électrique, Home Assistant, la pompe ou la circulation d’eau tombent en panne. [Voir le guide hivernage et ses précautions](release/v4.3.0/README.md).
+**Nouveau guide pratique : [configurer les sondes, l'historique et les alertes antigel](docs/user/ANTIGEL.md).** Les événements de demande, de fin et de défaut de protection sont conservés séparément dans le planning.\n\n**L’antigel est désactivé par défaut après migration.** Cette fonction logicielle ne garantit pas le hors-gel si l’alimentation électrique, Home Assistant, la pompe ou la circulation d’eau tombent en panne. [Voir le guide hivernage et ses précautions](release/v4.3.0/README.md).
 
 
 ## ✨ Ce qui change spécifiquement en V4.3.0

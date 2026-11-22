@@ -12,6 +12,16 @@ from .wintering import (DEFAULT_WINTERING, normalize_wintering, validate_winteri
 
 
 class WinteringRuntime:
+    def _winter_event(self, kind, detail, now):
+        """Persist bounded, user-facing frost events separately from general history."""
+        existing = self.data.get('winter_events')
+        if not isinstance(existing, list):
+            existing = []
+        self.data['winter_events'] = [
+            {'date': now.isoformat(), 'kind': kind, 'detail': detail},
+            *existing,
+        ][:200]
+
     def _winter_config(self):
         return self.data.get('wintering') or normalize_wintering()
 
@@ -179,7 +189,21 @@ class WinteringRuntime:
             old['active_since'] = now.isoformat()
         runtime['frost'] = frost_transition(frost_config, old, value, health, now)
         runtime['frost']['sample_at'] = stamp
-        if old.get('status') != runtime['frost']['status']:
+        was_requested = bool(old.get('requested'))
+        requested_now = bool(runtime['frost'].get('requested'))
+        if was_requested != requested_now:
+            kind = 'start' if requested_now else 'end'
+            temperature = f'{value:g} °C' if value is not None else 'température non confirmée'
+            if requested_now:
+                detail = f'Demande de circulation antigel déclenchée ({temperature}) ; marche et débit non encore confirmés.'
+            elif not frost_config['enabled']:
+                detail = 'Surveillance antigel désactivée ; demande de circulation levée. Le programme normal reste applicable.'
+            else:
+                detail = f'Fin de la demande antigel ({temperature}) ; la pompe suit désormais son programme.'
+            self._winter_event(kind, detail, now)
+            self._record('antigel', kind, detail)
+            runtime['pending_frost_notice'] = {'id': f'{kind}:{now.isoformat()}', 'kind': kind, 'detail': detail}
+        elif old.get('status') != runtime['frost']['status']:
             self._record('antigel', runtime['frost']['status'], 'Évolution de la demande / qualité du capteur')
         pump_entity = self.data['pump'].get('entity_id')
         pump = self.hass.states.get(pump_entity) if pump_entity else None
@@ -202,6 +226,8 @@ class WinteringRuntime:
             command['confirmed_at'] = now.isoformat()
             runtime['command'] = command
             self._record('pompe', observed, 'État HA confirmé après commande (ne prouve pas le débit)')
+            if observed == 'on' and runtime['frost'].get('requested'):
+                self._winter_event('pump_observed', 'Pompe signalée en marche par Home Assistant pendant la demande antigel ; débit non certifié.', now)
         alerts = []
         requested = runtime['frost'].get('requested')
         if frost_config['enabled'] and health != 'fresh':
@@ -226,6 +252,10 @@ class WinteringRuntime:
         signature = '|'.join(alerts)
         if signature != runtime.get('alert_signature', ''):
             self._record('surveillance', 'alerte' if alerts else 'retour', signature or 'Alerte levée')
+            if signature:
+                self._winter_event('alert', signature, now)
+            elif runtime.get('alert_signature'):
+                self._winter_event('recovery', 'Alertes de surveillance hivernale levées.', now)
         runtime['alert_signature'] = signature
 
     async def _notify_winter_alerts(self):
@@ -238,6 +268,16 @@ class WinteringRuntime:
                 self._record('notification', 'échec', 'Notification hivernage non transmise ; nouvelle tentative au prochain cycle')
                 return
         runtime['notified_signature'] = signature
+        notice = runtime.get('pending_frost_notice') or {}
+        if self._is_master() and notice.get('id') and notice['id'] != runtime.get('notified_frost_notice_id'):
+            title = ('Antigel piscine — circulation demandée' if notice.get('kind') == 'start'
+                     else 'Antigel piscine — fin de demande')
+            try:
+                await self._notify(title, notice.get('detail', 'État antigel modifié.'))
+            except Exception:
+                self._record('notification', 'échec', 'Notification de transition antigel non transmise ; nouvelle tentative au prochain cycle')
+                return
+            runtime['notified_frost_notice_id'] = notice['id']
 
     def _winter_priority(self, target, now):
         if target == 'pac' and (self._equipment('pac')['status'] != 'en_service' or self._winter_config()['mode'] == 'maintenance'):
@@ -276,5 +316,6 @@ class WinteringRuntime:
             'different': abs(calculated - applied) > 1 / 60,
             'water_status': watch.get('adaptive_water_status'), 'water_temperature_c': watch.get('adaptive_water_temperature_c'),
             'sensors': self._water_sources(now) or [], 'runtime': runtime,
+            'events': deepcopy(self.data.get('winter_events') or [])[:30],
             'program_day': day_program(periods, self.data['pump']['weekdays'], now),
             'timezone': str(now.tzinfo), 'warning': 'Home Assistant doit être disponible. Une protection hors-gel matérielle indépendante peut être nécessaire.'}

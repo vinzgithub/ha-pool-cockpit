@@ -44,7 +44,7 @@ function installWinteringV430(Card){
   p.saveRc27Control=async function(next,{render=true}={}){
     if(!this.winterLive()||!this._rc27Control?.winter_status?.master){this._winterError='Backend maître indisponible : modification non appliquée.';if(render)this.render();return;}
     const payload=JSON.parse(JSON.stringify(next));
-    ['wintering','winter_status','winter_runtime','schedule_proposal','schema_version','overrides','boost_until','history'].forEach(k=>delete payload[k]);
+    ['wintering','winter_status','winter_runtime','schedule_proposal','schema_version','overrides','boost_until','history','winter_events'].forEach(k=>delete payload[k]);
     if(payload.pump){delete payload.pump.recommended_hours;if(payload.seasonal_profiles?.source==='adaptive'){delete payload.pump.periods;delete payload.pump.weekdays;}}
     try{const state=await this._hass.callWS({type:'ha_pool_dashboard/save_state',config:payload});this._rc27Control=rc27SanitizeControl({...state,backend_available:true});writeRc27Control(this._rc27Control);this._winterError='';}
     catch(error){this._winterError=error?.message||'Sauvegarde refusée ; réglages conservés.';this._rc27Control.backend_available=false;}

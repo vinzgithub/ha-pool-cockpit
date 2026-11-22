@@ -195,6 +195,7 @@ class PoolScheduler(WinteringRuntime):
             extension.update({"target_hours": 0, "minutes": 0})
         data["measurement_sources"] = {str(key): bool(value) for key, value in dict(data.get("measurement_sources") or {}).items()}
         data["history"] = list(data.get("history") or [])[:100]
+        data["winter_events"] = list(data.get("winter_events") or [])[:200]
         data["overrides"] = dict(data.get("overrides") or {})
         data["schema_version"] = 2
         data["wintering"] = normalize_wintering(data.get("wintering"))
@@ -527,7 +528,7 @@ class PoolScheduler(WinteringRuntime):
         payload = deepcopy(payload)
         # Read-only fields must not be replayed by an old browser snapshot.
         for key in ("wintering", "winter_runtime", "winter_status", "schema_version", "pre_winter_schedule",
-                    "schedule_proposal", "overrides", "boost_until", "history", "last_notifications"):
+                    "schedule_proposal", "overrides", "boost_until", "history", "winter_events", "last_notifications"):
             payload.pop(key, None)
         pump = payload.get("pump") or {}
         # The UI recommendation is explanatory only, never an executable input.
@@ -788,6 +789,7 @@ class PoolScheduler(WinteringRuntime):
 
     async def async_clear_history(self) -> dict[str, Any]:
         self.data["history"] = []
+        self.data["winter_events"] = []
         await self.store.async_save(self.data)
         return self.public_state()
 

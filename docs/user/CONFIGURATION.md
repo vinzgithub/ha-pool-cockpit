@@ -151,3 +151,8 @@ Use:
     python3 install_pool_dashboard.py --config /config --theme ocean --dry-run --diagnostic
 
 If necessary, review the generated detection information before performing another installation.
+
+
+## Antigel et historique hivernal
+
+Consulter le **[guide pratique antigel](ANTIGEL.md)** pour trouver les entités de température et de date de mesure, comprendre la sécurité des capteurs, paramétrer les seuils, consulter l'historique et recevoir les notifications. Ne pas recopier les entités d'une installation personnelle ni assimiler un horodatage Home Assistant à une acquisition matérielle vérifiée.

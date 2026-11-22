@@ -46,3 +46,10 @@
 .pool-cockpit-v4 .winter-alerts-only .winter-alert{margin:0}
 @media(max-width:700px){.pool-cockpit-v4 .winter-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.pool-cockpit-v4 .winter-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pool-cockpit-v4 .winter-summary{flex-direction:column}}
 @media(max-width:420px){.pool-cockpit-v4 .winter-fields{grid-template-columns:1fr}}
+
+.pool-cockpit-v4 .winter-events{border-top:1px solid var(--v4-border);margin-top:12px}
+.pool-cockpit-v4 .winter-events ol{list-style:none;display:grid;gap:8px;margin:0;padding:0}
+.pool-cockpit-v4 .winter-event{display:grid;grid-template-columns:minmax(130px,170px) minmax(145px,190px) 1fr;gap:8px 12px;padding:10px 12px;border:1px solid var(--v4-border);border-radius:10px;background:var(--v4-card-background);font-size:.85rem;overflow-wrap:anywhere}
+.pool-cockpit-v4 .winter-event time{color:var(--v4-muted);font-variant-numeric:tabular-nums}
+.pool-cockpit-v4 .winter-events .winter-muted{margin:10px 0 2px}
+@media(max-width:700px){.pool-cockpit-v4 .winter-event{grid-template-columns:1fr}.pool-cockpit-v4 .winter-event time{font-size:.78rem}}

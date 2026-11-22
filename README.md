@@ -119,7 +119,7 @@ The dashboard includes **Overview, Advice, Measurements, Equipment, Planning and
 
 Switch between **Normal, Active Wintering and Maintenance**, retain your previous schedule and mark devices winterized independently. Optional frost monitoring may **request circulation** when a suitable local sensor signals cold conditions, subject to hydraulic safety interlocks.
 
-Frost monitoring is **disabled by default following migration**. It cannot replace autonomous physical freeze protection when power, Home Assistant, pumps or water flow fail. [Read the wintering and safety guide](release/v4.3.0/README.md).
+**Practical setup guide (French): [frost sensors, event history and notifications](docs/user/ANTIGEL.md).** Start, stop and protection failure events have a separate history in Planning.\n\nFrost monitoring is **disabled by default following migration**. It cannot replace autonomous physical freeze protection when power, Home Assistant, pumps or water flow fail. [Read the wintering and safety guide](release/v4.3.0/README.md).
 
 
 ## ✨ What's specifically new in V4.3.0?
