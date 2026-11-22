@@ -74,17 +74,17 @@ export function renderWinterCard({control={},devices=[],now=Date.now(),settings=
   const alerts=[...(error&&!demo?[error]:[]),...(!live&&!demo?['Backend indisponible · protection non confirmée. Les dernières données ne prouvent pas que la pompe fonctionne.']:[]),...(r.alerts||[])];
   const alertHtml=alerts.map(a=>`<p role="alert" class="winter-alert rc8-message">${e(a)}</p>`).join('');
   // Even views without a winter panel retain safety diagnostics outside details.
-  if(!['overview','planning','equipment','settings'].includes(view))return alertHtml?`<section class="winter-card rc8-observation winter-alerts-only" data-winter-card aria-label="Alertes hivernage">${alertHtml}</section>`:'';
+  if(!['overview','planning','equipment','settings','history'].includes(view))return alertHtml?`<section class="winter-card rc8-observation winter-alerts-only" data-winter-card aria-label="Alertes hivernage">${alertHtml}</section>`:'';
   const kinds={start:'Demande antigel',end:'Fin de demande',pump_observed:'Marche pompe observée',alert:'Alerte de sécurité',recovery:'Retour à la normale'};
   const eventRows=(!demo&&live?(s.events||[]):[]).slice(0,15).map(row=>{
     const time=Date.parse(row.date);
     const when=Number.isFinite(time)?new Date(time).toLocaleString('fr-FR',{timeZone:s.timezone?.includes('/')?s.timezone:undefined}):'Date inconnue';
     return `<li class="winter-event"><time datetime="${e(row.date)}">${e(when)}</time><b>${e(kinds[row.kind]||'Événement')}</b><span>${e(row.detail||'')}</span></li>`;
   }).join('');
-  const eventsHtml=view==='planning'?`<details class="winter-events"><summary>Historique antigel ${demo?'(démonstration)':('('+eventRows.length+' derniers événements affichés)')}</summary>${demo?'<p class="winter-muted">Aucun événement réel dans la démonstration.</p>':eventRows?`<ol>${eventRows}</ol>`:'<p class="winter-muted">Aucun événement antigel enregistré pour le moment.</p>'}<p class="winter-muted">Les demandes antigel, observations de pompe et alertes sont distinctes. La marche observée ne prouve pas le débit.</p></details>`:'';
+  const eventsHtml=['planning','history'].includes(view)?`<details class="winter-events"><summary>Historique antigel ${demo?'(démonstration)':('('+eventRows.length+' derniers événements affichés)')}</summary>${demo?'<p class="winter-muted">Aucun événement réel dans la démonstration.</p>':eventRows?`<ol>${eventRows}</ol>`:'<p class="winter-muted">Aucun événement antigel enregistré pour le moment.</p>'}<p class="winter-muted">Les demandes antigel, observations de pompe et alertes sont distinctes. La marche observée ne prouve pas le débit.</p></details>`:'';
   const pump=demo?'Fictif · arrêtée':live?(r.pump_state==='on'?'En marche':r.pump_state==='off'?'Arrêtée':'Indisponible'):'Non confirmée';
   const frostLabel=demo?'Antigel non simulé':!live?'Protection non confirmée':!s.master?'Satellite · aucune exécution locale':l(f.status);
-  const title=demo?'Hivernage actif · Démonstration':view==='overview'?l(c.mode||'normal'):view==='equipment'?'Équipements du bassin':view==='settings'?'Hivernage · paramètres':'Filtration et antigel';
+  const title=demo?'Hivernage actif · Démonstration':view==='overview'?l(c.mode||'normal'):view==='equipment'?'Équipements du bassin':view==='settings'?'Hivernage · paramètres':view==='history'?'Historique antigel':'Filtration et antigel';
   const metric=(label,value)=>`<div class="rc8-device-row"><span>${e(label)}</span><strong>${e(value)}</strong></div>`;
   const demoSettings=view==='settings'&&demo?
     '<details class="winter-config"><summary>Paramètres d’hivernage · aperçu non modifiable</summary>'+
